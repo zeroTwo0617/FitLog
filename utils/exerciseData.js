@@ -30,7 +30,8 @@ function decorate(e) {
   return Object.assign({}, e, {
     bpZh: zhBodyPart(e.bodyPart),
     eqZh: zhEquipment(e.equipment),
-    tgZh: zhTarget(e.target)
+    tgZh: zhTarget(e.target),
+    nameZh: e.nameZh || e.name
   })
 }
 
@@ -45,6 +46,7 @@ function list(opts) {
   if (keyword) {
     arr = arr.filter(e =>
       (e.name && e.name.toLowerCase().indexOf(keyword) >= 0) ||
+      (e.nameZh && e.nameZh.indexOf(keyword) >= 0) ||
       (e.target && e.target.toLowerCase().indexOf(keyword) >= 0) ||
       (e.bodyPart && e.bodyPart.toLowerCase().indexOf(keyword) >= 0)
     )

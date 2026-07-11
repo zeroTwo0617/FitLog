@@ -1,6 +1,6 @@
 <view class="page">
   <view class="search">
-    <input class="search-input" placeholder="搜索动作 / 肌群（英文）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
+    <input class="search-input" placeholder="搜索动作（中文 / 英文均可）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
   </view>
 
   <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
@@ -10,7 +10,7 @@
   <view class="list">
     <view wx:for="{{list}}" wx:key="id" class="card" bindtap="onToggle" data-id="{{item.id}}">
       <view class="card-top">
-        <text class="name">{{item.name}}</text>
+        <text class="name">{{item.nameZh}}</text>
         <text class="chev">{{expandedId===item.id ? '收起' : '做法'}}</text>
       </view>
       <view class="meta">{{item.bpZh}} · {{item.eqZh}} · {{item.tgZh}}</view>
