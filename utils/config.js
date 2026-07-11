@@ -6,7 +6,7 @@ const config = {
   APP_ID: 'wx371390f8ed0c6037',
 
   // 云开发环境 ID，例如 'fitlog-1g2h3k4i5j6k'
-  CLOUD_ENV: '请替换为你的云环境ID',
+  CLOUD_ENV: 'cloud1-d6g8h90dje10f421e',
 
   // 云数据库集合名（统一在此维护，避免散落硬编码）
   COLLECTIONS: {
