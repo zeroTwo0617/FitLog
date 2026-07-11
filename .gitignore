@@ -1,0 +1,23 @@
+# 微信小程序 / 云开发
+miniprogram_npm/
+node_modules/
+cloudfunctions/**/node_modules/
+
+# 本地私钥与配置（勿提交）
+project.private.config.json
+*.key
+*.pem
+env.json
+
+# 日志
+*.log
+npm-debug.log*
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 构建产物
+dist/
