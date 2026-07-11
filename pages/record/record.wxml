@@ -1,0 +1,57 @@
+<view class="page record">
+  <view class="topbar">
+    <text class="date">{{today}}</text>
+    <text class="title">记录训练</text>
+  </view>
+
+  <!-- 当前训练 -->
+  <view class="session" wx:if="{{session.length > 0}}">
+    <view class="ex-card" wx:for="{{session}}" wx:key="exerciseId">
+      <view class="ex-head">
+        <text class="ex-name">{{item.name}}</text>
+        <text class="ex-del" bindtap="removeExercise" data-idx="{{index}}">移除</text>
+      </view>
+      <view class="set-row head">
+        <text class="c-no">组</text>
+        <text class="c-reps">次数</text>
+        <text class="c-weight">重量</text>
+        <text class="c-rest">休息</text>
+        <text class="c-op"></text>
+      </view>
+      <view class="set-row" wx:for="{{item.sets}}" wx:for-item="s" wx:for-index="si" wx:key="si">
+        <text class="c-no">{{si + 1}}</text>
+        <input class="c-reps inp" type="number" value="{{s.reps}}" bindinput="onReps" data-idx="{{index}}" data-sidx="{{si}}" />
+        <input class="c-weight inp" type="digit" value="{{s.weight}}" bindinput="onWeight" data-idx="{{index}}" data-sidx="{{si}}" />
+        <input class="c-rest inp" type="number" value="{{s.rest}}" bindinput="onRest" data-idx="{{index}}" data-sidx="{{si}}" />
+        <text class="c-op del" bindtap="removeSet" data-idx="{{index}}" data-sidx="{{si}}">×</text>
+      </view>
+      <button class="add-set" size="mini" bindtap="addSet" data-idx="{{index}}">+ 添加一组</button>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{session.length === 0}}">
+    <text>还没有动作，点下方「添加动作」开始记录</text>
+  </view>
+
+  <!-- 添加动作 -->
+  <button class="btn-add" bindtap="togglePicker">{{showPicker ? '收起选择器' : '添加动作'}}</button>
+
+  <!-- 动作选择器 -->
+  <view class="picker" wx:if="{{showPicker}}">
+    <view class="search">
+      <input class="search-input" placeholder="搜索动作（中文 / 英文均可）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
+    </view>
+    <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
+      <view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat === item.key ? 'chip-on' : ''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}}</view>
+    </scroll-view>
+    <scroll-view class="pick-list" scroll-y="true">
+      <view wx:for="{{pickerList}}" wx:key="id" class="pick-item" bindtap="addExercise" data-id="{{item.id}}">
+        <text class="pick-name">{{item.nameZh}}</text>
+        <text class="pick-meta">{{item.bpZh}} · {{item.eqZh}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 保存 -->
+  <button class="btn-save" bindtap="save" disabled="{{saving}}">{{saving ? '保存中…' : '保存训练'}}</button>
+</view>

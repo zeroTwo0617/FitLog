@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/exercises/exercises"
+    "pages/exercises/exercises",
+    "pages/record/record"
   ],
   "window": {
     "navigationBarBackgroundColor": "#0f1115",

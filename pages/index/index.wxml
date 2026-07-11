@@ -15,4 +15,5 @@
     <button class="cloud-retry" size="mini" wx:if="{{cloud.status === 'error'}}" bindtap="syncCloud">重试</button>
   </view>
   <button class="btn-primary" bindtap="goExercises">浏览动作库</button>
+  <button class="btn-ghost" bindtap="goRecord">开始训练</button>
 </view>

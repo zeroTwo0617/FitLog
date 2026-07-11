@@ -43,5 +43,8 @@ Page({
   },
   goExercises() {
     wx.navigateTo({ url: '/pages/exercises/exercises' })
+  },
+  goRecord() {
+    wx.navigateTo({ url: '/pages/record/record' })
   }
 })

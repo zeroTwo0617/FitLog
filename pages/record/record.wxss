@@ -1,0 +1,219 @@
+.page.record {
+  padding-bottom: 60rpx;
+}
+
+/* 顶部栏 */
+.topbar {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+  margin-bottom: 28rpx;
+}
+
+.topbar .date {
+  color: var(--text-dim);
+  font-size: 26rpx;
+}
+
+.topbar .title {
+  font-size: 44rpx;
+  font-weight: 700;
+}
+
+/* 训练动作卡片 */
+.session {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.ex-card {
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius);
+  padding: 22rpx;
+}
+
+.ex-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14rpx;
+}
+
+.ex-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.ex-del {
+  color: #f87171;
+  font-size: 24rpx;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 10rpx 0;
+}
+
+.set-row.head {
+  color: var(--text-dim);
+  font-size: 22rpx;
+  border-bottom: 1rpx solid var(--border);
+  margin-bottom: 4rpx;
+}
+
+.c-no {
+  width: 56rpx;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 24rpx;
+  flex: none;
+}
+
+.c-reps, .c-weight, .c-rest {
+  flex: 1;
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+.c-op {
+  width: 48rpx;
+  text-align: center;
+  flex: none;
+}
+
+.inp {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface-2);
+  border: 1rpx solid var(--border);
+  border-radius: 12rpx;
+  padding: 12rpx 0;
+  color: var(--text);
+  font-size: 28rpx;
+  text-align: center;
+}
+
+.del {
+  color: #f87171;
+  font-size: 34rpx;
+}
+
+.add-set {
+  margin: 14rpx 0 0;
+  background: transparent;
+  color: var(--primary);
+  border: 1rpx solid var(--border);
+  font-size: 24rpx;
+}
+
+/* 空态 */
+.empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 100rpx 40rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+/* 添加动作按钮 */
+.btn-add {
+  margin: 32rpx 0 20rpx;
+  background: var(--surface);
+  color: var(--text);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius);
+  font-size: 28rpx;
+  padding: 20rpx 0;
+}
+
+/* 动作选择器 */
+.picker {
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius);
+  padding: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.search {
+  margin-bottom: 16rpx;
+}
+
+.search-input {
+  background: var(--surface-2);
+  border: 1rpx solid var(--border);
+  border-radius: 12rpx;
+  padding: 16rpx 22rpx;
+  color: var(--text);
+  font-size: 28rpx;
+}
+
+.cats {
+  white-space: nowrap;
+  margin-bottom: 16rpx;
+}
+
+.chip {
+  display: inline-block;
+  padding: 10rpx 26rpx;
+  margin-right: 12rpx;
+  background: var(--surface-2);
+  border: 1rpx solid var(--border);
+  border-radius: 999rpx;
+  color: var(--text-dim);
+  font-size: 24rpx;
+}
+
+.chip-on {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+  border-color: transparent;
+}
+
+.pick-list {
+  max-height: 560rpx;
+}
+
+.pick-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  padding: 18rpx 12rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.pick-item:active {
+  background: var(--surface-2);
+}
+
+.pick-name {
+  font-size: 28rpx;
+  color: var(--text);
+}
+
+.pick-meta {
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+/* 保存按钮 */
+.btn-save {
+  margin-top: 12rpx;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+  border-radius: var(--radius);
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 22rpx 0;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(79, 140, 255, 0.35);
+}
+
+.btn-save[disabled] {
+  opacity: 0.6;
+}
