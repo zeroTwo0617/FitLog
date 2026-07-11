@@ -9,6 +9,8 @@
         "postcss": true,
         "minified": false,
         "newFeature": true,
+        "ignoreDevUnusedFiles": false,
+        "ignoreUploadUnusedFiles": false,
         "babelSetting": {
             "ignore": [],
             "disablePlugins": [],
