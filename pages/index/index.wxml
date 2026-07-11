@@ -1,0 +1,10 @@
+<view class="page hero">
+  <view class="badge">FITLOG</view>
+  <text class="title">训练记录本</text>
+  <text class="sub">结构化记录你的每一组训练，让进步看得见</text>
+  <view class="stat">
+    <text class="stat-num">{{count}}</text>
+    <text class="stat-label">个内置动作</text>
+  </view>
+  <button class="btn-primary" bindtap="goExercises">浏览动作库</button>
+</view>

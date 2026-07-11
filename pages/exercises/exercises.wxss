@@ -1,0 +1,113 @@
+.search {
+  margin-bottom: 20rpx;
+}
+
+.search-input {
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius);
+  padding: 18rpx 24rpx;
+  color: var(--text);
+  font-size: 28rpx;
+}
+
+.cats {
+  white-space: nowrap;
+  margin-bottom: 20rpx;
+}
+
+.chip {
+  display: inline-block;
+  padding: 12rpx 28rpx;
+  margin-right: 14rpx;
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+  border-radius: 999rpx;
+  color: var(--text-dim);
+  font-size: 26rpx;
+}
+
+.chip-on {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+  border-color: transparent;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.card {
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius);
+  padding: 24rpx;
+  transition: all .2s ease;
+}
+
+.card:active {
+  transform: scale(0.99);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.chev {
+  color: var(--primary);
+  font-size: 24rpx;
+}
+
+.meta {
+  color: var(--text-dim);
+  font-size: 24rpx;
+  margin-top: 8rpx;
+}
+
+.steps {
+  margin-top: 18rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.step {
+  display: flex;
+  gap: 14rpx;
+}
+
+.step-no {
+  flex: none;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--primary);
+  font-size: 22rpx;
+  text-align: center;
+  line-height: 36rpx;
+}
+
+.step-txt {
+  flex: 1;
+  color: var(--text);
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 80rpx 0;
+}

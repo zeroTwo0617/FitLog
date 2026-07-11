@@ -1,0 +1,25 @@
+<view class="page">
+  <view class="search">
+    <input class="search-input" placeholder="搜索动作 / 肌群（英文）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
+  </view>
+
+  <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
+    <view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat===item.key?'chip-on':''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}}</view>
+  </scroll-view>
+
+  <view class="list">
+    <view wx:for="{{list}}" wx:key="id" class="card" bindtap="onToggle" data-id="{{item.id}}">
+      <view class="card-top">
+        <text class="name">{{item.name}}</text>
+        <text class="chev">{{expandedId===item.id ? '收起' : '做法'}}</text>
+      </view>
+      <view class="meta">{{item.bpZh}} · {{item.eqZh}} · {{item.tgZh}}</view>
+      <view wx:if="{{expandedId===item.id}}" class="steps">
+        <view wx:for="{{item.steps}}" wx:for-item="s" wx:key="index" class="step">
+          <text class="step-no">{{index+1}}</text><text class="step-txt">{{s}}</text>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{list.length===0}}" class="empty">没有匹配的动作，换个关键词试试</view>
+  </view>
+</view>

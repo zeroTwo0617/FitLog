@@ -1,0 +1,16 @@
+{
+  "description": "FitLog 训练记录本 - 微信小程序",
+  "appid": "touristappid",
+  "projectname": "fitlog-miniprogram",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": false,
+    "newFeature": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "latest",
+  "condition": {}
+}

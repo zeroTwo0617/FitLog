@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/exercises/exercises"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#0f1115",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0f1115",
+    "navigationBarTitleText": "FitLog"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

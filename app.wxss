@@ -1,0 +1,37 @@
+page {
+  --bg: #0f1115;
+  --surface: #171a21;
+  --surface-2: #1f232c;
+  --border: rgba(255, 255, 255, 0.07);
+  --text: #e8eaed;
+  --text-dim: #9aa0a6;
+  --primary: #4f8cff;
+  --primary-2: #7c5cff;
+  --radius: 16rpx;
+  --gap: 24rpx;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-size: 28rpx;
+}
+
+.page {
+  padding: var(--gap);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 22rpx 0;
+  text-align: center;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(79, 140, 255, 0.35);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
