@@ -1,16 +1,29 @@
 {
-  "description": "FitLog 训练记录本 - 微信小程序",
-  "appid": "touristappid",
-  "projectname": "fitlog-miniprogram",
-  "setting": {
-    "urlCheck": false,
-    "es6": true,
-    "enhance": true,
-    "postcss": true,
-    "minified": false,
-    "newFeature": true
-  },
-  "compileType": "miniprogram",
-  "libVersion": "latest",
-  "condition": {}
+    "description": "FitLog 训练记录本 - 微信小程序",
+    "appid": "wx371390f8ed0c6037",
+    "projectname": "fitlog-miniprogram",
+    "setting": {
+        "urlCheck": false,
+        "es6": true,
+        "enhance": true,
+        "postcss": true,
+        "minified": false,
+        "newFeature": true,
+        "babelSetting": {
+            "ignore": [],
+            "disablePlugins": [],
+            "outputPath": ""
+        }
+    },
+    "compileType": "miniprogram",
+    "libVersion": "latest",
+    "condition": {},
+    "packOptions": {
+        "ignore": [],
+        "include": []
+    },
+    "editorSetting": {
+        "tabIndent": "insertSpaces",
+        "tabSize": 4
+    }
 }

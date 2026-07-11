@@ -1,4 +1,4 @@
-const PRESET = require('../data/exercises.preset.json')
+const PRESET = require('../data/exercises.preset.js')
 
 const BODY_PART_ZH = {
   'upper arms': '上臂', 'upper legs': '大腿', 'back': '背部', 'waist': '腰/核心',
