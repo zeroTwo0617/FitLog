@@ -5,7 +5,7 @@
   justify-content: flex-start;
   gap: 20rpx;
   padding-top: 160rpx;
-  padding-bottom: 60rpx;
+  padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
 }
 
 .badge {

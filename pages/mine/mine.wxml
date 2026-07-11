@@ -1,0 +1,34 @@
+<view class="page tab-page">
+  <view class="profile">
+    <view class="avatar">🏋️</view>
+    <view class="pinfo">
+      <text class="pname">FitLog 用户</text>
+      <view class="pstatus pstatus-{{cloud.status}}">
+        <view class="pdot"></view>
+        <text>{{cloud.text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="stat-card">
+    <text class="stat-num">{{workoutCount}}</text>
+    <text class="stat-label">次训练记录</text>
+  </view>
+
+  <view class="menu">
+    <view class="menu-item" bindtap="goHistory">
+      <text class="mi-label">训练历史</text>
+      <text class="mi-arrow">›</text>
+    </view>
+    <view class="menu-item disabled">
+      <text class="mi-label">训练计划</text>
+      <text class="mi-tag">敬请期待</text>
+    </view>
+    <view class="menu-item disabled">
+      <text class="mi-label">数据统计</text>
+      <text class="mi-tag">敬请期待</text>
+    </view>
+  </view>
+
+  <view class="foot">FitLog · 让进步看得见</view>
+</view>

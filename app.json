@@ -4,13 +4,25 @@
     "pages/exercises/exercises",
     "pages/record/record",
     "pages/history/history",
-    "pages/history-detail/history-detail"
+    "pages/history-detail/history-detail",
+    "pages/mine/mine"
   ],
   "window": {
     "navigationBarBackgroundColor": "#0f1115",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#0f1115",
     "navigationBarTitleText": "FitLog"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#9aa0a6",
+    "selectedColor": "#4f8cff",
+    "backgroundColor": "#0f1115",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/exercises/exercises", "text": "动作库" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
+    ]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"

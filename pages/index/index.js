@@ -19,6 +19,9 @@ Page({
     this.setData({ count: ex.PRESET.length })
   },
   onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 0 })
+    }
     this.syncCloud()
   },
   // 验证云端链路：登录 + 读写 users 集合
@@ -42,7 +45,7 @@ Page({
       })
   },
   goExercises() {
-    wx.navigateTo({ url: '/pages/exercises/exercises' })
+    wx.switchTab({ url: '/pages/exercises/exercises' })
   },
   goRecord() {
     wx.navigateTo({ url: '/pages/record/record' })

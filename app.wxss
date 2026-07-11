@@ -21,6 +21,10 @@ page {
   box-sizing: border-box;
 }
 
+.tab-page {
+  padding-bottom: calc(var(--gap) + 150rpx + env(safe-area-inset-bottom));
+}
+
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-2));
   color: #fff;
