@@ -46,5 +46,8 @@ Page({
   },
   goRecord() {
     wx.navigateTo({ url: '/pages/record/record' })
+  },
+  goHistory() {
+    wx.navigateTo({ url: '/pages/history/history' })
   }
 })

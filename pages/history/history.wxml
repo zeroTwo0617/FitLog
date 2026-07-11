@@ -1,0 +1,23 @@
+<view class="page history">
+  <view class="h-top">
+    <text class="h-title">训练历史</text>
+    <text class="h-sub">按日期倒序 · 共 {{list.length}} 次</text>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">加载中…</view>
+
+  <view class="list" wx:if="{{!loading && list.length > 0}}">
+    <view class="card" wx:for="{{list}}" wx:key="_id" bindtap="goDetail" data-id="{{item._id}}">
+      <view class="card-top">
+        <text class="date">{{item.dateStr}}</text>
+        <text class="count">{{item.exercises.length}} 个动作 · {{item.setTotal}} 组</text>
+      </view>
+      <view class="names">{{item.namesText}}</view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && list.length === 0}}">
+    <text>还没有训练记录</text>
+    <text class="empty-sub">去首页点「开始训练」记录第一次吧</text>
+  </view>
+</view>

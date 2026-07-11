@@ -2,7 +2,9 @@
   "pages": [
     "pages/index/index",
     "pages/exercises/exercises",
-    "pages/record/record"
+    "pages/record/record",
+    "pages/history/history",
+    "pages/history-detail/history-detail"
   ],
   "window": {
     "navigationBarBackgroundColor": "#0f1115",

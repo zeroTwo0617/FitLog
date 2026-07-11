@@ -1,0 +1,84 @@
+.detail {
+  padding-bottom: 60rpx;
+}
+
+.loading {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 80rpx 0;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  margin-bottom: 28rpx;
+}
+
+.head .date {
+  font-size: 44rpx;
+  font-weight: 700;
+}
+
+.head .summary {
+  color: var(--text-dim);
+  font-size: 26rpx;
+}
+
+.group {
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius);
+  padding: 22rpx;
+  margin-bottom: var(--gap);
+}
+
+.group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.g-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.g-count {
+  color: var(--text-dim);
+  font-size: 24rpx;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 0;
+  font-size: 28rpx;
+}
+
+.set-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.c-no {
+  width: 64rpx;
+  text-align: center;
+  color: var(--primary);
+  font-size: 24rpx;
+  flex: none;
+}
+
+.c-reps, .c-weight, .c-rest {
+  flex: 1;
+  text-align: center;
+  color: var(--text);
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 120rpx 40rpx;
+}
