@@ -2,9 +2,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 20rpx;
   padding-top: 160rpx;
+  padding-bottom: 60rpx;
 }
 
 .badge {
