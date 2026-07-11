@@ -2,17 +2,5 @@
   <view class="badge">FITLOG</view>
   <text class="title">训练记录本</text>
   <text class="sub">结构化记录你的每一组训练，让进步看得见</text>
-  <view class="stat">
-    <text class="stat-num">{{count}}</text>
-    <text class="stat-label">个内置动作</text>
-  </view>
-  <view class="cloud-card cloud-{{cloud.status}}">
-    <view class="cloud-dot"></view>
-    <view class="cloud-text">
-      <text class="cloud-title">{{cloud.text}}</text>
-      <text class="cloud-sub" wx:if="{{cloud.profileText}}">{{cloud.profileText}}</text>
-    </view>
-    <button class="cloud-retry" size="mini" wx:if="{{cloud.status === 'error'}}" bindtap="syncCloud">重试</button>
-  </view>
   <button class="btn-primary" bindtap="goRecord">开始训练</button>
 </view>
