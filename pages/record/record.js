@@ -1,6 +1,7 @@
 const ex = require('../../utils/exerciseData.js')
 const cloud = require('../../utils/cloud.js')
 const auth = require('../../utils/auth.js')
+const pd = require('../../utils/planData.js')
 
 function fmtToday() {
   const d = new Date()
@@ -17,6 +18,8 @@ Page({
   data: {
     today: fmtToday(),
     session: [],      // [{exerciseId, name, nameEn, sets:[{reps,weight,rest}]}]
+    planId: '',         // 若由计划发起则关联
+    title: '',          // 计划名（自动带入，可留空）
     showPicker: false,
     keyword: '',
     activeCat: '',
@@ -25,8 +28,32 @@ Page({
     saving: false
   },
 
-  onLoad() {
+  onLoad(options) {
     this.refreshPicker()
+    if (options && options.planId) {
+      this.loadPlan(options.planId)
+    }
+  },
+
+  // 由训练计划发起：读取计划并预填 session
+  loadPlan(planId) {
+    const db = cloud.db()
+    db.collection(cloud.C.PLANS).doc(planId).get()
+      .then((res) => {
+        const plan = res && res.data ? res.data : null
+        if (!plan) return
+        const session = pd.planToSession(plan, ex)
+        this.setData({
+          session,
+          planId: planId,
+          title: plan.name || '',
+          today: fmtToday()
+        })
+      })
+      .catch((err) => {
+        console.error('从计划预填失败', err)
+        wx.showToast({ title: '计划加载失败', icon: 'none' })
+      })
   },
 
   // ===== 动作选择器 =====
@@ -139,7 +166,7 @@ Page({
     this.setData({ saving: true })
     const db = cloud.db()
 
-    auth.ensureUser()
+    return auth.ensureUser()
       .then(() => {
         const summary = session.map(s => ({
           exerciseId: s.exerciseId,
@@ -151,7 +178,8 @@ Page({
           data: {
             date: new Date(),
             dateStr: this.data.today,
-            title: '',
+            title: this.data.title || '',
+            planId: this.data.planId || '',
             exercises: summary,
             setTotal: session.reduce((acc, s) => acc + s.sets.length, 0),
             createdAt: new Date()

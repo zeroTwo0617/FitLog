@@ -5,7 +5,10 @@
     "pages/record/record",
     "pages/history/history",
     "pages/history-detail/history-detail",
-    "pages/mine/mine"
+    "pages/mine/mine",
+    "pages/plans/plans",
+    "pages/plan-edit/plan-edit",
+    "pages/plan-detail/plan-detail"
   ],
   "window": {
     "navigationBarBackgroundColor": "#0f1115",

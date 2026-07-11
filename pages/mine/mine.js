@@ -35,5 +35,8 @@ Page({
   },
   goHistory() {
     wx.navigateTo({ url: '/pages/history/history' })
+  },
+  goPlans() {
+    wx.navigateTo({ url: '/pages/plans/plans' })
   }
 })

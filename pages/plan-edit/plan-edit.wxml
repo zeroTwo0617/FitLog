@@ -1,0 +1,56 @@
+<view class="page edit">
+  <view class="field">
+    <text class="label">计划名称</text>
+    <input class="name-inp" placeholder="如：练胸日 / 练腿日" value="{{name}}" bindinput="onName" maxlength="20" />
+  </view>
+
+  <view class="sec-title">动作与目标</view>
+
+  <!-- 已选动作 -->
+  <view class="items" wx:if="{{items.length > 0}}">
+    <view class="item" wx:for="{{items}}" wx:key="exerciseId">
+      <view class="item-head">
+        <text class="item-name">{{item.exerciseName}}</text>
+        <text class="item-del" bindtap="removeItem" data-idx="{{index}}">移除</text>
+      </view>
+      <view class="targets">
+        <view class="tg">
+          <text class="tg-label">组数</text>
+          <input class="tg-inp" type="number" value="{{item.targetSets}}" bindinput="onTarget" data-idx="{{index}}" data-field="targetSets" />
+        </view>
+        <view class="tg">
+          <text class="tg-label">次数</text>
+          <input class="tg-inp" type="digit" value="{{item.targetReps}}" bindinput="onTarget" data-idx="{{index}}" data-field="targetReps" placeholder="可选" />
+        </view>
+        <view class="tg">
+          <text class="tg-label">重量kg</text>
+          <input class="tg-inp" type="digit" value="{{item.targetWeight}}" bindinput="onTarget" data-idx="{{index}}" data-field="targetWeight" placeholder="可选" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{items.length === 0}}">
+    <text>还没有动作，点下方「添加动作」</text>
+  </view>
+
+  <button class="btn-add" bindtap="togglePicker">{{showPicker ? '收起选择器' : '添加动作'}}</button>
+
+  <!-- 动作选择器 -->
+  <view class="picker" wx:if="{{showPicker}}">
+    <view class="search">
+      <input class="search-input" placeholder="搜索动作（中文 / 英文均可）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
+    </view>
+    <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
+      <view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat === item.key ? 'chip-on' : ''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}}</view>
+    </scroll-view>
+    <scroll-view class="pick-list" scroll-y="true">
+      <view wx:for="{{pickerList}}" wx:key="id" class="pick-item" bindtap="addExercise" data-id="{{item.id}}">
+        <text class="pick-name">{{item.nameZh}}</text>
+        <text class="pick-meta">{{item.bpZh}} · {{item.eqZh}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <button class="btn-save" bindtap="save">保存计划</button>
+</view>

@@ -1,7 +1,7 @@
 <view class="page record">
   <view class="topbar">
     <text class="date">{{today}}</text>
-    <text class="title">记录训练</text>
+    <text class="title">{{title ? title : '记录训练'}}</text>
   </view>
 
   <!-- 当前训练 -->

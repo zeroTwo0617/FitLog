@@ -20,9 +20,9 @@
       <text class="mi-label">训练历史</text>
       <text class="mi-arrow">›</text>
     </view>
-    <view class="menu-item disabled">
+    <view class="menu-item" bindtap="goPlans">
       <text class="mi-label">训练计划</text>
-      <text class="mi-tag">敬请期待</text>
+      <text class="mi-arrow">›</text>
     </view>
     <view class="menu-item disabled">
       <text class="mi-label">数据统计</text>

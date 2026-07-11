@@ -1,0 +1,75 @@
+.head {
+  margin-bottom: 30rpx;
+}
+
+.d-name {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 700;
+}
+
+.d-sub {
+  display: block;
+  margin-top: 12rpx;
+  color: var(--text-dim);
+  font-size: 26rpx;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.d-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 28rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.d-ex {
+  font-size: 32rpx;
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+}
+
+.d-targets {
+  display: flex;
+  gap: 10rpx;
+  flex-shrink: 0;
+}
+
+.d-chip {
+  font-size: 22rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(79, 140, 255, 0.18);
+  color: #9ec1ff;
+  white-space: nowrap;
+}
+
+.d-chip.dim {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-dim);
+}
+
+.btn-start {
+  width: 100%;
+  margin-top: 40rpx;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--radius);
+  padding: 24rpx 0;
+}
+
+.btn-start:active {
+  transform: scale(0.98);
+}
