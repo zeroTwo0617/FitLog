@@ -53,22 +53,6 @@
   margin-top: 20rpx;
 }
 
-.btn-ghost {
-  width: 60%;
-  margin-top: 18rpx;
-  background: var(--surface);
-  color: var(--text);
-  border: 1rpx solid var(--border);
-  border-radius: var(--radius);
-  padding: 22rpx 0;
-  text-align: center;
-  font-weight: 600;
-}
-
-.btn-ghost:active {
-  transform: scale(0.98);
-}
-
 /* 云端连接状态卡片 */
 .cloud-card {
   display: flex;

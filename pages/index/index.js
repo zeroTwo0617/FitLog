@@ -44,13 +44,7 @@ Page({
         })
       })
   },
-  goExercises() {
-    wx.switchTab({ url: '/pages/exercises/exercises' })
-  },
   goRecord() {
     wx.navigateTo({ url: '/pages/record/record' })
-  },
-  goHistory() {
-    wx.navigateTo({ url: '/pages/history/history' })
   }
 })
