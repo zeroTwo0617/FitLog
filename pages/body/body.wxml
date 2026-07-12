@@ -1,0 +1,77 @@
+<view class="page tab-page">
+  <view class="head">
+    <text class="h-title">身体数据</text>
+    <text class="h-sub">记录体重 / 体脂 / 围度，追踪长期变化</text>
+  </view>
+
+  <!-- 录入表单 -->
+  <view class="card">
+    <picker mode="date" value="{{date}}" bindchange="onDate">
+      <view class="field">
+        <text class="fl">日期</text>
+        <text class="fv">{{date}} ›</text>
+      </view>
+    </picker>
+    <view class="grid">
+      <view class="g-item">
+        <text class="gl">体重 kg</text>
+        <input class="gi" type="digit" value="{{weight}}" bindinput="onWeight" placeholder="可选" />
+      </view>
+      <view class="g-item">
+        <text class="gl">体脂 %</text>
+        <input class="gi" type="digit" value="{{fatPct}}" bindinput="onFat" placeholder="可选" />
+      </view>
+      <view class="g-item">
+        <text class="gl">胸围 cm</text>
+        <input class="gi" type="digit" value="{{chest}}" bindinput="onChest" placeholder="可选" />
+      </view>
+      <view class="g-item">
+        <text class="gl">腰围 cm</text>
+        <input class="gi" type="digit" value="{{waist}}" bindinput="onWaist" placeholder="可选" />
+      </view>
+      <view class="g-item">
+        <text class="gl">臂围 cm</text>
+        <input class="gi" type="digit" value="{{arm}}" bindinput="onArm" placeholder="可选" />
+      </view>
+      <view class="g-item">
+        <text class="gl">腿围 cm</text>
+        <input class="gi" type="digit" value="{{thigh}}" bindinput="onThigh" placeholder="可选" />
+      </view>
+    </view>
+    <input class="note" value="{{note}}" bindinput="onNote" placeholder="备注（可选）" />
+    <button class="btn-save" bindtap="save" disabled="{{saving}}">{{saving ? '保存中…' : '保存记录'}}</button>
+  </view>
+
+  <!-- 体重趋势 -->
+  <view class="card" wx:if="{{hasData && trend.length > 1}}">
+    <text class="card-title">体重趋势</text>
+    <view class="chart">
+      <view class="bar-col" wx:for="{{trend}}" wx:key="dateStr">
+        <view class="bar" style="height:{{item.heightPct}}%"></view>
+        <text class="bar-day">{{item.dateStr.slice(5)}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史列表 -->
+  <view class="card" wx:if="{{hasData}}">
+    <text class="card-title">历史记录</text>
+    <view class="rec" wx:for="{{records}}" wx:key="_id">
+      <text class="rec-date">{{item.dateStr}}</text>
+      <view class="rec-vals">
+        <text class="rv" wx:if="{{item.weight}}">体重 {{item.weight}}kg</text>
+        <text class="rv" wx:if="{{item.fatPct}}">体脂 {{item.fatPct}}%</text>
+        <text class="rv" wx:if="{{item.chest}}">胸 {{item.chest}}</text>
+        <text class="rv" wx:if="{{item.waist}}">腰 {{item.waist}}</text>
+        <text class="rv" wx:if="{{item.arm}}">臂 {{item.arm}}</text>
+        <text class="rv" wx:if="{{item.thigh}}">腿 {{item.thigh}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!hasData}}">
+    <text class="empty-emoji">📏</text>
+    <text class="empty-text">还没有身体数据</text>
+    <text class="empty-sub">在上面填表，记录第一次测量吧</text>
+  </view>
+</view>

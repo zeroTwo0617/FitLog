@@ -38,5 +38,11 @@ Page({
   },
   goPlans() {
     wx.navigateTo({ url: '/pages/plans/plans' })
+  },
+  goStats() {
+    wx.navigateTo({ url: '/pages/stats/stats' })
+  },
+  goBody() {
+    wx.navigateTo({ url: '/pages/body/body' })
   }
 })

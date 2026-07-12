@@ -5,6 +5,8 @@
     "pages/record/record",
     "pages/history/history",
     "pages/history-detail/history-detail",
+    "pages/stats/stats",
+    "pages/body/body",
     "pages/mine/mine",
     "pages/plans/plans",
     "pages/plan-edit/plan-edit",
