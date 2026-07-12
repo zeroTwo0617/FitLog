@@ -7,7 +7,7 @@
       <text class="summary">{{groups.length}} 个动作 · {{workout.setTotal}} 组</text>
     </view>
 
-    <view class="group" wx:for="{{groups}}" wx:key="exerciseId">
+    <view class="card" wx:for="{{groups}}" wx:key="exerciseId">
       <view class="group-head">
         <text class="g-name">{{item.name}}</text>
         <text class="g-count">{{item.setCount}} 组</text>

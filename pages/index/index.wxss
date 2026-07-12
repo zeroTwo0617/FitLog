@@ -6,9 +6,24 @@
   gap: 20rpx;
   padding-top: 160rpx;
   padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
+  position: relative;
+}
+
+/* soft brand glow behind the badge for depth */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 120rpx;
+  width: 420rpx;
+  height: 420rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 140, 255, 0.18), transparent 70%);
+  filter: blur(10rpx);
+  pointer-events: none;
 }
 
 .badge {
+  position: relative;
   letter-spacing: 8rpx;
   color: var(--primary);
   font-weight: 700;
@@ -16,11 +31,17 @@
 }
 
 .title {
-  font-size: 56rpx;
-  font-weight: 700;
+  position: relative;
+  font-size: 60rpx;
+  font-weight: 800;
+  background: linear-gradient(180deg, #ffffff, #c9d4ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .sub {
+  position: relative;
   color: var(--text-dim);
   font-size: 28rpx;
   text-align: center;
@@ -29,6 +50,7 @@
 }
 
 .hero .btn-primary {
-  width: 60%;
+  position: relative;
+  width: 64%;
   margin-top: 40rpx;
 }

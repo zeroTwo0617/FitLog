@@ -4,140 +4,49 @@
   gap: 24rpx;
   padding: 32rpx 28rpx;
   border-radius: var(--radius);
-  background: linear-gradient(135deg, rgba(79, 140, 255, 0.16), rgba(124, 92, 255, 0.16));
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.16), rgba(139, 92, 255, 0.16));
   border: 1rpx solid rgba(255, 255, 255, 0.08);
   margin-bottom: var(--gap);
 }
-
 .avatar {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 50%;
+  width: 96rpx; height: 96rpx; border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 52rpx;
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52rpx; flex-shrink: 0;
 }
+.pinfo { display: flex; flex-direction: column; gap: 10rpx; min-width: 0; }
+.pname { font-size: 34rpx; font-weight: 700; }
 
-.pinfo {
-  display: flex;
-  flex-direction: column;
-  gap: 10rpx;
-  min-width: 0;
-}
+.pstatus { display: flex; align-items: center; gap: 10rpx; font-size: 24rpx; color: var(--text-dim); }
+.pdot { width: 14rpx; height: 14rpx; border-radius: 50%; background: #9ca3af; }
+.pstatus-ok .pdot { background: var(--success); box-shadow: 0 0 10rpx var(--success); }
+.pstatus-error .pdot { background: var(--danger); box-shadow: 0 0 10rpx var(--danger); }
+.pstatus-pending .pdot { background: var(--warn); animation: mpulse 1.2s ease-in-out infinite; }
+@keyframes mpulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-.pname {
-  font-size: 34rpx;
-  font-weight: 700;
-}
-
-.pstatus {
-  display: flex;
-  align-items: center;
-  gap: 10rpx;
-  font-size: 24rpx;
-  color: var(--text-dim);
-}
-
-.pdot {
-  width: 14rpx;
-  height: 14rpx;
-  border-radius: 50%;
-  background: #9ca3af;
-}
-
-.pstatus-ok .pdot {
-  background: #34d399;
-  box-shadow: 0 0 10rpx #34d399;
-}
-
-.pstatus-error .pdot {
-  background: #f87171;
-  box-shadow: 0 0 10rpx #f87171;
-}
-
-.pstatus-pending .pdot {
-  background: #fbbf24;
-  animation: mpulse 1.2s ease-in-out infinite;
-}
-
-@keyframes mpulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-.stat-card {
-  display: flex;
-  align-items: baseline;
-  gap: 12rpx;
-  padding: var(--gap);
-  border-radius: var(--radius);
-  background: var(--surface);
-  border: 1rpx solid var(--border);
-  margin-bottom: var(--gap);
-}
-
+/* 统计卡：外观由全局 .card 提供 */
+.stat-card { display: flex; align-items: baseline; gap: 12rpx; margin-bottom: var(--gap); }
 .stat-num {
-  font-size: 64rpx;
-  font-weight: 800;
+  font-size: 64rpx; font-weight: 800;
   background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
+.stat-label { color: var(--text-dim); }
 
-.stat-label {
-  color: var(--text-dim);
-}
-
-.menu {
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--radius);
-  background: var(--surface);
-  border: 1rpx solid var(--border);
-  overflow: hidden;
-}
-
+/* 菜单：外观由全局 .card 提供 */
+.menu { display: flex; flex-direction: column; overflow: hidden; }
 .menu-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 30rpx 28rpx;
   border-bottom: 1rpx solid var(--border);
 }
-
-.menu-item:last-child {
-  border-bottom: none;
-}
-
-.mi-label {
-  font-size: 30rpx;
-  font-weight: 500;
-}
-
-.mi-arrow {
-  color: var(--text-dim);
-  font-size: 36rpx;
-}
-
-.menu-item.disabled {
-  opacity: 0.55;
-}
-
+.menu-item:last-child { border-bottom: none; }
+.menu-item:active { background: var(--surface-2); }
+.mi-label { font-size: 30rpx; font-weight: 500; }
+.mi-arrow { color: var(--text-dim); font-size: 36rpx; }
+.menu-item.disabled { opacity: 0.55; }
 .mi-tag {
-  font-size: 22rpx;
-  color: var(--text-dim);
-  background: var(--surface-2);
-  padding: 6rpx 16rpx;
-  border-radius: 999rpx;
+  font-size: 22rpx; color: var(--text-dim);
+  background: var(--surface-2); padding: 6rpx 16rpx; border-radius: 999rpx;
 }
-
-.foot {
-  text-align: center;
-  color: var(--text-dim);
-  font-size: 22rpx;
-  margin-top: 48rpx;
-}
+.foot { text-align: center; color: var(--text-dim); font-size: 22rpx; margin-top: 48rpx; }

@@ -1,82 +1,11 @@
-.history {
-  padding-bottom: 60rpx;
-}
+.page.history { padding-bottom: 60rpx; }
 
-.h-top {
-  display: flex;
-  flex-direction: column;
-  gap: 6rpx;
-  margin-bottom: 28rpx;
-}
+.list { display: flex; flex-direction: column; gap: var(--gap); }
 
-.h-title {
-  font-size: 44rpx;
-  font-weight: 700;
-}
+.card { transition: transform 0.2s ease, border-color 0.2s ease; }
+.card:active { transform: scale(0.99); border-color: var(--primary); }
 
-.h-sub {
-  color: var(--text-dim);
-  font-size: 26rpx;
-}
-
-.loading {
-  text-align: center;
-  color: var(--text-dim);
-  padding: 80rpx 0;
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap);
-}
-
-.card {
-  background: var(--surface);
-  border: 1rpx solid var(--border);
-  border-radius: var(--radius);
-  padding: 24rpx;
-  transition: all .2s ease;
-}
-
-.card:active {
-  transform: scale(0.99);
-  border-color: var(--primary);
-}
-
-.card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.date {
-  font-size: 32rpx;
-  font-weight: 600;
-}
-
-.count {
-  color: var(--text-dim);
-  font-size: 24rpx;
-}
-
-.names {
-  margin-top: 12rpx;
-  color: var(--text);
-  font-size: 28rpx;
-  line-height: 1.5;
-}
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12rpx;
-  text-align: center;
-  color: var(--text-dim);
-  padding: 120rpx 40rpx;
-}
-
-.empty-sub {
-  font-size: 24rpx;
-}
+.card-top { display: flex; justify-content: space-between; align-items: baseline; }
+.date { font-size: 32rpx; font-weight: 600; }
+.count { color: var(--text-dim); font-size: 24rpx; }
+.names { margin-top: 12rpx; color: var(--text); font-size: 28rpx; line-height: 1.5; }

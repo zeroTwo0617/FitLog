@@ -10,12 +10,12 @@
     </view>
   </view>
 
-  <view class="stat-card">
+  <view class="card stat-card">
     <text class="stat-num">{{workoutCount}}</text>
     <text class="stat-label">次训练记录</text>
   </view>
 
-  <view class="menu">
+  <view class="card menu">
     <view class="menu-item" bindtap="goHistory">
       <text class="mi-label">训练历史</text>
       <text class="mi-arrow">›</text>

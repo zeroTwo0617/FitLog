@@ -1,5 +1,5 @@
 <view class="page edit">
-  <view class="field">
+  <view class="card field">
     <text class="label">计划名称</text>
     <input class="name-inp" placeholder="如：练胸日 / 练腿日" value="{{name}}" bindinput="onName" maxlength="20" />
   </view>
@@ -8,7 +8,7 @@
 
   <!-- 已选动作 -->
   <view class="items" wx:if="{{items.length > 0}}">
-    <view class="item" wx:for="{{items}}" wx:key="exerciseId">
+    <view class="card item" wx:for="{{items}}" wx:key="exerciseId">
       <view class="item-head">
         <text class="item-name">{{item.exerciseName}}</text>
         <text class="item-del" bindtap="removeItem" data-idx="{{index}}">移除</text>

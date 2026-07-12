@@ -1,20 +1,69 @@
+/* ========================================================================
+   FitLog · Global Design System
+   A single source of truth for tokens + reusable components.
+   Performance: content cards are translucent (no backdrop-filter) so
+   scrolling stays at 60fps; blur is reserved for fixed tabbar/sheets.
+   Motion: only transform/opacity are animated (GPU-friendly).
+   ======================================================================== */
+
 page {
+  /* ---- Color tokens ---- */
   --bg: #0f1115;
-  --surface: #171a21;
-  --surface-2: #1f232c;
+  --surface: #161922;
+  --surface-2: #1d2230;
+  --card-bg: rgba(255, 255, 255, 0.045);
+  --card-bg-hover: rgba(255, 255, 255, 0.07);
+  --card-border: rgba(255, 255, 255, 0.09);
   --border: rgba(255, 255, 255, 0.07);
-  --text: #e8eaed;
-  --text-dim: #9aa0a6;
+  --text: #eef1f6;
+  --text-dim: #9aa3b2;
+
   --primary: #4f8cff;
-  --primary-2: #7c5cff;
-  --radius: 16rpx;
+  --primary-2: #8b5cff;
+  --primary-soft: rgba(79, 140, 255, 0.14);
+  --primary-soft-2: rgba(139, 92, 255, 0.14);
+  --success: #34d399;
+  --warn: #fbbf24;
+  --danger: #f87171;
+
+  /* ---- Shape & depth ---- */
+  --radius-sm: 12rpx;
+  --radius: 20rpx;
+  --radius-lg: 28rpx;
+  --shadow-card: 0 8rpx 30rpx rgba(0, 0, 0, 0.35);
+  --shadow-btn: 0 10rpx 28rpx rgba(79, 140, 255, 0.30);
+  --shadow-glow: 0 0 18rpx rgba(79, 140, 255, 0.45);
+
+  /* ---- Spacing & type ---- */
   --gap: 24rpx;
-  background: var(--bg);
+  --pad: 28rpx;
+
+  /* Ambient depth: two soft brand glows over the dark base (static, cheap) */
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(79, 140, 255, 0.12), transparent 55%),
+    radial-gradient(120% 80% at 100% 100%, rgba(139, 92, 255, 0.12), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
   font-size: 28rpx;
 }
 
+/* ---------- Reset ---------- */
+view, text, input, scroll-view, button { box-sizing: border-box; }
+
+button {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  line-height: normal;
+  font-size: inherit;
+  color: inherit;
+}
+button::after { border: none; }
+
+/* ---------- Layout primitives ---------- */
 .page {
   padding: var(--gap);
   min-height: 100vh;
@@ -25,17 +74,221 @@ page {
   padding-bottom: calc(var(--gap) + 150rpx + env(safe-area-inset-bottom));
 }
 
-.btn-primary {
+/* ---------- Page header ---------- */
+.head, .h-top { margin-bottom: 30rpx; }
+
+.h-title {
+  display: block;
+  font-size: 46rpx;
+  font-weight: 700;
+  letter-spacing: 0.5rpx;
+  color: var(--text);
+}
+
+.h-sub {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ---------- Card (glass, no scroll blur) ---------- */
+.card {
+  background: var(--card-bg);
+  border: 1rpx solid var(--card-border);
+  border-radius: var(--radius);
+  padding: var(--pad);
+}
+
+.card-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 22rpx;
+  color: var(--text);
+}
+
+/* ---------- Gradient text (for big numbers) ---------- */
+.grad-text {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Buttons ---------- */
+.btn-primary,
+.btn-save,
+.btn-start {
+  width: 100%;
   background: linear-gradient(135deg, var(--primary), var(--primary-2));
   color: #fff;
+  border: none;
   border-radius: var(--radius);
   padding: 22rpx 0;
   text-align: center;
   font-weight: 600;
-  border: none;
-  box-shadow: 0 8rpx 24rpx rgba(79, 140, 255, 0.35);
+  font-size: 30rpx;
+  line-height: 1.4;
+  box-shadow: var(--shadow-btn);
 }
 
-.btn-primary:active {
+.btn-add {
+  width: 100%;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius);
+  padding: 20rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+}
+
+.btn-import {
+  width: 100%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1rpx dashed var(--primary);
+  border-radius: var(--radius);
+  padding: 22rpx 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 28rpx;
+}
+
+.btn-secondary {
+  width: 100%;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius);
+  padding: 22rpx 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 30rpx;
+}
+
+.btn-ghost {
+  width: 100%;
+  background: transparent;
+  color: var(--text);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius);
+  padding: 20rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+}
+
+.btn-primary:active,
+.btn-save:active,
+.btn-start:active,
+.btn-add:active,
+.btn-import:active,
+.btn-secondary:active,
+.btn-ghost:active {
   transform: scale(0.98);
+}
+
+.btn-primary[disabled],
+.btn-save[disabled],
+.btn-start[disabled],
+.btn-add[disabled],
+.btn-import[disabled],
+.btn-secondary[disabled],
+.btn-ghost[disabled] {
+  opacity: 0.55;
+}
+
+/* ---------- Chip ---------- */
+.chip {
+  display: inline-block;
+  padding: 12rpx 28rpx;
+  margin-right: 14rpx;
+  background: var(--surface-2);
+  border: 1rpx solid var(--border);
+  border-radius: 999rpx;
+  color: var(--text-dim);
+  font-size: 24rpx;
+  transition: all 0.2s ease;
+}
+
+.chip-on {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+  border-color: transparent;
+}
+
+/* ---------- Inputs ---------- */
+.input,
+.search-input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16rpx 18rpx;
+  color: var(--text);
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.search-input { padding: 18rpx 22rpx; border-radius: var(--radius); }
+
+/* ---------- Pill tag (targets, metrics) ---------- */
+.tag {
+  display: inline-block;
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  background: var(--primary-soft);
+  color: #9ec1ff;
+  white-space: nowrap;
+}
+.tag.dim { background: rgba(255, 255, 255, 0.06); color: var(--text-dim); }
+
+/* ---------- Empty state ---------- */
+.empty {
+  text-align: center;
+  padding: 90rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  color: var(--text-dim);
+}
+.empty-emoji { font-size: 76rpx; }
+.empty-text { font-size: 30rpx; font-weight: 600; color: var(--text); }
+.empty-sub { font-size: 24rpx; color: var(--text-dim); text-align: center; }
+
+/* ---------- Loading ---------- */
+.loading {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 90rpx 0;
+  font-size: 28rpx;
+}
+
+/* ---------- Divider ---------- */
+.divider {
+  height: 1rpx;
+  background: var(--border);
+  margin: 16rpx 0;
+}
+
+/* ---------- Bottom-sheet entrance (modal, fixed) ---------- */
+.sheet, .plan-sheet {
+  animation: sheetUp 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+/* ---------- One-shot page entrance (transform/opacity only) ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18rpx); }
+  to { opacity: 1; transform: none; }
+}
+.page > view:not(.picker-mask):not(.plan-picker-mask) {
+  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }

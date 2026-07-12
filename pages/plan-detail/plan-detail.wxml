@@ -5,7 +5,7 @@
   </view>
 
   <view class="items" wx:if="{{plan}}">
-    <view class="d-item" wx:for="{{plan.items}}" wx:key="exerciseId">
+    <view class="card d-item" wx:for="{{plan.items}}" wx:key="exerciseId">
       <text class="d-ex">{{item.exerciseName}}</text>
       <view class="d-targets">
         <text class="d-chip" wx:if="{{item.targetSets}}">{{item.targetSets}} 组</text>
