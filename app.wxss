@@ -220,19 +220,28 @@ button::after { border: none; }
 }
 
 /* ---------- Inputs ---------- */
+/* 关键：微信 <input> 必须显式 height + 相等 line-height，否则文字被上下裁切（只显示一半）。
+   垂直居中由 line-height 提供，padding 只负责左右内边距。 */
 .input,
 .search-input {
   width: 100%;
   background: var(--surface-2);
   border: 1rpx solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 16rpx 18rpx;
+  padding: 0 18rpx;
   color: var(--text);
   font-size: 28rpx;
+  height: 84rpx;
+  line-height: 84rpx;
   box-sizing: border-box;
 }
 
-.search-input { padding: 18rpx 22rpx; border-radius: var(--radius); }
+.search-input {
+  padding: 0 22rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: var(--radius);
+}
 
 /* ---------- Pill tag (targets, metrics) ---------- */
 .tag {
