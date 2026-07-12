@@ -107,8 +107,42 @@
   transform: scale(0.98);
 }
 
+/* 动作选择器：底部弹出遮罩面板，搜索框钉在顶部，永远在键盘上方 */
+.picker-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.sheet {
+  background: #16181d;
+  border-radius: 28rpx 28rpx 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8rpx 28rpx 28rpx;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.sheet-handle {
+  width: 72rpx;
+  height: 8rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.25);
+  margin: 10rpx auto 18rpx;
+}
+
 .search {
   margin-bottom: 16rpx;
+  flex-shrink: 0;
 }
 
 .search-input {
@@ -125,6 +159,7 @@
 .cats {
   white-space: nowrap;
   margin-bottom: 16rpx;
+  flex-shrink: 0;
 }
 
 .chip {
@@ -145,7 +180,8 @@
 }
 
 .pick-list {
-  max-height: 480rpx;
+  max-height: 56vh;
+  flex: 1;
 }
 
 .pick-item {

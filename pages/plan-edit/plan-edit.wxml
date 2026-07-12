@@ -36,20 +36,23 @@
 
   <button class="btn-add" bindtap="togglePicker">{{showPicker ? '收起选择器' : '添加动作'}}</button>
 
-  <!-- 动作选择器 -->
-  <view class="picker" wx:if="{{showPicker}}">
-    <view class="search">
-      <input class="search-input" placeholder="搜索动作（中文 / 英文均可）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
-    </view>
-    <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
-      <view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat === item.key ? 'chip-on' : ''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}}</view>
-    </scroll-view>
-    <scroll-view class="pick-list" scroll-y="true">
-      <view wx:for="{{pickerList}}" wx:key="id" class="pick-item" bindtap="addExercise" data-id="{{item.id}}">
-        <text class="pick-name">{{item.nameZh}}</text>
-        <text class="pick-meta">{{item.bpZh}} · {{item.eqZh}}</text>
+  <!-- 动作选择器（底部弹出遮罩面板） -->
+  <view class="picker-mask" wx:if="{{showPicker}}" bindtap="togglePicker">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-handle"></view>
+      <view class="search">
+        <input class="search-input" placeholder="搜索动作（中文 / 英文均可）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
       </view>
-    </scroll-view>
+      <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
+        <view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat === item.key ? 'chip-on' : ''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}}</view>
+      </scroll-view>
+      <scroll-view class="pick-list" scroll-y="true">
+        <view wx:for="{{pickerList}}" wx:key="id" class="pick-item" bindtap="addExercise" data-id="{{item.id}}">
+          <text class="pick-name">{{item.nameZh}}</text>
+          <text class="pick-meta">{{item.bpZh}} · {{item.eqZh}}</text>
+        </view>
+      </scroll-view>
+    </view>
   </view>
 
   <button class="btn-save" bindtap="save">保存计划</button>

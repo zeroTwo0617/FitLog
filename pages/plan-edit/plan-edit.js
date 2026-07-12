@@ -19,6 +19,8 @@ Page({
       this.loadPlan(options.id)
     }
   },
+  // 阻止面板内部点击冒泡到遮罩（避免误关闭）
+  noop() {},
   loadPlan(id) {
     const db = cloud.db()
     db.collection(cloud.C.PLANS).doc(id).get()
