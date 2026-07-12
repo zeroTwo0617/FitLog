@@ -4,12 +4,26 @@
     <text class="title">{{title ? title : '记录训练'}}</text>
   </view>
 
+  <!-- 计划导入 / 当前跟练计划 -->
+  <view class="plan-bar" wx:if="{{!planId}}">
+    <button class="btn-import" bindtap="openPlanPicker">📋 导入训练计划跟练</button>
+  </view>
+  <view class="plan-bar on" wx:if="{{planId}}">
+    <text class="plan-on-name">📋 {{title}} · 跟练中</text>
+    <text class="plan-on-clear" bindtap="clearPlan">取消关联</text>
+  </view>
+
   <!-- 当前训练 -->
   <view class="session" wx:if="{{session.length > 0}}">
     <view class="ex-card" wx:for="{{session}}" wx:key="exerciseId">
       <view class="ex-head">
         <text class="ex-name">{{item.name}}</text>
         <text class="ex-del" bindtap="removeExercise" data-idx="{{index}}">移除</text>
+      </view>
+      <view class="ex-target" wx:if="{{item.targetSets || item.targetReps || item.targetWeight}}">
+        <text wx:if="{{item.targetSets}}">目标 {{item.targetSets}} 组</text>
+        <text wx:if="{{item.targetReps}}">· {{item.targetReps}} 次</text>
+        <text wx:if="{{item.targetWeight}}">· {{item.targetWeight}} kg</text>
       </view>
       <view class="set-row head">
         <text class="c-no">组</text>
@@ -36,20 +50,39 @@
   <!-- 添加动作 -->
   <button class="btn-add" bindtap="togglePicker">{{showPicker ? '收起选择器' : '添加动作'}}</button>
 
-  <!-- 动作选择器 -->
-  <view class="picker" wx:if="{{showPicker}}">
-    <view class="search">
-      <input class="search-input" placeholder="搜索动作（中文 / 英文均可）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
-    </view>
-    <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
-      <view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat === item.key ? 'chip-on' : ''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}}</view>
-    </scroll-view>
-    <scroll-view class="pick-list" scroll-y="true">
-      <view wx:for="{{pickerList}}" wx:key="id" class="pick-item" bindtap="addExercise" data-id="{{item.id}}">
-        <text class="pick-name">{{item.nameZh}}</text>
-        <text class="pick-meta">{{item.bpZh}} · {{item.eqZh}}</text>
+  <!-- 动作选择器（底部弹出遮罩面板） -->
+  <view class="picker-mask" wx:if="{{showPicker}}" bindtap="togglePicker">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-handle"></view>
+      <view class="search">
+        <input class="search-input" placeholder="搜索动作（中文 / 英文均可）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
       </view>
-    </scroll-view>
+      <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
+        <view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat === item.key ? 'chip-on' : ''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}}</view>
+      </scroll-view>
+      <scroll-view class="pick-list" scroll-y="true">
+        <view wx:for="{{pickerList}}" wx:key="id" class="pick-item" bindtap="addExercise" data-id="{{item.id}}">
+          <text class="pick-name">{{item.nameZh}}</text>
+          <text class="pick-meta">{{item.bpZh}} · {{item.eqZh}}</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 导入训练计划选择器（底部弹出） -->
+  <view class="plan-picker-mask" wx:if="{{showPlanPicker}}" bindtap="closePlanPicker">
+    <view class="plan-sheet" catchtap="noop">
+      <view class="sheet-handle"></view>
+      <text class="sheet-title">选择训练计划</text>
+      <scroll-view class="plan-pick-list" scroll-y="true">
+        <view wx:for="{{planList}}" wx:key="_id" class="plan-pick-item" bindtap="pickPlan" data-id="{{item._id}}">
+          <text class="pp-name">{{item.name}}</text>
+          <text class="pp-meta">{{item.count}} 个动作</text>
+        </view>
+        <view wx:if="{{planList.length === 0}}" class="plan-empty">还没有计划，去「我的」页创建</view>
+      </scroll-view>
+      <button class="pp-cancel" bindtap="closePlanPicker">取消</button>
+    </view>
   </view>
 
   <!-- 保存 -->

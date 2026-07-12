@@ -25,7 +25,9 @@ Page({
     activeCat: '',
     categories: ex.categoryOptions(),
     pickerList: [],
-    saving: false
+    saving: false,
+    planList: [],          // 导入计划选择器列表
+    showPlanPicker: false
   },
 
   onLoad(options) {
@@ -35,14 +37,17 @@ Page({
     }
   },
 
-  // 由训练计划发起：读取计划并预填 session
+  // 阻止面板内点击冒泡误关
+  noop() {},
+
+  // 由训练计划发起：读取计划并（去重）合并进 session
   loadPlan(planId) {
     const db = cloud.db()
     db.collection(cloud.C.PLANS).doc(planId).get()
       .then((res) => {
         const plan = res && res.data ? res.data : null
         if (!plan) return
-        const session = pd.planToSession(plan, ex)
+        const session = pd.mergePlanIntoSession(this.data.session, plan, ex)
         this.setData({
           session,
           planId: planId,
@@ -54,6 +59,43 @@ Page({
         console.error('从计划预填失败', err)
         wx.showToast({ title: '计划加载失败', icon: 'none' })
       })
+  },
+
+  // ===== 导入训练计划（记录页内） =====
+  openPlanPicker() {
+    this.setData({ showPlanPicker: true })
+    const db = cloud.db()
+    db.collection(cloud.C.PLANS).limit(100).get()
+      .then((res) => {
+        const list = (res && res.data) || []
+        this.setData({
+          planList: list.map((p) => ({
+            _id: p._id,
+            name: p.name || '未命名计划',
+            count: (p.items && p.items.length) || 0
+          }))
+        })
+      })
+      .catch((err) => {
+        this.setData({ showPlanPicker: false })
+        wx.showToast({ title: '加载计划失败', icon: 'none' })
+        console.error('加载计划列表失败', err)
+      })
+  },
+
+  closePlanPicker() {
+    this.setData({ showPlanPicker: false })
+  },
+
+  pickPlan(e) {
+    const id = e.currentTarget.dataset.id
+    this.setData({ showPlanPicker: false })
+    if (id) this.loadPlan(id)
+  },
+
+  // 取消与计划的关联（保留已填动作，随时调整）
+  clearPlan() {
+    this.setData({ planId: '', title: '' })
   },
 
   // ===== 动作选择器 =====

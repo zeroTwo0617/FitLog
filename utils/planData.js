@@ -20,9 +20,23 @@ function planToSession(plan, ex) {
       exerciseId: it.exerciseId,
       name: it.exerciseName,
       nameEn: ex0 ? ex0.name : '',
+      targetSets: (it.targetSets != null && it.targetSets !== '') ? it.targetSets : '',
+      targetReps: (it.targetReps != null && it.targetReps !== '') ? it.targetReps : '',
+      targetWeight: (it.targetWeight != null && it.targetWeight !== '') ? it.targetWeight : '',
       sets: sets
     }
   })
+}
+
+// 把计划合并进当前 session（按 exerciseId 去重，仅追加不存在的动作）
+// 用于「记录页内导入计划」：手动添加的动作保留，计划动作补充进来
+function mergePlanIntoSession(existing, plan, ex) {
+  const incoming = planToSession(plan, ex)
+  const merged = (existing && Array.isArray(existing)) ? existing.slice() : []
+  incoming.forEach((it) => {
+    if (!merged.some((m) => m.exerciseId === it.exerciseId)) merged.push(it)
+  })
+  return merged
 }
 
 // 计划摘要（列表卡片用）：动作数 + 动作名文本
@@ -36,4 +50,4 @@ function planSummary(plan) {
   return { count: names.length, namesText: namesText }
 }
 
-module.exports = { planToSession, planSummary }
+module.exports = { planToSession, planSummary, mergePlanIntoSession }
