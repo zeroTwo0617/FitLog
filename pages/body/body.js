@@ -12,6 +12,7 @@ Page({
   data: {
     date: fmtToday(),
     dateStr: fmtToday(),
+    height: '',
     weight: '',
     fatPct: '',
     chest: '',
@@ -34,7 +35,15 @@ Page({
     db.collection(cloud.C.BODY).limit(100).get()
       .then((res) => {
         const records = (res && res.data) || []
-        const sorted = records.slice().sort((a, b) => (a.dateStr < b.dateStr ? 1 : -1)) // 倒序，最新在前
+        const sorted = records.slice().sort((a, b) => (a.dateStr < b.dateStr ? 1 : -1)).map((r) => {
+          // 由身高+体重派生 BMI（仅当两项齐全时）
+          let bmi = ''
+          if (r.weight && r.height) {
+            const h = Number(r.height) / 100
+            bmi = (Number(r.weight) / (h * h)).toFixed(1)
+          }
+          return Object.assign({}, r, { bmi: bmi })
+        }) // 倒序，最新在前
         const trend = sd.bodyTrend(records, 'weight')
         this.setData({
           records: sorted,
@@ -54,6 +63,7 @@ Page({
   },
 
   onWeight(e) { this.setData({ weight: e.detail.value }) },
+  onHeight(e) { this.setData({ height: e.detail.value }) },
   onFat(e) { this.setData({ fatPct: e.detail.value }) },
   onChest(e) { this.setData({ chest: e.detail.value }) },
   onWaist(e) { this.setData({ waist: e.detail.value }) },
@@ -64,7 +74,7 @@ Page({
   save() {
     if (this.data.saving) return
     const d = this.data
-    const hasAny = d.weight !== '' || d.fatPct !== '' || d.chest !== '' || d.waist !== '' || d.arm !== '' || d.thigh !== ''
+    const hasAny = d.height !== '' || d.weight !== '' || d.fatPct !== '' || d.chest !== '' || d.waist !== '' || d.arm !== '' || d.thigh !== ''
     if (!hasAny) {
       wx.showToast({ title: '至少填一项', icon: 'none' })
       return
@@ -74,6 +84,7 @@ Page({
     const rec = {
       date: new Date(d.date),
       dateStr: d.dateStr,
+      height: d.height === '' ? null : Number(d.height),
       weight: d.weight === '' ? null : Number(d.weight),
       fatPct: d.fatPct === '' ? null : Number(d.fatPct),
       chest: d.chest === '' ? null : Number(d.chest),
@@ -88,7 +99,7 @@ Page({
       .then(() => {
         this.setData({
           saving: false,
-          weight: '', fatPct: '', chest: '', waist: '', arm: '', thigh: '', note: ''
+          height: '', weight: '', fatPct: '', chest: '', waist: '', arm: '', thigh: '', note: ''
         })
         wx.showToast({ title: '已保存', icon: 'success' })
         this.load()

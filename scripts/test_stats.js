@@ -96,14 +96,15 @@ bodyInst.setData = function (obj) { Object.assign(this.data, obj) }
   ok(statsInst.data.calendar.length >= 28, 'stats 页：日历已生成')
   ok(statsInst.data.hasData === true, 'stats 页：hasData=true')
 
-  // body 保存
-  bodyInst.setData({ weight: '70', fatPct: '', chest: '95', waist: '80', arm: '', thigh: '' })
+  // body 保存（含身高）
+  bodyInst.setData({ height: '175', weight: '70', fatPct: '', chest: '95', waist: '80', arm: '', thigh: '' })
   await bodyInst.save()
   await new Promise((r) => setTimeout(r, 60))
 
   ok(MOCK_DB.bodyMetrics.length === 1, 'body 页：写入 1 条 bodyMetrics')
-  ok(MOCK_DB.bodyMetrics[0].weight === 70 && MOCK_DB.bodyMetrics[0].chest === 95, 'body 页：数值 Number 化正确')
+  ok(MOCK_DB.bodyMetrics[0].weight === 70 && MOCK_DB.bodyMetrics[0].height === 175 && MOCK_DB.bodyMetrics[0].chest === 95, 'body 页：身高/体重/围度 Number 化正确')
   ok(bodyInst.data.records.length === 1 && bodyInst.data.hasData === true, 'body 页：保存后历史加载 1 条')
+  ok(bodyInst.data.records[0].bmi === (70 / (1.75 * 1.75)).toFixed(1), 'body 页：BMI 由身高+体重派生正确')
 
   console.log('\n========================================')
   console.log('  功能 #6 自测：' + pass + ' 通过 / ' + fail + ' 失败')
