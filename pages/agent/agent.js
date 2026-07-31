@@ -28,7 +28,8 @@ Page({
     if (!backend.enabled()) return this.setData({ error: '后端服务尚未配置' })
     const messages = this.data.messages.concat([{ role: 'user', text: query }, { role: 'assistant', text: '' }])
     this.setData({ messages, input: '', loading: true, error: '', draft: null, lastQuery: query })
-    this.loadContext().then((context) => {
+    const login = backend.getToken() ? Promise.resolve() : auth.login()
+    login.then(() => this.loadContext()).then((context) => {
       return new Promise((resolve, reject) => {
         this.activeStream = backend.stream({
           data: { sessionId: this.data.sessionId, action: 'plan', query, context },

@@ -41,10 +41,10 @@ public class AgentService {
     }
 
     public void stream(AgentRequest request, String openid, SseEmitter emitter) {
-        rateLimit.check(openid);
         String sessionId = request.getSessionId() == null || request.getSessionId().isBlank()
                 ? UUID.randomUUID().toString().replace("-", "") : request.getSessionId().trim();
         try {
+            rateLimit.check(openid);
             validate(request);
             contentSafety.check(request.getQuery());
             send(emitter, "meta", Map.of("sessionId", sessionId, "providerAvailable", llm.available()));
