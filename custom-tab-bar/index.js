@@ -7,8 +7,8 @@ Component({
     list: [
       { pagePath: '/pages/index/index', text: '首页', icon: '◉' },
       { pagePath: '/pages/exercises/exercises', text: '动作', icon: '◎' },
-      { pagePath: '/pages/calendar/calendar', text: '日历', icon: '◌' },
       { pagePath: '/pages/agent/agent', text: '助手', icon: '✦' },
+      { pagePath: '/pages/calendar/calendar', text: '日历', icon: '◌' },
       { pagePath: '/pages/mine/mine', text: '我的', icon: '◍' }
     ]
   },
