@@ -22,14 +22,14 @@ function buildFallback() {
 
 Page({
   data: Object.assign({
-    theme: 'dark',
+    theme: 'light',
     todayText: formatToday(),
     loading: true
   }, buildFallback()),
 
   onShow() {
     this.setData({
-      theme: getApp().globalData.theme || 'dark',
+      theme: getApp().globalData.theme || 'light',
       todayText: formatToday()
     })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {

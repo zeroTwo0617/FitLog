@@ -17,16 +17,16 @@
     "pages/agent/agent"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#0f1115",
-    "navigationBarTextStyle": "white",
-    "backgroundColor": "#0f1115",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f8fa",
     "navigationBarTitleText": "FitLog"
   },
   "tabBar": {
     "custom": true,
-    "color": "#9aa0a6",
-    "selectedColor": "#4f8cff",
-    "backgroundColor": "#0f1115",
+    "color": "#7b8797",
+    "selectedColor": "#2563eb",
+    "backgroundColor": "#ffffff",
     "list": [
       { "pagePath": "pages/index/index", "text": "首页" },
       { "pagePath": "pages/exercises/exercises", "text": "动作库" },

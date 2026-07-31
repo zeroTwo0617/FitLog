@@ -1,4 +1,4 @@
-<view class="page tab-page ex theme-{{theme ? theme : 'dark'}}">
+<view class="page tab-page ex theme-{{theme ? theme : 'light'}}">
   <view class="hero-strip">
     <view>
       <text class="h-title">动作库</text>
@@ -32,12 +32,8 @@
     <scroll-view class="main" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}" scroll-top="{{scrollTop}}">
       <view class="grid">
         <view wx:for="{{list}}" wx:key="id" class="cell" hover-class="cell-hover" bindtap="onOpen" data-id="{{item.id}}">
-          <view class="thumb-wrap">
-            <image wx:if="{{item.gif}}" class="thumb" src="{{item.gif}}" mode="aspectFill" lazy-load="{{true}}" />
-            <view wx:else class="thumb ph">
-              <text class="ph-txt">{{item.initial}}</text>
-            </view>
-            <view wx:if="{{item.realGif}}" class="corner">GIF</view>
+          <view class="letter-mark">
+            <text>{{item.initial}}</text>
           </view>
           <view class="cell-copy">
             <view class="cell-tag-row">

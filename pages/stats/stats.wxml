@@ -1,4 +1,4 @@
-<view class="page tab-page theme-{{theme ? theme : 'dark'}}">
+<view class="page tab-page theme-{{theme ? theme : 'light'}}">
   <view class="head stats-head">
     <text class="h-title">数据统计</text>
     <text class="h-sub">训练量、打卡与力量成长，集中在一页看清</text>
@@ -39,6 +39,31 @@
           <view class="bar {{item.trained ? 'bar-on' : ''}}" style="height:{{item.heightPct}}%"></view>
           <text class="bar-day">{{item.day}}</text>
         </view>
+      </view>
+    </view>
+
+    <view class="card stats-card" wx:if="{{hasData}}">
+      <view class="section-head">
+        <text class="section-title">本月打卡</text>
+        <text class="section-meta">{{monthCheckins}} 天</text>
+      </view>
+      <view class="cal-week">
+        <text class="cal-wd">日</text>
+        <text class="cal-wd">一</text>
+        <text class="cal-wd">二</text>
+        <text class="cal-wd">三</text>
+        <text class="cal-wd">四</text>
+        <text class="cal-wd">五</text>
+        <text class="cal-wd">六</text>
+      </view>
+      <view class="cal-grid">
+        <view wx:for="{{calendar}}" wx:key="index" class="cal-cell {{item.trained ? 'on' : ''}} {{item.isToday ? 'today' : ''}}">
+          <text>{{item.day}}</text>
+        </view>
+      </view>
+      <view class="cal-legend">
+        <view class="lg-item"><view class="lg-dot on"></view><text>已训练</text></view>
+        <view class="lg-item"><view class="lg-dot"></view><text>未训练</text></view>
       </view>
     </view>
 

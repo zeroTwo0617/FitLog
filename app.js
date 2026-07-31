@@ -8,7 +8,7 @@ Page = function (options) {
   const onShow = options.onShow
   options.onShow = function (...args) {
     const g = getApp()
-    const t = (g && g.globalData && g.globalData.theme) || 'dark'
+    const t = (g && g.globalData && g.globalData.theme) || 'light'
     theme.syncNavBar(t)
     if (typeof onShow === 'function') return onShow.apply(this, args)
   }
@@ -17,7 +17,7 @@ Page = function (options) {
 
 App({
   globalData: {
-    theme: 'dark',
+    theme: 'light',
     cloudReady: false
   },
   onLaunch() {

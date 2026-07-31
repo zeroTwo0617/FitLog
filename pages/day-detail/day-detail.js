@@ -11,7 +11,7 @@ function fmtTime(iso) {
 
 Page({
   data: {
-    theme: 'dark',
+    theme: 'light',
     date: '',
     loading: true,
     sessions: [],
@@ -19,7 +19,7 @@ Page({
   },
 
   onLoad(options) {
-    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.setData({ theme: getApp().globalData.theme || 'light' })
     const date = (options && options.date) || ''
     if (!date) {
       wx.showToast({ title: '缺少日期', icon: 'none' })

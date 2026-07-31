@@ -1,4 +1,4 @@
-<view class="page detail theme-{{theme ? theme : 'dark'}}">
+<view class="page detail theme-{{theme ? theme : 'light'}}">
   <view class="head" wx:if="{{plan}}">
     <text class="d-name">{{plan.name}}</text>
     <text class="d-sub">{{plan.items.length}} 个动作</text>

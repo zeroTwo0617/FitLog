@@ -1,9 +1,8 @@
 const ex = require('../../utils/exerciseData.js')
-const backend = require('../../utils/backend.js')
 
 Page({
   data: {
-    theme: 'dark',
+    theme: 'light',
     keyword: '',
     activeCat: '',
     activeCatLabel: '全部动作',
@@ -14,7 +13,7 @@ Page({
   },
 
   onShow() {
-    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.setData({ theme: getApp().globalData.theme || 'light' })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 1 })
     }
@@ -41,34 +40,12 @@ Page({
       keyword: this.data.keyword,
       bodyPart: this.data.activeCat
     }).map((it) => Object.assign({}, it, {
-      initial: it.nameZh ? it.nameZh.charAt(0) : '',
-      gif: '',
-      realGif: false
+      initial: it.nameZh ? it.nameZh.charAt(0) : ''
     }))
     const active = this.data.categories.find((item) => item.key === this.data.activeCat)
     this.setData({
       list,
       activeCatLabel: active ? active.label : '全部动作'
-    })
-    this.loadMedia(list)
-  },
-
-  loadMedia(list) {
-    const ids = list.map((it) => it.id)
-    backend.getExerciseMediaMap(ids).then((map) => {
-      const updated = list.map((it) => {
-        const v = map[it.id] || {}
-        let gif = ''
-        let realGif = false
-        if (v.available && v.url) {
-          gif = backend.abs(v.url)
-          realGif = true
-        } else if (v.placeholder) {
-          gif = backend.abs(v.placeholder)
-        }
-        return Object.assign({}, it, { gif, realGif })
-      })
-      this.setData({ list: updated })
     })
   },
 

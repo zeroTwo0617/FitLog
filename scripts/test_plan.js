@@ -3,6 +3,7 @@ const path = require('path')
 
 // ---- 全局桩 ----
 global.Page = function (cfg) { global.__lastPage = cfg }
+global.getApp = () => ({ globalData: { theme: 'light' } })
 global.wx = {
   navigateTo: () => {},
   navigateBack: () => {},

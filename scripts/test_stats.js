@@ -10,9 +10,18 @@ function ok(cond, msg) {
 }
 
 // ============ 1) statsData 纯函数 ============
+const now = new Date()
+const fmt = (date) => {
+  const p = (n) => (n < 10 ? '0' + n : '' + n)
+  return date.getFullYear() + '-' + p(date.getMonth() + 1) + '-' + p(date.getDate())
+}
+const dateA = new Date(now)
+dateA.setDate(now.getDate() - 2)
+const dateB = new Date(now)
+dateB.setDate(now.getDate() - 1)
 const workouts = [
-  { _id: 'w1', dateStr: '2026-07-10' },
-  { _id: 'w2', dateStr: '2026-07-12' }
+  { _id: 'w1', dateStr: fmt(dateA) },
+  { _id: 'w2', dateStr: fmt(dateB) }
 ]
 const sets = [
   { sessionId: 'w1', exerciseId: 'a', exerciseName: '卧推', reps: 10, weight: 60 },
@@ -31,9 +40,11 @@ ok(trend.length === 14, 'volumeTrend 返回 14 天')
 ok(trend.filter(t => t.trained).length === 2, '趋势中 2 天标记 trained')
 ok(trend.every(t => t.heightPct >= 0 && t.heightPct <= 100), 'heightPct 在 0-100 区间')
 
-const cal = sd.buildCalendar(2026, 7, ['2026-07-10', '2026-07-12', '2026-07-12'])
+const monthDateA = new Date(now.getFullYear(), now.getMonth(), 1)
+const monthDateB = new Date(now.getFullYear(), now.getMonth(), 2)
+const cal = sd.buildCalendar(now.getFullYear(), now.getMonth() + 1, [monthDateA, monthDateB].map(fmt))
 ok(cal.length >= 28 && cal.length <= 42, 'buildCalendar 网格天数合理(含前置空格)')
-ok(cal.some(c => c.day === 10 && c.trained) && cal.some(c => c.day === 12 && c.trained), '日历标记 10/12 为打卡')
+ok(cal.some(c => c.day === monthDateA.getDate() && c.trained) && cal.some(c => c.day === monthDateB.getDate() && c.trained), '日历标记训练日期为打卡')
 ok(cal.some(c => c.isToday), '日历含今天标记')
 
 const bodyRecs = [
@@ -73,6 +84,7 @@ global.wx = {
 }
 global.__lastPage = null
 global.Page = (cfg) => { global.__lastPage = cfg }
+global.getApp = () => ({ globalData: { theme: 'light' } })
 
 require(abs('../pages/stats/stats.js'))
 const statsInst = Object.assign({}, global.__lastPage)

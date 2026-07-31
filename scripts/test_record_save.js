@@ -5,6 +5,7 @@ const path = require('path')
 // 1) 收集 Page(options)
 let pageOpts = null
 global.Page = (opts) => { pageOpts = opts }
+global.getApp = () => ({ globalData: { theme: 'light' } })
 
 // 2) 收集云写入（按集合名分桶，避免把 users 档案写入误计入 sets）
 const writes = { workouts: [], sets: [], other: [] }

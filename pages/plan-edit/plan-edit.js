@@ -13,7 +13,7 @@ Page({
     pickerList: []
   },
   onLoad(options) {
-    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.setData({ theme: getApp().globalData.theme || 'light' })
     this.refreshPicker()
     const draft = wx.getStorageSync('fitlog_agent_plan_draft')
     if (draft && draft.name && Array.isArray(draft.items)) {

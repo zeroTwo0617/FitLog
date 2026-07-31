@@ -15,18 +15,9 @@ const config = {
     SETS: 'sets',          // 组明细（一次训练的每组）
     PLANS: 'plans',        // 训练计划/模板
     BODY: 'bodyMetrics',   // 身体数据（体重/围度）
-    EXERCISES: 'exercises' // 预留：后续如需把动作库 seed 到云
-  },
-
-  // 后端服务地址（图片 / agent）。部署时改成已备案的 HTTPS 域名，
-  // 并在微信公众平台配置 request / downloadFile 合法域名。
-  // 开发环境后端地址；上线时替换为 HTTPS 域名，并配置微信合法域名。
-  BACKEND_BASE: 'http://localhost:8080',
-  BACKEND_TOKEN_KEY: 'fitlog_backend_token',
-
-  // 后端占位图地址（图片 API 关闭 / 无图时前端展示“暂无图片”）。
-  // 留空则由后端 /api/media/enabled 返回默认占位图地址。
-  BACKEND_PLACEHOLDER: ''
+    EXERCISES: 'exercises', // 动作库（可选，当前使用内置预设动作）
+    AGENT_SESSIONS: 'agentSessions' // Agent 会话消息，按云端 _openid 隔离
+  }
 }
 
 module.exports = config

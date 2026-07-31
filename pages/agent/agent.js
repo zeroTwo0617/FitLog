@@ -1,30 +1,56 @@
-const backend = require('../../utils/backend.js')
+const agent = require('../../utils/agent.js')
 
 Page({
   data: {
-    theme: 'dark',
-    messages: [{ role: 'assistant', content: '告诉我你的训练目标、每周可训练几天，以及有没有需要避开的动作。' }],
+    theme: 'light',
+    messages: agent.DEFAULT_MESSAGES,
     input: '',
     sending: false,
     sessionId: '',
     planDraft: null,
-    context: null
+    context: null,
+    loadingContext: true
   },
 
   onLoad() {
-    this.setData({ theme: getApp().globalData.theme || 'dark' })
-    backend.backendLogin().then(() => backend.buildAgentContext()).then((context) => {
-      this.setData({ context })
-    }).catch((err) => {
-      this.setData({ context: {} })
-      wx.showToast({ title: err.message || '后端连接失败', icon: 'none' })
-    })
+    this._destroyed = false
+    this._replyToken = 0
+    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.loadSession()
+  },
+
+  onUnload() {
+    this._destroyed = true
+    this._replyToken += 1
+    if (this.replyTimer) clearTimeout(this.replyTimer)
+    this.replyTimer = null
   },
 
   onShow() {
+    this.setData({ theme: getApp().globalData.theme || 'light' })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 2 })
     }
+  },
+
+  loadSession() {
+    const sessionId = wx.getStorageSync(agent.SESSION_KEY) || ''
+    Promise.all([
+      agent.buildContext(),
+      agent.loadSession(sessionId)
+    ]).then(([context, session]) => {
+      if (this._destroyed) return
+      const messages = session && agent.normalizeMessages(session.messages)
+      this.setData({
+        context,
+        loadingContext: false,
+        sessionId: session && session._id ? session._id : sessionId,
+        messages: messages && messages.length ? messages : agent.DEFAULT_MESSAGES
+      })
+    }).catch((err) => {
+      console.error('加载训练助手数据失败', err)
+      this.setData({ loadingContext: false, context: {}, messages: agent.DEFAULT_MESSAGES })
+    })
   },
 
   onInput(e) { this.setData({ input: e.detail.value }) },
@@ -32,34 +58,60 @@ Page({
   send() {
     const query = (this.data.input || '').trim()
     if (!query || this.data.sending) return
-    const messages = this.data.messages.concat([{ role: 'user', content: query }, { role: 'assistant', content: '' }])
-    this.setData({ messages, input: '', sending: true, planDraft: null })
+
+    const messages = this.data.messages.concat([
+      { role: 'user', content: query },
+      { role: 'assistant', content: '' }
+    ])
     const assistantIndex = messages.length - 1
-    const append = (text) => {
+    const replyToken = ++this._replyToken
+    this.setData({ messages, input: '', sending: true, planDraft: null })
+
+    const complete = () => {
+      this.replyTimer = null
+      if (this._destroyed || replyToken !== this._replyToken) return
+      const result = agent.reply(query, this.data.context || {})
       const next = this.data.messages.slice()
-      next[assistantIndex] = Object.assign({}, next[assistantIndex], { content: (next[assistantIndex].content || '') + text })
-      this.setData({ messages: next })
+      next[assistantIndex] = { role: 'assistant', content: result.text }
+      this.setData({ messages: next, planDraft: result.planDraft, sending: false })
+      agent.persistSession(this.data.sessionId, next, this.data.context || {})
+        .then((sessionId) => {
+          if (this._destroyed || !sessionId) return
+          wx.setStorageSync(agent.SESSION_KEY, sessionId)
+          this.setData({ sessionId })
+        })
+        .catch((err) => console.error('保存助手会话失败', err))
     }
-    const finish = () => this.setData({ sending: false })
-    const start = (context) => {
-      this.task = backend.streamAgent({ action: 'plan', query, sessionId: this.data.sessionId, context: context || {} }, {
-        onEvent: (event, data) => {
-          if (event === 'meta' && data.sessionId) this.setData({ sessionId: data.sessionId })
-          if (event === 'delta' && data.text) append(data.text)
-          if (event === 'plan' && data.planDraft) this.setData({ planDraft: data.planDraft })
-          if (event === 'done') finish()
-          if (event === 'error') { append('\n\n' + (data.message || 'Agent 暂时不可用')); finish() }
-        },
-        onAuthError: () => backend.backendLogin().then(() => start(context)).catch(() => { append('\n\n登录已过期，请稍后重试'); finish() }),
-        onError: (err) => { append('\n\n' + (err.message || '请求失败')); finish() }
-      })
-    }
-    start(this.data.context)
+    if (typeof wx.nextTick === 'function') wx.nextTick(complete)
+    else this.replyTimer = setTimeout(complete, 0)
   },
 
   stop() {
-    if (this.task && this.task.abort) this.task.abort()
+    if (this.replyTimer) clearTimeout(this.replyTimer)
+    this.replyTimer = null
+    this._replyToken += 1
     this.setData({ sending: false })
+  },
+
+  retry() {
+    const messages = this.data.messages.slice()
+    let lastQuery = ''
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === 'user') {
+        lastQuery = messages[i].content
+        break
+      }
+    }
+    if (!lastQuery || this.data.sending) return
+    messages.pop()
+    messages.pop()
+    this.setData({ messages, input: lastQuery }, () => this.send())
+  },
+
+  clearSession() {
+    if (this.data.sending) return
+    wx.removeStorageSync(agent.SESSION_KEY)
+    this.setData({ messages: agent.DEFAULT_MESSAGES, sessionId: '', planDraft: null })
   },
 
   saveDraft() {

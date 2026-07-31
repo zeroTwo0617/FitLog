@@ -4,7 +4,7 @@ const theme = require('../../utils/theme.js')
 
 Page({
   data: {
-    theme: 'dark',
+    theme: 'light',
     cloud: { status: 'pending', text: '正在同步...' },
     profile: null,
     displayName: 'FitLog 用户',
@@ -13,7 +13,7 @@ Page({
   },
 
   onShow() {
-    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.setData({ theme: getApp().globalData.theme || 'light' })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 4 })
     }

@@ -1,4 +1,4 @@
-<view class="page history theme-{{theme ? theme : 'dark'}}">
+<view class="page history theme-{{theme ? theme : 'light'}}">
   <view class="h-top">
     <text class="h-title">训练历史</text>
     <text class="h-sub">按日期倒序，回看每次训练的完成情况</text>

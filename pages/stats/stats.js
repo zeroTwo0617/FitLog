@@ -9,11 +9,12 @@ Page({
     totalVolume: 0,
     monthCheckins: 0,
     trend: [],
-    maxByExercise: []
+    maxByExercise: [],
+    calendar: []
   },
 
   onShow() {
-    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.setData({ theme: getApp().globalData.theme || 'light' })
     this.load()
   },
 
@@ -37,6 +38,7 @@ Page({
       const nm = now.getMonth() + 1
       const prefix = ny + '-' + (nm < 10 ? '0' + nm : nm) + '-'
       const monthCheckins = agg.trainedDates.filter((d) => d.indexOf(prefix) === 0).length
+      const calendar = sd.buildCalendar(ny, nm, agg.trainedDates)
 
       // 动作最大重量 Top5（带高度百分比）
       const maxW = agg.maxByExercise.length ? agg.maxByExercise[0].max : 0
@@ -51,7 +53,8 @@ Page({
         totalVolume: agg.totalVolume,
         monthCheckins: monthCheckins,
         trend: trend,
-        maxByExercise: maxByExercise
+        maxByExercise: maxByExercise,
+        calendar: calendar
       })
     }).catch((err) => {
       this.setData({ loading: false })

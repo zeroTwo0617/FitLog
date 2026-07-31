@@ -1,4 +1,4 @@
-<view class="page tab-page theme-{{theme ? theme : 'dark'}}">
+<view class="page tab-page theme-{{theme ? theme : 'light'}}">
   <view class="overview-card">
     <text class="overview-kicker">训练模板</text>
     <text class="overview-title">把常用组合收成计划</text>

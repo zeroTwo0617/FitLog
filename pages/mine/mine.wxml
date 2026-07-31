@@ -1,4 +1,4 @@
-<view class="page tab-page theme-{{theme ? theme : 'dark'}}">
+<view class="page tab-page theme-{{theme ? theme : 'light'}}">
   <view class="profile-hero">
     <view class="avatar">FL</view>
     <view class="pinfo">

@@ -25,3 +25,12 @@ dist/
 # 测试用动作 GIF（© Gymvisual，仅本地预览/验证用，不入库）
 # 上线前改为自托管 CDN 并保留署名；详见 assets/exercise-gif/README.md
 assets/exercise-gif/*.gif
+
+# 后端已移除；本地遗留的媒体与编译缓存不参与小程序版本控制
+fitlog-backend/media/
+fitlog-backend/target/
+fitlog-backend/.idea/
+
+# 本地模型注入配置，禁止进入版本库
+**/application-local.yml
+**/application_local.yml

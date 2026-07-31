@@ -1,4 +1,4 @@
-<view class="page record theme-{{theme ? theme : 'dark'}}">
+<view class="page record theme-{{theme ? theme : 'light'}}">
   <view class="head record-head">
     <text class="h-title">{{title ? title : '记录训练'}}</text>
     <text class="h-sub">{{today}} · 记录每一组有效训练</text>

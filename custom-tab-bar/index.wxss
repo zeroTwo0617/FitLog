@@ -57,8 +57,11 @@
 }
 
 .theme-light.tabbar {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(15, 17, 21, 0.08);
+  background: #ffffff;
+  border-color: #e3e8ef;
+  box-shadow: 0 8rpx 22rpx rgba(31, 48, 74, 0.08);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .theme-light .tab-pill {
@@ -66,6 +69,6 @@
 }
 
 .theme-light .tab.active .tab-pill {
-  color: #1f2937;
-  background: linear-gradient(135deg, rgba(79, 140, 255, 0.18), rgba(139, 92, 255, 0.14));
+  color: #1d4ed8;
+  background: #eaf2ff;
 }

@@ -9,7 +9,7 @@ function fmtNow() {
 
 Page({
   data: {
-    theme: 'dark',
+    theme: 'light',
     loading: true,
     calYear: 0,
     calMonth: 0,
@@ -29,7 +29,7 @@ Page({
   },
 
   onShow() {
-    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.setData({ theme: getApp().globalData.theme || 'light' })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 3 })
     }

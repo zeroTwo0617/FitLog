@@ -1,4 +1,4 @@
-<view class="page tab-page theme-{{theme ? theme : 'dark'}}">
+<view class="page tab-page theme-{{theme ? theme : 'light'}}">
   <view class="head">
     <text class="h-title">身体数据</text>
     <text class="h-sub">记录身高 / 体重 / 体脂 / 围度，追踪长期变化</text>

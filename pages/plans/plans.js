@@ -3,14 +3,14 @@ const pd = require('../../utils/planData.js')
 
 Page({
   data: {
-    theme: 'dark',
+    theme: 'light',
     list: [],
     loading: true,
     totalExercises: 0
   },
 
   onShow() {
-    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.setData({ theme: getApp().globalData.theme || 'light' })
     this.load()
   },
 

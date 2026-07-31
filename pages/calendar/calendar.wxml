@@ -1,4 +1,4 @@
-<view class="page tab-page theme-{{theme ? theme : 'dark'}}">
+<view class="page tab-page theme-{{theme ? theme : 'light'}}">
   <view class="calendar-hero">
     <view class="head">
       <text class="h-title">训练日历</text>

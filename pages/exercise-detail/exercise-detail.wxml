@@ -1,12 +1,10 @@
-<view class="page detail theme-{{theme ? theme : 'dark'}}">
+<view class="page detail theme-{{theme ? theme : 'light'}}">
   <view class="loading" wx:if="{{loading}}">加载中…</view>
 
   <block wx:if="{{!loading && ex}}">
     <view class="hero">
-      <image wx:if="{{ex.gif}}" class="hero-gif" src="{{ex.gif}}" mode="aspectFill" lazy-load="{{true}}" />
-      <view wx:else class="hero ph">
-        <text class="ph-txt">{{ex.initial}}</text>
-      </view>
+      <text class="hero-initial">{{ex.initial}}</text>
+      <text class="hero-caption">动作说明</text>
     </view>
 
     <view class="title-block">
@@ -28,7 +26,6 @@
       </view>
     </view>
 
-    <view wx:if="{{ex.realGif}}" class="credit">动态演示 · © Gymvisual</view>
   </block>
 
   <view class="empty" wx:if="{{!loading && !ex}}">

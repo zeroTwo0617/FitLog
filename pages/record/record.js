@@ -40,7 +40,7 @@ Page({
   },
 
   onLoad(options) {
-    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.setData({ theme: getApp().globalData.theme || 'light' })
     this.refreshPicker()
     if (options && options.planId) {
       this.loadPlan(options.planId)

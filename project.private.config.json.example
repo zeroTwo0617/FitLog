@@ -1,0 +1,13 @@
+{
+  "description": "本地微信开发者工具配置模板。复制为 project.private.config.json 后按需修改；不要提交复制后的私有文件。",
+  "projectname": "fitlog-miniprogram",
+  "setting": {
+    "compileHotReLoad": true,
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": false,
+    "newFeature": true
+  }
+}

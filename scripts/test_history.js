@@ -25,6 +25,7 @@ console.log('✅ 纯函数单测通过（sortWorkouts / buildGroups）')
 // ===== 2) mock 云 + Page，验证页面读取 =====
 let pageOpts = null
 global.Page = (opts) => { pageOpts = opts }
+global.getApp = () => ({ globalData: { theme: 'light' } })
 
 const MOCK = {
   workouts: [
