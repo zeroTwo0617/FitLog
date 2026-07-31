@@ -65,6 +65,5 @@ Page({
 
   toggleTheme() {
     theme.toggle()
-    this.setData({ theme: theme.getTheme() })
   }
 })

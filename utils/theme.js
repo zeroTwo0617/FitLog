@@ -9,6 +9,8 @@ const NAV = {
   light: { frontColor: '#000000', backgroundColor: '#f3f5fa' }
 }
 
+let syncedNavTheme = ''
+
 function getTheme() {
   const s = wx.getStorageSync(KEY)
   return s === 'light' || s === 'dark' ? s : 'dark'
@@ -17,10 +19,12 @@ function getTheme() {
 // 同步原生顶栏颜色（frontColor 仅支持 #ffffff / #000000）
 function syncNavBar(t) {
   const cfg = NAV[t] || NAV.dark
+  if (syncedNavTheme === t) return
+  syncedNavTheme = t
   wx.setNavigationBarColor({
     frontColor: cfg.frontColor,
     backgroundColor: cfg.backgroundColor,
-    animation: { duration: 200, timingFunc: 'ease' }
+    animation: { duration: 0, timingFunc: 'linear' }
   })
 }
 
@@ -29,11 +33,10 @@ function setTheme(t) {
   wx.setStorageSync(KEY, t)
   const app = getApp()
   if (app && app.globalData) app.globalData.theme = t
-  // 广播给当前页面栈，立即生效
+  // 只更新当前可见页；隐藏页会在 onShow 时读取 globalData，避免大页面同时重绘。
   const pages = getCurrentPages()
-  pages.forEach((p) => {
-    if (p && typeof p.setData === 'function') p.setData({ theme: t })
-  })
+  const current = pages[pages.length - 1]
+  if (current && typeof current.setData === 'function') current.setData({ theme: t })
   // 立即同步当前可见页的顶栏颜色
   syncNavBar(t)
 }
