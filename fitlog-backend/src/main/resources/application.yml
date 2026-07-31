@@ -45,6 +45,8 @@ fitlog:
     max-query-length: ${AGENT_MAX_QUERY_LENGTH:2000}
     max-context-items: ${AGENT_MAX_CONTEXT_ITEMS:30}
     rate-limit-per-minute: ${AGENT_RATE_LIMIT_PER_MINUTE:20}
+  database:
+    auto-migrate: ${DB_AUTO_MIGRATE:true}
   content-safety:
     # 生产环境接入微信内容安全 API；开发环境保留轻量 mock 拦截。
     mock: ${CONTENT_SAFETY_MOCK:true}
