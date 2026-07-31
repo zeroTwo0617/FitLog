@@ -97,27 +97,100 @@ function parseSseBuffer(buffer, onEvent) {
   return remainder
 }
 
+function createUtf8Decoder() {
+  if (typeof TextDecoder === 'function') {
+    const decoder = new TextDecoder('utf-8')
+    return {
+      decode(data) { return decoder.decode(data, { stream: true }) },
+      flush() { return decoder.decode() }
+    }
+  }
+
+  let pending = []
+  return {
+    decode(data) {
+      const bytes = Array.from(new Uint8Array(data))
+      const all = pending.concat(bytes)
+      let completeLength = all.length
+      if (all.length) {
+        let start = all.length - 1
+        while (start >= 0 && (all[start] & 0xc0) === 0x80) start--
+        if (start >= 0) {
+          const lead = all[start]
+          const expected = lead < 0x80 ? 1 : lead < 0xe0 ? 2 : lead < 0xf0 ? 3 : 4
+          if (all.length - start < expected) completeLength = start
+        } else {
+          completeLength = 0
+        }
+      }
+      pending = all.slice(completeLength)
+      return decodeUtf8Bytes(all.slice(0, completeLength))
+    },
+    flush() {
+      const bytes = pending
+      pending = []
+      return decodeUtf8Bytes(bytes)
+    }
+  }
+}
+
+function decodeUtf8Bytes(bytes) {
+  let output = ''
+  for (let i = 0; i < bytes.length;) {
+    const first = bytes[i++]
+    if (first < 0x80) {
+      output += String.fromCharCode(first)
+      continue
+    }
+    const width = first < 0xe0 ? 2 : first < 0xf0 ? 3 : 4
+    if (i + width - 1 > bytes.length) {
+      output += '\ufffd'
+      break
+    }
+    let codePoint = first & (width === 2 ? 0x1f : width === 3 ? 0x0f : 0x07)
+    let valid = true
+    for (let j = 1; j < width; j++) {
+      const next = bytes[i++]
+      if ((next & 0xc0) !== 0x80) valid = false
+      codePoint = (codePoint << 6) | (next & 0x3f)
+    }
+    if (!valid || codePoint > 0x10ffff || (codePoint >= 0xd800 && codePoint <= 0xdfff)) {
+      output += '\ufffd'
+    } else if (codePoint <= 0xffff) {
+      output += String.fromCharCode(codePoint)
+    } else {
+      codePoint -= 0x10000
+      output += String.fromCharCode(0xd800 + (codePoint >> 10), 0xdc00 + (codePoint & 0x3ff))
+    }
+  }
+  return output
+}
+
 function streamAgent(payload, handlers) {
   if (!enabled()) {
     if (handlers && handlers.onError) handlers.onError(new Error('后端地址未配置'))
     return { abort() {} }
   }
   const token = getToken()
+  let buffer = ''
+  const utf8 = createUtf8Decoder()
   const task = wx.request({
     url: BACKEND_BASE + '/api/agent/stream', method: 'POST', data: payload,
     enableChunked: true, timeout: 60000,
     header: { 'content-type': 'application/json', Accept: '*/*', Authorization: 'Bearer ' + token },
     success: (res) => {
+      const tail = utf8.flush()
+      if (tail) buffer += tail
+      buffer = parseSseBuffer(buffer, (event, value) => handlers.onEvent && handlers.onEvent(event, value))
       if (res.statusCode === 401 && handlers.onAuthError) handlers.onAuthError()
       else if (res.statusCode >= 400 && handlers.onError) handlers.onError(new Error('Agent 请求失败'))
     },
     fail: (err) => handlers.onError && handlers.onError(err)
   })
-  let buffer = ''
   if (task && task.onChunkReceived) task.onChunkReceived((chunk) => {
     const data = chunk && chunk.data
     if (typeof data === 'string') buffer += data
-    else if (data) buffer += String.fromCharCode.apply(null, new Uint8Array(data))
+    else if (data) buffer += utf8.decode(data)
     buffer = parseSseBuffer(buffer, (event, value) => handlers.onEvent && handlers.onEvent(event, value))
   })
   return task
@@ -179,5 +252,7 @@ module.exports = {
   request,
   backendLogin,
   buildAgentContext,
-  streamAgent
+  streamAgent,
+  createUtf8Decoder,
+  parseSseBuffer
 }
