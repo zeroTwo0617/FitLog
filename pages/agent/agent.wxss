@@ -1,5 +1,5 @@
-.agent-page { min-height: 100vh; padding: 0; display: flex; flex-direction: column; }
-.messages { flex: 1; height: calc(100vh - 150rpx); padding: 28rpx; box-sizing: border-box; }
+.agent-page { min-height: 100vh; padding: 0 0 150rpx; box-sizing: border-box; display: flex; flex-direction: column; }
+.messages { flex: 1; min-height: 0; height: 0; padding: 28rpx; box-sizing: border-box; }
 .message { display: flex; margin-bottom: 20rpx; }
 .message.user { justify-content: flex-end; }
 .bubble { max-width: 78%; padding: 20rpx 24rpx; border-radius: 20rpx; background: var(--surface-2); color: var(--text); line-height: 1.55; white-space: pre-wrap; }
