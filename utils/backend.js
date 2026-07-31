@@ -1,7 +1,5 @@
 // 后端接入：图片 / agent 统一从这里走后端（Spring Boot 服务）。
-// 域名为空时自动回退到本地 GIF（旧行为），保证开发期无后端也有图。
 const config = require('./config.js')
-const { gifForId } = require('../data/exercise-gif-map.js')
 
 const BACKEND_BASE = (config.BACKEND_BASE || config.BACKEND_URL || '').replace(/\/+$/, '')
 const TOKEN_KEY = config.BACKEND_TOKEN_KEY || 'fitlog_backend_jwt'
@@ -130,12 +128,11 @@ function abs(url) {
   return BACKEND_BASE + url
 }
 
-// 未配置后端域名：回退本地 GIF 映射
-function localMap(ids) {
+// 后端未配置或不可用时只返回占位状态，不返回未经验证的本地图片路径。
+function emptyMediaMap(ids) {
   const map = {}
   ids.forEach((id) => {
-    const src = gifForId(id)
-    if (src) map[id] = { available: true, url: src, placeholder: PLACEHOLDER }
+    map[id] = { available: false, placeholder: PLACEHOLDER }
   })
   return map
 }
@@ -144,7 +141,7 @@ function localMap(ids) {
 function getExerciseMediaMap(ids) {
   return new Promise((resolve) => {
     if (!ids || !ids.length) return resolve({})
-    if (!BACKEND_BASE) return resolve(localMap(ids))
+    if (!BACKEND_BASE) return resolve(emptyMediaMap(ids))
     wx.request({
       url: BACKEND_BASE + '/api/media/map?ids=' + ids.join(','),
       timeout: 8000,
@@ -158,7 +155,7 @@ function getExerciseMediaMap(ids) {
 function getExerciseMedia(id) {
   return new Promise((resolve) => {
     if (!id) return resolve({})
-    if (!BACKEND_BASE) return resolve({ available: true, url: gifForId(id), placeholder: PLACEHOLDER })
+    if (!BACKEND_BASE) return resolve({ available: false, placeholder: PLACEHOLDER })
     wx.request({
       url: BACKEND_BASE + '/api/media/exercise/' + encodeURIComponent(id),
       timeout: 8000,

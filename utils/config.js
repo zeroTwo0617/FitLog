@@ -20,8 +20,8 @@ const config = {
 
   // 后端服务地址（图片 / agent）。部署时改成已备案的 HTTPS 域名，
   // 并在微信公众平台配置 request / downloadFile 合法域名。
-  // 为空时小程序回退到本地 GIF（开发期无后端也有图）。
-  BACKEND_BASE: '',
+  // 开发环境后端地址；上线时替换为 HTTPS 域名，并配置微信合法域名。
+  BACKEND_BASE: 'http://localhost:8080',
   BACKEND_TOKEN_KEY: 'fitlog_backend_token',
 
   // 后端占位图地址（图片 API 关闭 / 无图时前端展示“暂无图片”）。
