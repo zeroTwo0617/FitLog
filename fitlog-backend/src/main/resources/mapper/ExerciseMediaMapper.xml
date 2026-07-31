@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fitlog.backend.repository.ExerciseMediaMapper">
+    <sql id="columns">
+        exercise_id, media_type, storage_key, url, width, height, created_at
+    </sql>
+
+    <select id="selectByExerciseId" resultType="ExerciseMedia">
+        SELECT <include refid="columns"/>
+        FROM exercises_media
+        WHERE exercise_id = #{exerciseId}
+    </select>
+
+    <select id="selectByIds" resultType="ExerciseMedia">
+        SELECT <include refid="columns"/>
+        FROM exercises_media
+        WHERE exercise_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectAll" resultType="ExerciseMedia">
+        SELECT <include refid="columns"/>
+        FROM exercises_media
+    </select>
+
+    <insert id="insertIgnore" parameterType="ExerciseMedia">
+        INSERT IGNORE INTO exercises_media (exercise_id, media_type, storage_key)
+        VALUES (#{exerciseId}, #{mediaType}, #{storageKey})
+    </insert>
+</mapper>

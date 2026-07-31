@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitLog 数据控制台</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #f7f9fc;
+      --border: #e5eaf2;
+      --text: #182230;
+      --text-dim: #738095;
+      --primary: #2563eb;
+      --primary-soft: #eff6ff;
+      --success: #15803d;
+      --danger: #dc2626;
+      --shadow: 0 10px 30px rgba(36, 52, 77, .06);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+    }
+    #app { max-width: 1280px; margin: 0 auto; padding: 34px 28px 56px; }
+    header { margin-bottom: 26px; }
+    header h1 { font-size: 26px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -.3px; }
+    header p { margin: 0; color: var(--text-dim); font-size: 13px; }
+    header code { color: var(--primary); background: var(--primary-soft); }
+    .media-switch {
+      display: flex; align-items: center; gap: 12px; margin-top: 22px; padding: 16px 18px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow);
+      color: var(--text-dim);
+    }
+    .media-switch b.on { color: var(--success); }
+    .media-switch b.off { color: var(--danger); }
+    .media-switch .hint { margin-left: auto; color: var(--text-dim); font-size: 12px; }
+    .btn.sm { padding: 6px 13px; font-size: 13px; }
+    .tabs { display: flex; gap: 4px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+    .tab { padding: 12px 18px; cursor: pointer; color: var(--text-dim); border-bottom: 2px solid transparent; transition: all .18s ease; }
+    .tab:hover { color: var(--text); background: var(--surface-2); }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 650; }
+    .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+    .toolbar input[type=text] {
+      background: var(--surface); border: 1px solid var(--border); color: var(--text);
+      padding: 10px 13px; border-radius: 8px; outline: none; min-width: 260px; transition: border .18s, box-shadow .18s;
+    }
+    .toolbar input[type=text]:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,.10); }
+    .toolbar .filters { display: flex; gap: 8px; }
+    .btn { padding: 9px 16px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: all .18s ease; }
+    .btn:hover { border-color: #9db7e8; background: var(--primary-soft); }
+    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 10px rgba(37,99,235,.18); }
+    .btn.primary:hover { background: #1d4ed8; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+    .status { color: var(--text-dim); font-size: 13px; margin: 4px 0 10px; }
+    .status b { color: var(--text); }
+    .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: auto; max-height: 62vh; box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px; }
+    thead th { position: sticky; top: 0; background: #fbfcfe; color: var(--text-dim); text-align: left; padding: 13px 15px; font-weight: 650; white-space: nowrap; border-bottom: 1px solid var(--border); z-index: 1; }
+    tbody td { padding: 12px 15px; border-bottom: 1px solid #eef1f5; white-space: nowrap; max-width: 380px; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #f8fbff; }
+    .empty, .loading, .err { padding: 48px; text-align: center; color: var(--text-dim); }
+    .err { color: var(--danger); }
+    .pager { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
+    .pager .spacer { flex: 1; }
+    .pager select { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
+    footer { margin-top: 28px; color: var(--text-dim); font-size: 12px; text-align: center; }
+    code { background: var(--primary-soft); padding: 2px 6px; border-radius: 5px; color: var(--primary); }
+    .thumb-img { width: 58px; height: 58px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); background: #eef2f7; }
+    @media (max-width: 680px) {
+      #app { padding: 24px 14px 40px; }
+      header h1 { font-size: 22px; }
+      .media-switch { align-items: flex-start; flex-wrap: wrap; }
+      .media-switch .hint { width: 100%; margin-left: 0; }
+      .tabs { overflow-x: auto; white-space: nowrap; }
+      .tab { padding-left: 13px; padding-right: 13px; }
+      .toolbar input[type=text] { min-width: 0; width: 100%; }
+      .toolbar .filters { width: 100%; }
+      .toolbar .filters input { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>FitLog 数据控制台</h1>
+      <p>只读浏览后端数据 · 访问 <code>/api/admin/*</code> · 仅 localhost 调试用</p>
+      <div class="media-switch">
+        图片API：<b :class="mediaOn ? 'on' : 'off'">{{ mediaOn ? '● 已开启' : '○ 已关闭' }}</b>
+        <button class="btn sm" @click="toggleMedia">{{ mediaOn ? '关闭' : '开启' }}</button>
+        <span class="hint">关闭后 /api/media/* 全部回退占位图，前端“暂时没有图片”</span>
+      </div>
+    </header>
+
+    <div class="tabs">
+      <div v-for="t in tabs" :key="t.key"
+           :class="['tab', { active: activeTab === t.key }]"
+           @click="changeTab(t.key)">{{ t.label }}</div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" v-model="keyword" @keyup.enter="onSearch"
+             placeholder="关键字搜索（按当前表字段模糊匹配）" />
+      <span class="filters">
+        <input v-for="f in currentTab.filters" :key="f.key" type="text"
+               v-model="filters[f.key]" :placeholder="f.placeholder" />
+      </span>
+      <button class="btn primary" @click="onSearch">搜索</button>
+      <button class="btn" @click="reset">重置</button>
+    </div>
+
+    <div class="status" v-if="result">
+      共 <b>{{ result.total }}</b> 条 · 第 <b>{{ page }}</b> / {{ totalPages }} 页 · 每页 {{ result.size }}
+    </div>
+
+    <div class="table-wrap">
+      <table v-if="result && result.rows.length">
+        <thead>
+          <tr>
+            <th v-for="col in currentTab.cols" :key="col.key">{{ col.label }}</th>
+          </tr>
+        </thead>
+          <tbody>
+          <tr v-for="(row, i) in result.rows" :key="i">
+            <td v-for="col in currentTab.cols" :key="col.key">
+              <img v-if="col.type === 'img'" :src="row[col.key]" class="thumb-img" />
+              <span v-else :title="cell(row, col)">{{ truncate(cell(row, col), col.truncate) }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div v-else-if="loading" class="loading">加载中…</div>
+      <div v-else-if="error" class="err">{{ error }}</div>
+      <div v-else class="empty">无数据</div>
+    </div>
+
+    <div class="pager" v-if="result && result.rows.length">
+      <button class="btn" :disabled="page <= 1" @click="prev">← 上一页</button>
+      <button class="btn" :disabled="page >= totalPages" @click="next">下一页 →</button>
+      <span class="spacer"></span>
+      <label>每页
+        <select @change="onSize">
+          <option value="20" :selected="size===20">20</option>
+          <option value="50" :selected="size===50">50</option>
+          <option value="100" :selected="size===100">100</option>
+        </select>
+      </label>
+    </div>
+
+    <footer>FitLog Backend · Admin Console (M1b+) · 数据与生产同源，请勿外泄</footer>
+  </div>
+
+  <script>
+    const TABS = [
+      {
+        key: 'exercises_media',
+        label: '图片映射',
+        cols: [
+          { key: 'exerciseId', label: '动作ID' },
+          { key: 'previewUrl', label: '预览', type: 'img' },
+          { key: 'mediaType', label: '类型' },
+          { key: 'storageKey', label: '存储Key', truncate: 50 },
+          { key: 'url', label: 'URL', truncate: 60 },
+          { key: 'width', label: '宽' },
+          { key: 'height', label: '高' },
+          { key: 'createdAt', label: '创建时间' }
+        ],
+        filters: []
+      },
+      {
+        key: 'kb_chunks',
+        label: '知识块',
+        cols: [
+          { key: 'id', label: 'ID' },
+          { key: 'source', label: '来源' },
+          { key: 'refId', label: '关联ID' },
+          { key: 'chunkText', label: '文本', truncate: 80 },
+          { key: 'embedding', label: '向量', truncate: 36 },
+          { key: 'metaJson', label: '元信息', truncate: 60 },
+          { key: 'createdAt', label: '创建时间' }
+        ],
+        filters: [{ key: 'source', placeholder: '来源过滤: exercise / user_history' }]
+      },
+      {
+        key: 'agent_sessions',
+        label: '会话记忆',
+        cols: [
+          { key: 'id', label: 'ID' },
+          { key: 'openid', label: 'openid' },
+          { key: 'messages', label: '消息', truncate: 80 },
+          { key: 'updatedAt', label: '更新时间' }
+        ],
+        filters: [{ key: 'openid', placeholder: '按 openid 精确过滤' }]
+      }
+    ];
+
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          tabs: TABS,
+          activeTab: 'exercises_media',
+          page: 1,
+          size: 20,
+          keyword: '',
+          filters: {},
+          result: null,
+          loading: false,
+          error: null,
+          mediaOn: true
+        };
+      },
+      computed: {
+        currentTab() {
+          return this.tabs.find((t) => t.key === this.activeTab);
+        },
+        totalPages() {
+          return this.result ? Math.max(1, Math.ceil(this.result.total / this.result.size)) : 1;
+        }
+      },
+      methods: {
+        cell(row, col) {
+          const v = row[col.key];
+          return v === null || v === undefined ? '' : String(v);
+        },
+        truncate(s, n) {
+          s = String(s);
+          if (n && s.length > n) return s.slice(0, n) + '…';
+          return s;
+        },
+        buildParams() {
+          const p = new URLSearchParams();
+          p.set('page', this.page);
+          p.set('size', this.size);
+          if (this.keyword) p.set('keyword', this.keyword);
+          this.currentTab.filters.forEach((f) => {
+            const v = this.filters[f.key];
+            if (v) p.set(f.key, v);
+          });
+          return p.toString();
+        },
+        async load() {
+          this.loading = true;
+          this.error = null;
+          try {
+            const res = await fetch('/api/admin/' + this.activeTab + '?' + this.buildParams());
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            this.result = await res.json();
+            if (this.page > this.totalPages) this.page = this.totalPages;
+          } catch (e) {
+            this.error = '加载失败：' + e.message;
+            this.result = null;
+          } finally {
+            this.loading = false;
+          }
+        },
+        changeTab(key) {
+          this.activeTab = key;
+          this.page = 1;
+          this.keyword = '';
+          this.filters = {};
+          this.load();
+        },
+        onSearch() {
+          this.page = 1;
+          this.load();
+        },
+        reset() {
+          this.page = 1;
+          this.keyword = '';
+          this.filters = {};
+          this.load();
+        },
+        prev() {
+          if (this.page > 1) {
+            this.page--;
+            this.load();
+          }
+        },
+        next() {
+          if (this.page < this.totalPages) {
+            this.page++;
+            this.load();
+          }
+        },
+        onSize(e) {
+          this.size = parseInt(e.target.value, 10);
+          this.page = 1;
+          this.load();
+        },
+        async fetchMediaEnabled() {
+          try {
+            const res = await fetch('/api/media/enabled');
+            if (res.ok) {
+              const d = await res.json();
+              this.mediaOn = !!(d && d.enabled);
+            }
+          } catch (e) { /* 忽略 */ }
+        },
+        async toggleMedia() {
+          const next = !this.mediaOn;
+          try {
+            const res = await fetch('/api/admin/media-enabled?enabled=' + next, { method: 'POST' });
+            if (res.ok) {
+              const d = await res.json();
+              this.mediaOn = !!(d && d.enabled);
+            } else {
+              this.mediaOn = next;
+            }
+          } catch (e) {
+            this.mediaOn = next;
+          }
+        }
+      },
+      mounted() {
+        this.fetchMediaEnabled();
+        this.load();
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: fitlog-backend
+  datasource:
+    # 全部走环境变量，禁止把真实密钥写进仓库
+    url: ${DB_URL:jdbc:mysql://localhost:3306/fitlog?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # 每次启动自动执行 classpath:schema.sql（CREATE TABLE IF NOT EXISTS，幂等）
+  # 注意：只建表，不建库；fitlog 库需先存在（首次由手动/脚本创建）。
+  # 临时关闭：启动期 schema 初始化偶发失败，先置 never 让应用跑起来（表已由脚本建好），
+  # 待定位 schema.sql 在 Spring 下的具体报错后再改回 always。
+  sql:
+    init:
+      mode: never
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false   # LocalDateTime 序列化为 ISO 字符串，控制台可读
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.fitlog.backend.model.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 业务配置：LLM / Embedding / 图片 base url，均从环境变量注入
+fitlog:
+  llm:
+    provider: ${LLM_PROVIDER:}
+    base-url: ${LLM_BASE_URL:}
+    api-key: ${LLM_API_KEY:}
+    model: ${LLM_MODEL:}
+  embedding:
+    provider: ${EMBEDDING_PROVIDER:}
+    base-url: ${EMBEDDING_BASE_URL:}
+    api-key: ${EMBEDDING_API_KEY:}
+    model: ${EMBEDDING_MODEL:}
+  media:
+    # 图片公网 base（COS 域名或同域 /static），拼 storage_key 得到最终 url
+    base-url: ${MEDIA_BASE_URL:}
+    # 本地图片根目录（GIF 放这里，由 MediaBootstrap 扫描种子入库）。生产可换成 COS 挂载目录
+    dir: ${MEDIA_DIR:./media}
+    # 图片 API 总开关：false 时 /api/media/* 全部回退占位图，前端“暂时没有图片”
+    enabled: ${MEDIA_ENABLED:true}
+    # 占位图路径（同域 /media/** 由 MediaFileController 托管），关 API 或无图时前端显示它
+    placeholder: ${MEDIA_PLACEHOLDER:/media/placeholder/exercise-missing.png}
