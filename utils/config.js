@@ -5,6 +5,9 @@ const config = {
   // 微信小程序 AppID（与 project.config.json 保持一致）
   APP_ID: 'wx371390f8ed0c6037',
 
+  // 后端 HTTPS 地址；开发者工具本地联调时可填 https 代理地址。
+  BACKEND_URL: '',
+
   // 云开发环境 ID，例如 'fitlog-1g2h3k4i5j6k'
   CLOUD_ENV: 'cloud1-d6g8h90dje10f421e',
 

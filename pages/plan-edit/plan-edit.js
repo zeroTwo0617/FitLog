@@ -14,6 +14,11 @@ Page({
   },
   onLoad(options) {
     this.refreshPicker()
+    const draft = wx.getStorageSync('fitlog_agent_plan_draft')
+    if (draft && !options.id) {
+      wx.removeStorageSync('fitlog_agent_plan_draft')
+      this.setData({ name: draft.name || '', items: draft.items || [] })
+    }
     if (options && options.id) {
       this.setData({ id: options.id })
       this.loadPlan(options.id)

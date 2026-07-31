@@ -57,7 +57,8 @@ public class MediaService {
 
     public MediaDto getByExerciseId(String exerciseId) {
         if (!feature.isEnabled()) return disabled(exerciseId);
-        return toDto(mediaMapper.selectByExerciseId(exerciseId));
+        MediaDto dto = toDto(mediaMapper.selectByExerciseId(exerciseId));
+        return dto == null ? disabled(exerciseId) : dto;
     }
 
     public Map<String, MediaDto> getMap(List<String> ids) {

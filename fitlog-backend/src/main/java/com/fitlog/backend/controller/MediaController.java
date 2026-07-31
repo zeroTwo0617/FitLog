@@ -48,7 +48,8 @@ public class MediaController {
 
     @GetMapping("/map")
     public Map<String, MediaDto> getMap(@RequestParam String ids) {
-        List<String> idList = List.of(ids.split(","));
+        List<String> idList = java.util.Arrays.stream(ids.split(","))
+                .map(String::trim).filter(s -> !s.isBlank()).limit(100).toList();
         return mediaService.getMap(idList);
     }
 

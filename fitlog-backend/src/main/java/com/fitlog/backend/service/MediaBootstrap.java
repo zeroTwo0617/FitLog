@@ -82,9 +82,14 @@ public class MediaBootstrap implements CommandLineRunner {
         }
         try (Stream<Path> s = Files.list(dir)) {
             s.filter(p -> p.getFileName().toString().toLowerCase().endsWith(".gif"))
+              .filter(Files::isRegularFile)
               .forEach(p -> {
                   String name = p.getFileName().toString();
                   String id = name.substring(0, name.lastIndexOf('.'));
+                  if (id.isBlank() || id.contains("/") || id.contains("\\") || id.contains("..")) {
+                      System.err.println("[MediaBootstrap] 跳过非法文件名: " + name);
+                      return;
+                  }
                   ExerciseMedia em = new ExerciseMedia();
                   em.setExerciseId(id);
                   em.setMediaType("gif");

@@ -11,6 +11,7 @@
     "pages/plans/plans",
     "pages/plan-edit/plan-edit",
     "pages/plan-detail/plan-detail"
+    ,"pages/agent/agent"
   ],
   "window": {
     "navigationBarBackgroundColor": "#0f1115",

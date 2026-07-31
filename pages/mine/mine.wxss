@@ -43,6 +43,7 @@
 .menu-item:last-child { border-bottom: none; }
 .menu-item:active { background: var(--surface-2); }
 .mi-label { font-size: 30rpx; font-weight: 500; }
+.mi-hint { display: block; margin-top: 8rpx; color: var(--text-dim); font-size: 22rpx; }
 .mi-arrow { color: var(--text-dim); font-size: 36rpx; }
 .menu-item.disabled { opacity: 0.55; }
 .mi-tag {

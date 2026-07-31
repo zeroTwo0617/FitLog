@@ -16,6 +16,13 @@
   </view>
 
   <view class="card menu">
+    <view class="menu-item agent-entry" bindtap="goAgent">
+      <view>
+        <text class="mi-label">训练方案助手</text>
+        <text class="mi-hint">根据你的目标生成训练建议</text>
+      </view>
+      <text class="mi-arrow">›</text>
+    </view>
     <view class="menu-item" bindtap="goHistory">
       <text class="mi-label">训练历史</text>
       <text class="mi-arrow">›</text>

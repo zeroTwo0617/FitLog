@@ -32,11 +32,29 @@ mybatis:
 
 # 业务配置：LLM / Embedding / 图片 base url，均从环境变量注入
 fitlog:
+  auth:
+    jwt-secret: ${JWT_SECRET:change-me-in-production-fitlog}
+    expires-seconds: ${JWT_EXPIRES_SECONDS:7200}
+    wx-app-id: ${WX_APP_ID:}
+    wx-app-secret: ${WX_APP_SECRET:}
+    wx-login-url: ${WX_LOGIN_URL:https://api.weixin.qq.com/sns/jscode2session}
+    mock-openid: ${WX_LOGIN_MOCK_OPENID:}
+    admin-openids: ${ADMIN_OPENIDS:}
+  request:
+    max-body-bytes: ${REQUEST_MAX_BODY_BYTES:65536}
+    max-query-length: ${AGENT_MAX_QUERY_LENGTH:2000}
+    max-context-items: ${AGENT_MAX_CONTEXT_ITEMS:30}
+    rate-limit-per-minute: ${AGENT_RATE_LIMIT_PER_MINUTE:20}
+  content-safety:
+    # 生产环境接入微信内容安全 API；开发环境保留轻量 mock 拦截。
+    mock: ${CONTENT_SAFETY_MOCK:true}
   llm:
     provider: ${LLM_PROVIDER:}
     base-url: ${LLM_BASE_URL:}
     api-key: ${LLM_API_KEY:}
     model: ${LLM_MODEL:}
+    timeout-seconds: ${LLM_TIMEOUT_SECONDS:45}
+    max-tokens: ${LLM_MAX_TOKENS:1200}
   embedding:
     provider: ${EMBEDDING_PROVIDER:}
     base-url: ${EMBEDDING_BASE_URL:}

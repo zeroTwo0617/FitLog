@@ -44,5 +44,8 @@ Page({
   },
   goBody() {
     wx.navigateTo({ url: '/pages/body/body' })
+  },
+  goAgent() {
+    wx.navigateTo({ url: '/pages/agent/agent' })
   }
 })

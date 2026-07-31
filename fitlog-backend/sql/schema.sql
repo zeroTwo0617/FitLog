@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS kb_chunks (
 CREATE TABLE IF NOT EXISTS agent_sessions (
   id          BIGINT       AUTO_INCREMENT PRIMARY KEY,
   openid      VARCHAR(64)  NOT NULL,
+  session_id  VARCHAR(64)  NOT NULL,
   messages    JSON         NOT NULL,          -- [{role, content, ts}]
   updated_at  DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  INDEX idx_openid (openid)
+  INDEX idx_openid (openid),
+  UNIQUE KEY uk_agent_user_session (openid, session_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

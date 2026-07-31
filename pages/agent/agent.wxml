@@ -1,0 +1,36 @@
+<view class="page agent-page">
+  <view class="head">
+    <text class="h-title">训练方案助手</text>
+    <text class="h-sub">告诉我你的目标、时间和训练限制</text>
+  </view>
+
+  <scroll-view class="messages" scroll-y="true" scroll-into-view="last-message">
+    <view wx:if="{{messages.length === 0}}" class="empty card">
+      <text class="empty-text">从一个目标开始</text>
+      <text class="empty-sub">例如：我想在每周三次训练中提升上肢力量</text>
+    </view>
+    <view wx:for="{{messages}}" wx:key="index" id="{{index === messages.length - 1 ? 'last-message' : ''}}" class="message {{item.role}}">
+      <view class="bubble">{{item.text}}{{item.role === 'assistant' && loading && index === messages.length - 1 ? ' ▌' : ''}}</view>
+    </view>
+  </scroll-view>
+
+  <view wx:if="{{draft}}" class="draft card">
+    <view class="draft-head">
+      <text class="draft-title">计划草案 · {{draft.name}}</text>
+      <text class="draft-count">{{draft.items.length}} 个动作</text>
+    </view>
+    <view wx:for="{{draft.items}}" wx:key="exerciseId" class="draft-item">
+      <text class="draft-name">{{item.exerciseName}}</text>
+      <text class="draft-target">{{item.targetSets || '-'}} 组 · {{item.targetReps || '-'}} 次</text>
+    </view>
+    <button class="btn-primary" bindtap="saveDraft">编辑并保存计划</button>
+  </view>
+
+  <view wx:if="{{error}}" class="error" bindtap="clearError">{{error}}</view>
+  <view class="composer">
+    <textarea class="composer-input" value="{{input}}" bindinput="onInput" maxlength="2000" auto-height="true" placeholder="输入训练目标或问题" />
+    <button wx:if="{{loading}}" class="btn-secondary stop" bindtap="stop">停止</button>
+    <button wx:else class="btn-primary send" bindtap="send" disabled="{{!input}}">发送</button>
+  </view>
+  <button wx:if="{{!loading && lastQuery && error}}" class="btn-ghost retry" bindtap="retry">重试</button>
+</view>
