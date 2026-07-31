@@ -121,7 +121,7 @@ public class AgentService {
         }
         messages.add(message("user", query));
         messages.add(message("assistant", answer));
-        if (messages.size() > 20) messages = new ArrayList<>(messages.subList(messages.size() - 20, messages.size()));
+        if (messages.size() > 20) messages.subList(0, messages.size() - 20).clear();
         String json = mapper.writeValueAsString(messages);
         if (current == null) {
             AgentSession session = new AgentSession();
