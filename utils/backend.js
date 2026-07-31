@@ -72,13 +72,15 @@ function buildAgentContext() {
     db.collection(cloud.C.PLANS).limit(10).get(),
     db.collection(cloud.C.BODY).orderBy('date', 'desc').limit(3).get()
   ]).then(([workouts, plans, body]) => ({
-    recentWorkouts: (workouts.data || []).map((item) => ({
-      date: item.dateStr, title: item.title || '', exercises: (item.exercises || item.items || []).slice(0, 12)
-    })),
-    existingPlans: (plans.data || []).map((item) => ({
-      name: item.name || '', items: (item.items || []).slice(0, 12)
-    })),
-    bodyMetrics: (body.data || []).map((item) => ({ date: item.date, weight: item.weight, bodyFat: item.bodyFat }))
+      recentWorkouts: (workouts.data || []).map((item) => ({
+        date: item.dateStr, title: item.title || '', exercises: (item.exercises || item.items || []).slice(0, 12)
+      })),
+      existingPlans: (plans.data || []).map((item) => ({
+        name: item.name || '', items: (item.items || []).slice(0, 12)
+      })),
+      bodyMetrics: body.data && body.data[0]
+        ? { weight: body.data[0].weight, height: body.data[0].height, bodyFat: body.data[0].bodyFat }
+        : null
   }))
 }
 
@@ -104,7 +106,7 @@ function streamAgent(payload, handlers) {
   const task = wx.request({
     url: BACKEND_BASE + '/api/agent/stream', method: 'POST', data: payload,
     enableChunked: true, timeout: 60000,
-    header: { 'content-type': 'application/json', Accept: 'text/event-stream', Authorization: 'Bearer ' + token },
+    header: { 'content-type': 'application/json', Accept: '*/*', Authorization: 'Bearer ' + token },
     success: (res) => {
       if (res.statusCode === 401 && handlers.onAuthError) handlers.onAuthError()
       else if (res.statusCode >= 400 && handlers.onError) handlers.onError(new Error('Agent 请求失败'))
