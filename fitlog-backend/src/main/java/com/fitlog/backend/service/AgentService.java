@@ -40,6 +40,8 @@ public class AgentService {
         this.maxContextItems = maxContextItems;
     }
 
+    public boolean isLlmAvailable() { return llm.available(); }
+
     public void stream(AgentRequest request, String openid, SseEmitter emitter) {
         String sessionId = request.getSessionId() == null || request.getSessionId().isBlank()
                 ? UUID.randomUUID().toString().replace("-", "") : request.getSessionId().trim();
