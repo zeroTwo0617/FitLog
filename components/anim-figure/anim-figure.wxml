@@ -1,0 +1,10 @@
+<view class="stage anim-{{type}}">
+  <view class="fig">
+    <view class="fig-head"></view>
+    <view class="fig-torso"></view>
+    <view class="fig-arm fig-arm-l"></view>
+    <view class="fig-arm fig-arm-r"></view>
+    <view class="fig-leg fig-leg-l"></view>
+    <view class="fig-leg fig-leg-r"></view>
+  </view>
+</view>

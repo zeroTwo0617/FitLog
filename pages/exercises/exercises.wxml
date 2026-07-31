@@ -1,25 +1,59 @@
-<view class="page tab-page">
-  <view class="search">
-    <input class="search-input" placeholder="搜索动作（中文 / 英文均可）" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
+<view class="page tab-page ex theme-{{theme ? theme : 'dark'}}">
+  <view class="hero-strip">
+    <view>
+      <text class="h-title">动作库</text>
+      <text class="h-sub">按部位筛选，快速找到训练动作和示意图。</text>
+    </view>
+    <view class="hero-stat">
+      <text class="hero-stat-value">{{list.length}}</text>
+      <text class="hero-stat-label">当前结果</text>
+    </view>
   </view>
 
-  <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
-    <view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat===item.key?'chip-on':''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}}</view>
-  </scroll-view>
+  <view class="search-card">
+    <input class="search-input" placeholder="搜索动作名称或英文名" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
+    <view class="search-meta">
+      <text class="tag">{{activeCatLabel}}</text>
+      <text class="result-text">共 {{totalCount}} 个动作</text>
+    </view>
+  </view>
 
-  <view class="list">
-    <view wx:for="{{list}}" wx:key="id" class="card" bindtap="onToggle" data-id="{{item.id}}">
-      <view class="card-top">
-        <text class="name">{{item.nameZh}}</text>
-        <text class="chev">{{expandedId===item.id ? '收起' : '做法'}}</text>
-      </view>
-      <view class="meta">{{item.bpZh}} · {{item.eqZh}} · {{item.tgZh}}</view>
-      <view wx:if="{{expandedId===item.id}}" class="steps">
-        <view wx:for="{{item.steps}}" wx:for-item="s" wx:key="index" class="step">
-          <text class="step-no">{{index+1}}</text><text class="step-txt">{{s}}</text>
+  <view class="body">
+    <scroll-view class="side" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+      <view wx:for="{{categories}}" wx:key="key" class="cat {{activeCat===item.key?'cat-on':''}}" data-cat="{{item.key}}" bindtap="onCat">
+        <view class="cat-bar"></view>
+        <view class="cat-tx">
+          <text class="cat-label">{{item.label}}</text>
+          <text class="cat-count">{{item.count}}</text>
         </view>
       </view>
-    </view>
-    <view wx:if="{{list.length===0}}" class="empty">没有匹配的动作，换个关键词试试</view>
+    </scroll-view>
+
+    <scroll-view class="main" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}" scroll-top="{{scrollTop}}">
+      <view class="grid">
+        <view wx:for="{{list}}" wx:key="id" class="cell" hover-class="cell-hover" bindtap="onOpen" data-id="{{item.id}}">
+          <view class="thumb-wrap">
+            <image wx:if="{{item.gif}}" class="thumb" src="{{item.gif}}" mode="aspectFill" lazy-load="{{true}}" />
+            <view wx:else class="thumb ph">
+              <text class="ph-txt">{{item.initial}}</text>
+            </view>
+            <view wx:if="{{item.realGif}}" class="corner">GIF</view>
+          </view>
+          <view class="cell-copy">
+            <view class="cell-tag-row">
+              <text class="tag">{{item.bpZh}}</text>
+            </view>
+            <view class="cell-name">{{item.nameZh}}</view>
+            <view class="cell-meta">{{item.eqZh}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{list.length===0}}" class="empty">
+        <text class="empty-text">没有匹配的动作</text>
+        <text class="empty-sub">换个关键词，或者切换左侧分类试试。</text>
+      </view>
+      <view wx:else class="list-end">已显示 {{list.length}} 个动作</view>
+    </scroll-view>
   </view>
 </view>

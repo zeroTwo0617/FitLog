@@ -1,0 +1,253 @@
+.calendar-hero {
+  margin-bottom: 24rpx;
+}
+
+.calendar-card {
+  padding-top: 24rpx;
+}
+
+.cal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.cal-subtitle {
+  display: block;
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.cal-arrow {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  line-height: 1;
+  color: var(--text);
+  background: var(--inset);
+  border: 1rpx solid var(--hairline);
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+.cal-arrow:active {
+  transform: scale(0.92);
+}
+
+.cal-arrow.disabled {
+  opacity: 0.3;
+}
+
+.cal-week {
+  display: flex;
+  margin-bottom: 12rpx;
+}
+
+.cal-wd {
+  flex: 1;
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+.cal-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cal-cell {
+  width: 14.28%;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.cal-day {
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 28rpx;
+  color: var(--text-dim);
+}
+
+.cal-cell.on .cal-day {
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: 0 4rpx 14rpx rgba(79, 140, 255, 0.4);
+}
+
+.cal-cell.today .cal-day {
+  border: 2rpx solid var(--primary-2);
+}
+
+.cal-cell.selected .cal-day {
+  box-shadow: 0 0 0 4rpx var(--primary-soft), 0 4rpx 14rpx rgba(79, 140, 255, 0.28);
+}
+
+.cal-badge {
+  position: absolute;
+  top: 8rpx;
+  right: calc(50% - 28rpx);
+  min-width: 28rpx;
+  height: 28rpx;
+  padding: 0 4rpx;
+  border-radius: 999rpx;
+  background: var(--danger);
+  color: #fff;
+  font-size: 18rpx;
+  line-height: 28rpx;
+  text-align: center;
+}
+
+.cal-legend {
+  display: flex;
+  gap: 30rpx;
+  margin-top: 18rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid var(--hairline);
+  flex-wrap: wrap;
+}
+
+.lg-item {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+.lg-dot {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  background: var(--inset);
+  border: 1rpx solid var(--hairline);
+}
+
+.lg-dot.on {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  border-color: transparent;
+  box-shadow: 0 2rpx 8rpx rgba(79, 140, 255, 0.4);
+}
+
+.lg-dot.today {
+  border-color: var(--primary-2);
+}
+
+.lg-dot.selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx var(--primary-soft);
+}
+
+.day-detail {
+  margin-top: 20rpx;
+  padding: 24rpx;
+  animation: fadeUp 0.25s ease both;
+}
+
+.detail-head,
+.session-head,
+.group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.detail-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.detail-sub,
+.session-meta,
+.group-count {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+.detail-close {
+  width: 52rpx;
+  height: 52rpx;
+  flex: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--inset);
+  color: var(--text-dim);
+  font-size: 34rpx;
+}
+
+.detail-loading,
+.detail-empty {
+  padding: 34rpx 0 12rpx;
+  color: var(--text-dim);
+  font-size: 24rpx;
+}
+
+.detail-session {
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid var(--hairline);
+}
+
+.session-title {
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.detail-group {
+  margin-top: 18rpx;
+  padding: 18rpx;
+  border-radius: var(--radius-sm);
+  background: var(--inset);
+}
+
+.group-name {
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.detail-set {
+  display: grid;
+  grid-template-columns: 0.7fr 1fr 1.2fr 1fr;
+  gap: 10rpx;
+  padding: 12rpx 0;
+  font-size: 24rpx;
+  text-align: center;
+  color: var(--text);
+}
+
+.detail-set-head {
+  color: var(--text-dim);
+  font-size: 21rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.tip {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 22rpx;
+  margin-top: 30rpx;
+}

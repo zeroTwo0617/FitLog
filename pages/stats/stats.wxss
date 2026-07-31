@@ -1,22 +1,11 @@
-/* 摘要卡 */
-.summary { display: flex; gap: 16rpx; margin-bottom: 28rpx; }
-.sum-card {
-  flex: 1;
-  display: flex; flex-direction: column; align-items: center; gap: 8rpx;
-  padding: 24rpx 12rpx;
-  border-radius: var(--radius);
-  background: var(--card-bg);
-  border: 1rpx solid var(--card-border);
-}
-.sum-num {
-  font-size: 40rpx; font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
-.sum-label { font-size: 22rpx; color: var(--text-dim); }
+.stats-head { margin-bottom: 22rpx; }
+.stats-metrics { margin-bottom: 28rpx; }
+.stats-metrics .metric-card { padding: 22rpx 18rpx; }
+.stats-metrics .metric-value { font-size: 36rpx; }
+.stats-card { margin-bottom: 20rpx; }
 
 /* 训练量柱状图 */
-.chart { display: flex; align-items: flex-end; gap: 8rpx; height: 240rpx; }
+.chart { display: flex; align-items: flex-end; gap: 8rpx; height: 220rpx; padding-top: 12rpx; border-bottom: 1rpx solid var(--hairline); }
 .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
 .bar {
   width: 100%; min-height: 4rpx; border-radius: 8rpx 8rpx 0 0;
@@ -30,6 +19,18 @@
 .bar-day { margin-top: 8rpx; font-size: 18rpx; color: var(--text-dim); }
 
 /* 日历 */
+.cal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16rpx; }
+.cal-nav { display: flex; align-items: center; gap: 12rpx; }
+.cal-arrow {
+  width: 56rpx; height: 56rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40rpx; line-height: 1; color: var(--text);
+  background: var(--inset); border: 1rpx solid var(--hairline);
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
+.cal-arrow:active { transform: scale(0.9); }
+.cal-arrow.disabled { opacity: 0.3; }
+.cal-mlabel { font-size: 28rpx; font-weight: 600; min-width: 200rpx; text-align: center; }
 .cal-week { display: flex; margin-bottom: 12rpx; }
 .cal-wd { flex: 1; text-align: center; font-size: 22rpx; color: var(--text-dim); }
 .cal-grid { display: flex; flex-wrap: wrap; }
@@ -48,11 +49,17 @@
 }
 .cal-cell.today text { border: 2rpx solid var(--primary-2); }
 
+/* 图例 */
+.cal-legend { display: flex; gap: 36rpx; margin-top: 18rpx; padding-top: 18rpx; border-top: 1rpx solid var(--hairline); }
+.lg-item { display: flex; align-items: center; gap: 10rpx; font-size: 22rpx; color: var(--text-dim); }
+.lg-dot { width: 24rpx; height: 24rpx; border-radius: 50%; background: var(--inset); border: 1rpx solid var(--hairline); }
+.lg-dot.on { background: linear-gradient(135deg, var(--primary), var(--primary-2)); border-color: transparent; box-shadow: 0 2rpx 8rpx rgba(79, 140, 255, 0.4); }
+
 /* 最大重量 Top5 */
 .ex-list { display: flex; flex-direction: column; gap: 18rpx; }
 .ex-row { display: flex; align-items: center; gap: 14rpx; }
 .ex-name { width: 160rpx; font-size: 26rpx; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ex-bar-wrap { flex: 1; height: 18rpx; background: rgba(255, 255, 255, 0.08); border-radius: 999rpx; overflow: hidden; }
+.ex-bar-wrap { flex: 1; height: 18rpx; background: var(--hairline); border-radius: 999rpx; overflow: hidden; }
 .ex-bar { height: 100%; border-radius: 999rpx; background: linear-gradient(90deg, var(--primary), var(--primary-2)); }
 .ex-val { width: 96rpx; text-align: right; font-size: 24rpx; color: var(--text); }
 

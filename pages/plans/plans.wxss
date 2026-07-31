@@ -1,11 +1,103 @@
-.list { display: flex; flex-direction: column; gap: 20rpx; }
+.overview-card {
+  padding: 30rpx;
+  border-radius: 28rpx;
+  background:
+    radial-gradient(110% 110% at 0% 0%, rgba(79, 140, 255, 0.18), transparent 52%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  border: 1rpx solid var(--card-border);
+}
 
-.card { display: flex; align-items: center; gap: 16rpx; transition: transform 0.2s ease, border-color 0.2s ease; }
-.card:active { transform: scale(0.99); border-color: var(--primary); }
+.overview-kicker {
+  display: block;
+  font-size: 22rpx;
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 4rpx;
+}
 
-.card-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8rpx; }
-.card-name { font-size: 34rpx; font-weight: 600; }
-.card-meta { font-size: 24rpx; color: var(--text-dim); }
-.card-arrow { color: var(--text-dim); font-size: 40rpx; }
+.overview-title {
+  display: block;
+  margin-top: 14rpx;
+  font-size: 46rpx;
+  font-weight: 800;
+  color: var(--text);
+}
 
-.btn-primary { margin-top: 40rpx; }
+.overview-desc {
+  display: block;
+  margin-top: 14rpx;
+  font-size: 25rpx;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+.plan-metrics {
+  margin-top: 26rpx;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.plan-item {
+  padding: 26rpx;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  border: 1rpx solid var(--card-border);
+}
+
+.plan-item-top {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.plan-item-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.plan-item-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.plan-item-meta {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+.plan-item-arrow {
+  flex-shrink: 0;
+  font-size: 40rpx;
+  color: var(--text-dim);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 18rpx;
+}
+
+.plan-item-desc {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 23rpx;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+.plan-empty {
+  margin-top: 12rpx;
+}
+
+.create-btn {
+  margin-top: 36rpx;
+}

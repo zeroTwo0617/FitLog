@@ -27,6 +27,7 @@ Page({
   },
 
   onShow() {
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     this.load()
   },
 

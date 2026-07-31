@@ -1,4 +1,4 @@
 {
   "navigationBarTitleText": "训练方案助手",
-  "usingComponents": {}
+  "enablePullDownRefresh": false
 }

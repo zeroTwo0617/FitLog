@@ -13,11 +13,12 @@ Page({
     pickerList: []
   },
   onLoad(options) {
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     this.refreshPicker()
     const draft = wx.getStorageSync('fitlog_agent_plan_draft')
-    if (draft && !options.id) {
+    if (draft && draft.name && Array.isArray(draft.items)) {
       wx.removeStorageSync('fitlog_agent_plan_draft')
-      this.setData({ name: draft.name || '', items: draft.items || [] })
+      this.setData({ name: draft.name, items: draft.items })
     }
     if (options && options.id) {
       this.setData({ id: options.id })

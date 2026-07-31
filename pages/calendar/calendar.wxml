@@ -1,0 +1,88 @@
+<view class="page tab-page theme-{{theme ? theme : 'dark'}}">
+  <view class="calendar-hero">
+    <view class="head">
+      <text class="h-title">训练日历</text>
+      <text class="h-sub">用月历观察训练节奏，选中日期后直接查看当天内容。</text>
+    </view>
+    <view class="metric-grid">
+      <view class="metric-card">
+        <text class="metric-value grad-text">{{trainedDays}}</text>
+        <text class="metric-label">累计训练天数</text>
+      </view>
+      <view class="metric-card">
+        <text class="metric-value">{{workoutCount}}</text>
+        <text class="metric-label">总训练次数</text>
+      </view>
+      <view class="metric-card">
+        <text class="metric-value">{{monthWorkoutCount}}</text>
+        <text class="metric-label">本月训练次数</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <block wx:if="{{!loading}}">
+    <view class="card calendar-card">
+      <view class="cal-top">
+        <view>
+          <text class="card-title">打卡日历</text>
+          <text class="cal-subtitle">{{calYear}} 年 {{calMonth}} 月</text>
+        </view>
+        <view class="cal-nav">
+          <view class="cal-arrow {{canPrev ? '' : 'disabled'}}" bindtap="prevMonth">‹</view>
+          <view class="cal-arrow {{canNext ? '' : 'disabled'}}" bindtap="nextMonth">›</view>
+        </view>
+      </view>
+      <view class="cal-week">
+        <text wx:for="{{weekLabels}}" wx:key="*this" class="cal-wd">{{item}}</text>
+      </view>
+      <view class="cal-grid">
+        <view wx:for="{{calendar}}" wx:key="dateStr"
+              class="cal-cell {{item.trained ? 'on' : ''}} {{item.isToday ? 'today' : ''}} {{selectedDate === item.dateStr ? 'selected' : ''}}"
+              data-date="{{item.dateStr}}" bindtap="tapDay">
+          <text class="cal-day">{{item.day}}</text>
+          <text class="cal-badge" wx:if="{{item.count > 1}}">{{item.count}}</text>
+        </view>
+      </view>
+      <view class="cal-legend">
+        <view class="lg-item"><view class="lg-dot on"></view><text>已训练</text></view>
+        <view class="lg-item"><view class="lg-dot today"></view><text>今天</text></view>
+        <view class="lg-item"><view class="lg-dot selected"></view><text>已选中</text></view>
+      </view>
+    </view>
+
+    <view class="day-detail card" wx:if="{{selectedDate}}">
+      <view class="detail-head">
+        <view>
+          <text class="detail-title">{{selectedDate}}</text>
+          <text class="detail-sub" wx:if="{{selectedSessionCount > 0}}">{{selectedSessionCount}} 次训练 · {{selectedExerciseCount}} 个动作 · {{selectedSetCount}} 组</text>
+          <text class="detail-sub" wx:if="{{selectedSessionCount === 0}}">这一天没有训练记录</text>
+        </view>
+        <view class="detail-close" bindtap="tapDay" data-date="{{selectedDate}}">×</view>
+      </view>
+
+      <view class="detail-loading" wx:if="{{detailLoading}}">正在整理当天训练...</view>
+      <view class="detail-empty" wx:if="{{!detailLoading && selectedSessionCount === 0}}">休息日也算训练计划的一部分。</view>
+
+      <view class="detail-session" wx:for="{{selectedWorkouts}}" wx:key="id" wx:for-item="workout">
+        <view class="session-head">
+          <text class="session-title">{{workout.title}}</text>
+          <text class="session-meta">{{workout.time}} · {{workout.exerciseCount}} 个动作 · {{workout.totalSets}} 组</text>
+        </view>
+        <view class="detail-group" wx:for="{{workout.groups}}" wx:key="exerciseId" wx:for-item="group">
+          <view class="group-head">
+            <text class="group-name">{{group.name}}</text>
+            <text class="group-count">{{group.setCount}} 组</text>
+          </view>
+          <view class="detail-set detail-set-head">
+            <text>组</text><text>次数</text><text>重量</text><text>休息</text>
+          </view>
+          <view class="detail-set" wx:for="{{group.sets}}" wx:key="setIndex" wx:for-item="set">
+            <text>{{set.setIndex}}</text><text>{{set.repsText}}</text><text>{{set.weightText}}</text><text>{{set.restText}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

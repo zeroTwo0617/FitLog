@@ -1,4 +1,4 @@
-<view class="page edit">
+<view class="page edit theme-{{theme ? theme : 'dark'}}">
   <view class="card field">
     <text class="label">计划名称</text>
     <input class="name-inp" placeholder="如：练胸日 / 练腿日" value="{{name}}" bindinput="onName" maxlength="20" />

@@ -15,8 +15,8 @@
 .tg { flex: 1; display: flex; flex-direction: column; gap: 8rpx; }
 .tg-label { font-size: 22rpx; color: var(--text-dim); }
 .tg-inp {
-  background: rgba(0, 0, 0, 0.25);
-  border: 1rpx solid rgba(255, 255, 255, 0.12);
+  background: var(--overlay);
+  border: 1rpx solid var(--hairline);
   border-radius: 12rpx;
   padding: 14rpx 16rpx;
   font-size: 28rpx;
@@ -29,14 +29,14 @@
 /* 动作选择器：底部弹出遮罩面板（fixed，保留模糊） */
 .picker-mask {
   position: fixed; left: 0; right: 0; top: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--mask);
   z-index: 100;
   display: flex; flex-direction: column; justify-content: flex-end;
 }
 .sheet {
-  background: #16181d;
+  background: var(--sheet-bg);
   border-radius: 28rpx 28rpx 0 0;
-  border-top: 1rpx solid rgba(255, 255, 255, 0.12);
+  border-top: 1rpx solid var(--hairline);
   padding: 8rpx 28rpx 28rpx;
   max-height: 82vh;
   display: flex; flex-direction: column;
@@ -46,13 +46,13 @@
 }
 .sheet-handle {
   width: 72rpx; height: 8rpx; border-radius: 999rpx;
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--hairline);
   margin: 10rpx auto 18rpx;
 }
 .search { margin-bottom: 16rpx; flex-shrink: 0; }
 .cats { white-space: nowrap; margin-bottom: 16rpx; flex-shrink: 0; }
 .pick-list { max-height: 56vh; flex: 1; }
-.pick-item { display: flex; flex-direction: column; gap: 6rpx; padding: 22rpx 8rpx; border-bottom: 1rpx solid rgba(255, 255, 255, 0.08); }
+.pick-item { display: flex; flex-direction: column; gap: 6rpx; padding: 22rpx 8rpx; border-bottom: 1rpx solid var(--hairline); }
 .pick-item:active { background: var(--surface-2); }
 .pick-name { font-size: 30rpx; }
 .pick-meta { font-size: 22rpx; color: var(--text-dim); }

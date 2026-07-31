@@ -1,8 +1,8 @@
-<view class="page tab-page">
-  <view class="profile">
-    <view class="avatar">🏋️</view>
+<view class="page tab-page theme-{{theme ? theme : 'dark'}}">
+  <view class="profile-hero">
+    <view class="avatar">FL</view>
     <view class="pinfo">
-      <text class="pname">FitLog 用户</text>
+      <text class="pname">{{displayName}}</text>
       <view class="pstatus pstatus-{{cloud.status}}">
         <view class="pdot"></view>
         <text>{{cloud.text}}</text>
@@ -10,36 +10,72 @@
     </view>
   </view>
 
-  <view class="card stat-card">
-    <text class="stat-num">{{workoutCount}}</text>
-    <text class="stat-label">次训练记录</text>
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">个人概览</text>
+      <text class="section-meta">你的训练资产</text>
+    </view>
+    <view class="stat-grid">
+      <view class="stat-tile">
+        <text class="stat-num grad-text">{{workoutCount}}</text>
+        <text class="stat-label">训练记录</text>
+      </view>
+      <view class="stat-tile">
+        <text class="stat-num">{{planCount}}</text>
+        <text class="stat-label">训练计划</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card settings">
+    <view class="menu-item theme-item" bindtap="toggleTheme">
+      <view>
+        <text class="mi-label">外观主题</text>
+        <text class="mi-sub">切换深色 / 浅色模式</text>
+      </view>
+      <view class="switch {{theme === 'dark' ? 's-dark' : 's-light'}}">
+        <view class="knob">{{theme === 'dark' ? '夜' : '日'}}</view>
+      </view>
+    </view>
   </view>
 
   <view class="card menu">
-    <view class="menu-item agent-entry" bindtap="goAgent">
+    <view class="menu-item" bindtap="goAgent">
       <view>
         <text class="mi-label">训练方案助手</text>
-        <text class="mi-hint">根据你的目标生成训练建议</text>
+        <text class="mi-sub">根据你的训练记录设计计划草案</text>
       </view>
       <text class="mi-arrow">›</text>
     </view>
     <view class="menu-item" bindtap="goHistory">
-      <text class="mi-label">训练历史</text>
+      <view>
+        <text class="mi-label">训练历史</text>
+        <text class="mi-sub">按日期回看每次训练内容</text>
+      </view>
       <text class="mi-arrow">›</text>
     </view>
     <view class="menu-item" bindtap="goPlans">
-      <text class="mi-label">训练计划</text>
+      <view>
+        <text class="mi-label">训练计划</text>
+        <text class="mi-sub">维护常用训练模板</text>
+      </view>
       <text class="mi-arrow">›</text>
     </view>
     <view class="menu-item" bindtap="goStats">
-      <text class="mi-label">数据统计</text>
+      <view>
+        <text class="mi-label">数据统计</text>
+        <text class="mi-sub">查看训练趋势和累计表现</text>
+      </view>
       <text class="mi-arrow">›</text>
     </view>
     <view class="menu-item" bindtap="goBody">
-      <text class="mi-label">身体数据</text>
+      <view>
+        <text class="mi-label">身体数据</text>
+        <text class="mi-sub">记录体重和围度变化</text>
+      </view>
       <text class="mi-arrow">›</text>
     </view>
   </view>
 
-  <view class="foot">FitLog · 让进步看得见</view>
+  <view class="foot">FitLog · 让进步被看见</view>
 </view>

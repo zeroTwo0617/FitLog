@@ -1,18 +1,39 @@
-<view class="page history">
+<view class="page history theme-{{theme ? theme : 'dark'}}">
   <view class="h-top">
     <text class="h-title">训练历史</text>
-    <text class="h-sub">按日期倒序 · 共 {{list.length}} 次</text>
+    <text class="h-sub">按日期倒序，回看每次训练的完成情况</text>
+  </view>
+
+  <view class="metric-grid history-metrics">
+    <view class="metric-card">
+      <text class="metric-value grad-text">{{list.length}}</text>
+      <text class="metric-label">训练次数</text>
+    </view>
+    <view class="metric-card">
+      <text class="metric-value">{{trainedDays}}</text>
+      <text class="metric-label">训练天数</text>
+    </view>
+    <view class="metric-card">
+      <text class="metric-value">{{totalSets}}</text>
+      <text class="metric-label">完成组数</text>
+    </view>
   </view>
 
   <view class="loading" wx:if="{{loading}}">加载中…</view>
 
   <view class="list" wx:if="{{!loading && list.length > 0}}">
-    <view class="card" wx:for="{{list}}" wx:key="_id" bindtap="goDetail" data-id="{{item._id}}">
+    <view class="card history-card" wx:for="{{list}}" wx:key="_id" bindtap="goDetail" data-id="{{item._id}}">
       <view class="card-top">
-        <text class="date">{{item.dateStr}}</text>
+        <view>
+          <text class="date">{{item.dateStr}}</text>
+          <text class="history-time" wx:if="{{item.title}}">{{item.title}}</text>
+        </view>
         <text class="count">{{item.exercises.length}} 个动作 · {{item.setTotal}} 组</text>
       </view>
-      <view class="names">{{item.namesText}}</view>
+      <view class="history-body">
+        <view class="names">{{item.namesText}}</view>
+        <text class="history-arrow">›</text>
+      </view>
     </view>
   </view>
 

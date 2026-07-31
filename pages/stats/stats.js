@@ -1,11 +1,6 @@
 const cloud = require('../../utils/cloud.js')
 const sd = require('../../utils/statsData.js')
 
-function fmtNow() {
-  const d = new Date()
-  return { year: d.getFullYear(), month: d.getMonth() + 1 }
-}
-
 Page({
   data: {
     loading: true,
@@ -14,13 +9,11 @@ Page({
     totalVolume: 0,
     monthCheckins: 0,
     trend: [],
-    calendar: [],
-    maxByExercise: [],
-    calYear: 0,
-    calMonth: 0
+    maxByExercise: []
   },
 
   onShow() {
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     this.load()
   },
 
@@ -38,12 +31,11 @@ Page({
       // 近 14 天训练量趋势
       const trend = sd.volumeTrend(agg, 14)
 
-      // 当月打卡日历
-      const { year, month } = fmtNow()
-      const calendar = sd.buildCalendar(year, month, agg.trainedDates)
-
       // 本月打卡天数
-      const prefix = year + '-' + (month < 10 ? '0' + month : month) + '-'
+      const now = new Date()
+      const ny = now.getFullYear()
+      const nm = now.getMonth() + 1
+      const prefix = ny + '-' + (nm < 10 ? '0' + nm : nm) + '-'
       const monthCheckins = agg.trainedDates.filter((d) => d.indexOf(prefix) === 0).length
 
       // 动作最大重量 Top5（带高度百分比）
@@ -59,10 +51,7 @@ Page({
         totalVolume: agg.totalVolume,
         monthCheckins: monthCheckins,
         trend: trend,
-        calendar: calendar,
-        maxByExercise: maxByExercise,
-        calYear: year,
-        calMonth: month
+        maxByExercise: maxByExercise
       })
     }).catch((err) => {
       this.setData({ loading: false })

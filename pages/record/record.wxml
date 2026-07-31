@@ -1,7 +1,22 @@
-<view class="page record">
-  <view class="topbar">
-    <text class="date">{{today}}</text>
-    <text class="title">{{title ? title : '记录训练'}}</text>
+<view class="page record theme-{{theme ? theme : 'dark'}}">
+  <view class="head record-head">
+    <text class="h-title">{{title ? title : '记录训练'}}</text>
+    <text class="h-sub">{{today}} · 记录每一组有效训练</text>
+  </view>
+
+  <view class="metric-grid record-metrics">
+    <view class="metric-card">
+      <text class="metric-value grad-text">{{exerciseCount}}</text>
+      <text class="metric-label">训练动作</text>
+    </view>
+    <view class="metric-card">
+      <text class="metric-value">{{totalSets}}</text>
+      <text class="metric-label">总组数</text>
+    </view>
+    <view class="metric-card">
+      <text class="metric-value mode-value">{{planId ? '计划' : '自由'}}</text>
+      <text class="metric-label">记录模式</text>
+    </view>
   </view>
 
   <!-- 计划导入 / 当前跟练计划 -->
@@ -15,7 +30,7 @@
 
   <!-- 当前训练 -->
   <view class="session" wx:if="{{session.length > 0}}">
-    <view class="ex-card" wx:for="{{session}}" wx:key="exerciseId">
+    <view class="card ex-card" wx:for="{{session}}" wx:key="exerciseId">
       <view class="ex-head">
         <text class="ex-name">{{item.name}}</text>
         <text class="ex-del" bindtap="removeExercise" data-idx="{{index}}">移除</text>

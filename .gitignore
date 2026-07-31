@@ -21,3 +21,7 @@ Thumbs.db
 
 # 构建产物
 dist/
+
+# 测试用动作 GIF（© Gymvisual，仅本地预览/验证用，不入库）
+# 上线前改为自托管 CDN 并保留署名；详见 assets/exercise-gif/README.md
+assets/exercise-gif/*.gif

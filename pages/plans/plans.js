@@ -3,24 +3,37 @@ const pd = require('../../utils/planData.js')
 
 Page({
   data: {
+    theme: 'dark',
     list: [],
-    loading: true
+    loading: true,
+    totalExercises: 0
   },
+
   onShow() {
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     this.load()
   },
+
   load() {
     this.setData({ loading: true })
     const db = cloud.db()
-    // 权限「仅创建者可读写」会自动按 _openid 过滤，无需 where
     db.collection(cloud.C.PLANS).limit(100).get()
       .then((res) => {
         const raw = (res && res.data) || []
         const list = raw.map((p) => {
           const s = pd.planSummary(p)
-          return Object.assign({}, p, { count: s.count, namesText: s.namesText })
+          const items = Array.isArray(p.items) ? p.items : []
+          const totalSets = items.reduce((sum, item) => sum + (Number(item.targetSets) || 0), 0)
+          return Object.assign({}, p, {
+            count: s.count,
+            namesText: s.namesText,
+            totalSets,
+            previewNames: items.slice(0, 3).map((item) => item.exerciseName),
+            moreCount: Math.max(0, items.length - 3)
+          })
         })
-        this.setData({ list, loading: false })
+        const totalExercises = list.reduce((sum, item) => sum + item.count, 0)
+        this.setData({ list, totalExercises, loading: false })
       })
       .catch((err) => {
         this.setData({ loading: false })
@@ -28,10 +41,12 @@ Page({
         console.error('加载计划列表失败', err)
       })
   },
+
   goDetail(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({ url: '/pages/plan-detail/plan-detail?id=' + id })
   },
+
   goCreate() {
     wx.navigateTo({ url: '/pages/plan-edit/plan-edit' })
   }

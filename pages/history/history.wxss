@@ -1,11 +1,18 @@
 .page.history { padding-bottom: 60rpx; }
 
+.history-metrics { margin-bottom: 28rpx; }
+.history-metrics .metric-card { padding: 22rpx 18rpx; }
+.history-metrics .metric-value { font-size: 36rpx; }
+
 .list { display: flex; flex-direction: column; gap: var(--gap); }
 
-.card { transition: transform 0.2s ease, border-color 0.2s ease; }
-.card:active { transform: scale(0.99); border-color: var(--primary); }
+.history-card { transition: transform 0.2s ease, border-color 0.2s ease; }
+.history-card:active { transform: scale(0.99); border-color: var(--primary); }
 
 .card-top { display: flex; justify-content: space-between; align-items: baseline; }
 .date { font-size: 32rpx; font-weight: 600; }
 .count { color: var(--text-dim); font-size: 24rpx; }
-.names { margin-top: 12rpx; color: var(--text); font-size: 28rpx; line-height: 1.5; }
+.history-time { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 22rpx; }
+.history-body { display: flex; align-items: center; gap: 16rpx; margin-top: 18rpx; }
+.names { flex: 1; color: var(--text); font-size: 28rpx; line-height: 1.5; }
+.history-arrow { color: var(--text-dim); font-size: 36rpx; }

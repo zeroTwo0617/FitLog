@@ -5,9 +5,6 @@ const config = {
   // 微信小程序 AppID（与 project.config.json 保持一致）
   APP_ID: 'wx371390f8ed0c6037',
 
-  // 后端 HTTPS 地址；开发者工具本地联调时可填 https 代理地址。
-  BACKEND_URL: '',
-
   // 云开发环境 ID，例如 'fitlog-1g2h3k4i5j6k'
   CLOUD_ENV: 'cloud1-d6g8h90dje10f421e',
 
@@ -19,7 +16,17 @@ const config = {
     PLANS: 'plans',        // 训练计划/模板
     BODY: 'bodyMetrics',   // 身体数据（体重/围度）
     EXERCISES: 'exercises' // 预留：后续如需把动作库 seed 到云
-  }
+  },
+
+  // 后端服务地址（图片 / agent）。部署时改成已备案的 HTTPS 域名，
+  // 并在微信公众平台配置 request / downloadFile 合法域名。
+  // 为空时小程序回退到本地 GIF（开发期无后端也有图）。
+  BACKEND_BASE: '',
+  BACKEND_TOKEN_KEY: 'fitlog_backend_token',
+
+  // 后端占位图地址（图片 API 关闭 / 无图时前端展示“暂无图片”）。
+  // 留空则由后端 /api/media/enabled 返回默认占位图地址。
+  BACKEND_PLACEHOLDER: ''
 }
 
 module.exports = config

@@ -1,0 +1,34 @@
+<view class="page detail theme-{{theme ? theme : 'dark'}}">
+  <view class="head">
+    <text class="date">{{date}}</text>
+    <text class="summary" wx:if="{{sessionCount > 0}}">{{sessionCount}} 次训练</text>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">加载中…</view>
+
+  <block wx:if="{{!loading && sessionCount > 0}}">
+    <view class="session" wx:for="{{sessions}}" wx:key="id">
+      <view class="s-head">
+        <text class="s-title">{{sessions.length > 1 ? ('第 ' + item.index + ' 练') : '训练详情'}}</text>
+        <text class="s-meta">{{item.time}} · {{item.exerciseCount}} 个动作 · {{item.totalSets}} 组</text>
+      </view>
+      <view class="card" wx:for="{{item.groups}}" wx:for-item="g" wx:key="exerciseId">
+        <view class="group-head">
+          <text class="g-name">{{g.name}}</text>
+          <text class="g-count">{{g.setCount}} 组</text>
+        </view>
+        <view class="set-row" wx:for="{{g.sets}}" wx:for-item="s" wx:for-index="si" wx:key="setIndex">
+          <text class="c-no">{{s.setIndex}}</text>
+          <text class="c-reps">{{s.repsText}}</text>
+          <text class="c-weight">{{s.weightText}}</text>
+          <text class="c-rest">{{s.restText}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="empty" wx:if="{{!loading && sessionCount === 0}}">
+    <text class="empty-emoji">🗓️</text>
+    <text class="empty-text">这一天没有训练记录</text>
+  </view>
+</view>

@@ -26,6 +26,17 @@ page {
   --warn: #fbbf24;
   --danger: #f87171;
 
+  /* 主题语义 token（深浅色共用，浅色在 .theme-light 覆盖） */
+  --accent: #9ec1ff;                   /* 主色 soft 底上的文字 */
+  --overlay: rgba(0, 0, 0, 0.25);      /* 半透明深色面（输入/卡片内陷） */
+  --mask: rgba(0, 0, 0, 0.45);         /* 底部弹层遮罩 */
+  --sheet-bg: #161922;                 /* 固定/弹出面板底色 */
+  --placeholder: rgba(255, 255, 255, 0.5); /* 占位首字/幽灵文字 */
+  --hairline: rgba(255, 255, 255, 0.08);   /* 通用细分隔线 */
+  --inset: rgba(255, 255, 255, 0.06);       /* 通用内陷填充 */
+  --glow-1: rgba(79, 140, 255, 0.12);
+  --glow-2: rgba(139, 92, 255, 0.12);
+
   /* ---- Shape & depth ---- */
   --radius-sm: 12rpx;
   --radius: 20rpx;
@@ -38,16 +49,50 @@ page {
   --gap: 24rpx;
   --pad: 28rpx;
 
-  /* Ambient depth: two soft brand glows over the dark base (static, cheap) */
-  background:
-    radial-gradient(120% 80% at 0% 0%, rgba(79, 140, 255, 0.12), transparent 55%),
-    radial-gradient(120% 80% at 100% 100%, rgba(139, 92, 255, 0.12), transparent 55%),
-    var(--bg);
-  background-attachment: fixed;
+  /* 背景底色由主题类 (.theme-dark/.theme-light) 在根视图上绘制辉光，page 仅兜底纯色 */
+  background: var(--bg);
 
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
   font-size: 28rpx;
+}
+
+/* ---------- Theme: dark (默认) / light 覆盖 ---------- */
+.theme-dark {
+  color: var(--text);
+  background:
+    radial-gradient(120% 80% at 0% 0%, var(--glow-1), transparent 55%),
+    radial-gradient(120% 80% at 100% 100%, var(--glow-2), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+}
+.theme-light {
+  --bg: #f3f5fa;
+  --surface: #ffffff;
+  --surface-2: #e9edf5;
+  --card-bg: rgba(15, 17, 21, 0.025);
+  --card-bg-hover: rgba(15, 17, 21, 0.05);
+  --card-border: rgba(15, 17, 21, 0.09);
+  --border: rgba(15, 17, 21, 0.08);
+  --text: #161b24;
+  --text-dim: #5b6573;
+  --primary-soft: rgba(79, 140, 255, 0.12);
+  --primary-soft-2: rgba(139, 92, 255, 0.12);
+  --accent: #2f5fd0;
+  --overlay: rgba(15, 17, 21, 0.06);
+  --mask: rgba(15, 17, 21, 0.35);
+  --sheet-bg: #ffffff;
+  --placeholder: rgba(15, 17, 21, 0.22);
+  --hairline: rgba(15, 17, 21, 0.08);
+  --inset: rgba(15, 17, 21, 0.04);
+  --glow-1: rgba(79, 140, 255, 0.16);
+  --glow-2: rgba(139, 92, 255, 0.16);
+  color: var(--text);
+  background:
+    radial-gradient(120% 80% at 0% 0%, var(--glow-1), transparent 55%),
+    radial-gradient(120% 80% at 100% 100%, var(--glow-2), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
 }
 
 /* ---------- Reset ---------- */
@@ -107,6 +152,88 @@ button::after { border: none; }
   font-weight: 600;
   margin-bottom: 22rpx;
   color: var(--text);
+}
+
+.section {
+  margin-top: 28rpx;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 18rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.section-meta {
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16rpx;
+}
+
+.metric-card {
+  min-width: 0;
+  padding: 24rpx;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  border: 1rpx solid var(--card-border);
+}
+
+.theme-light .metric-card {
+  background: linear-gradient(180deg, rgba(15, 17, 21, 0.02), rgba(15, 17, 21, 0.04));
+}
+
+.metric-value {
+  display: block;
+  font-size: 42rpx;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.metric-label {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+.metric-note {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 20rpx;
+  color: var(--text-dim);
+  opacity: 0.78;
+}
+
+.pill-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 92rpx;
+  border-radius: var(--radius);
+  padding: 0 28rpx;
+  background: var(--surface-2);
+  border: 1rpx solid var(--border);
+  color: var(--text);
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.pill-btn:active {
+  transform: scale(0.98);
 }
 
 /* ---------- Gradient text (for big numbers) ---------- */
@@ -250,10 +377,10 @@ button::after { border: none; }
   padding: 6rpx 16rpx;
   border-radius: 999rpx;
   background: var(--primary-soft);
-  color: #9ec1ff;
+  color: var(--accent);
   white-space: nowrap;
 }
-.tag.dim { background: rgba(255, 255, 255, 0.06); color: var(--text-dim); }
+.tag.dim { background: var(--inset); color: var(--text-dim); }
 
 /* ---------- Empty state ---------- */
 .empty {

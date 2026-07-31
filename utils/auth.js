@@ -2,7 +2,6 @@
 // 采用「微信云开发免登录模式」：记录由云环境自动注入 _openid，
 // 配合集合权限「仅创建者可读写」，天然实现仅本人可见，无需自建 openid 传递/云函数。
 const cloud = require('./cloud.js')
-const backend = require('./backend.js')
 
 const STORAGE_KEY = 'fitlog_login_flag'
 
@@ -16,12 +15,8 @@ function login() {
   return new Promise((resolve, reject) => {
     wx.login({
       success: (res) => {
-        const finish = () => {
-          wx.setStorageSync(STORAGE_KEY, true)
-          resolve(res.code)
-        }
-        if (!backend.enabled()) return finish()
-        backend.login(res.code).then(finish).catch(reject)
+        wx.setStorageSync(STORAGE_KEY, true)
+        resolve(res.code)
       },
       fail: reject
     })

@@ -1,30 +1,39 @@
 const auth = require('../../utils/auth.js')
 const cloud = require('../../utils/cloud.js')
-const config = require('../../utils/config.js')
+const theme = require('../../utils/theme.js')
 
 Page({
   data: {
-    cloud: { status: 'pending', text: '正在同步…' },
+    theme: 'dark',
+    cloud: { status: 'pending', text: '正在同步...' },
     profile: null,
-    workoutCount: 0
+    displayName: 'FitLog 用户',
+    workoutCount: 0,
+    planCount: 0
   },
+
   onShow() {
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 2 })
+      this.getTabBar().setData({ selected: 3 })
     }
     this.refresh()
   },
+
   refresh() {
-    this.setData({ 'cloud.status': 'pending', 'cloud.text': '正在同步…' })
+    this.setData({ 'cloud.status': 'pending', 'cloud.text': '正在同步...' })
     Promise.all([
       auth.ensureUser(),
-      cloud.collection(cloud.C.WORKOUTS).count()
-    ]).then(([u, cnt]) => {
+      cloud.collection(cloud.C.WORKOUTS).count(),
+      cloud.collection(cloud.C.PLANS).count()
+    ]).then(([u, workoutCnt, planCnt]) => {
       this.setData({
         profile: u.profile,
+        displayName: (u && u.profile && u.profile.nickName) || 'FitLog 用户',
         'cloud.status': 'ok',
-        'cloud.text': '云端已同步',
-        workoutCount: (cnt && cnt.total) || 0
+        'cloud.text': '云端同步正常',
+        workoutCount: (workoutCnt && workoutCnt.total) || 0,
+        planCount: (planCnt && planCnt.total) || 0
       })
     }).catch((err) => {
       this.setData({
@@ -33,19 +42,29 @@ Page({
       })
     })
   },
+
   goHistory() {
     wx.navigateTo({ url: '/pages/history/history' })
   },
+
   goPlans() {
     wx.navigateTo({ url: '/pages/plans/plans' })
   },
+
   goStats() {
     wx.navigateTo({ url: '/pages/stats/stats' })
   },
+
   goBody() {
     wx.navigateTo({ url: '/pages/body/body' })
   },
+
   goAgent() {
     wx.navigateTo({ url: '/pages/agent/agent' })
+  },
+
+  toggleTheme() {
+    theme.toggle()
+    this.setData({ theme: theme.getTheme() })
   }
 })

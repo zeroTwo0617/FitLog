@@ -27,10 +27,20 @@ Page({
     pickerList: [],
     saving: false,
     planList: [],          // 导入计划选择器列表
-    showPlanPicker: false
+    showPlanPicker: false,
+    exerciseCount: 0,
+    totalSets: 0
+  },
+
+  sessionStats(session) {
+    return {
+      exerciseCount: (session || []).length,
+      totalSets: (session || []).reduce((sum, item) => sum + ((item.sets || []).length), 0)
+    }
   },
 
   onLoad(options) {
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     this.refreshPicker()
     if (options && options.planId) {
       this.loadPlan(options.planId)
@@ -48,12 +58,12 @@ Page({
         const plan = res && res.data ? res.data : null
         if (!plan) return
         const session = pd.mergePlanIntoSession(this.data.session, plan, ex)
-        this.setData({
+        this.setData(Object.assign({
           session,
           planId: planId,
           title: plan.name || '',
           today: fmtToday()
-        })
+        }, this.sessionStats(session)))
       })
       .catch((err) => {
         console.error('从计划预填失败', err)
@@ -135,14 +145,14 @@ Page({
       nameEn: ex0.name,
       sets: [blankSet()]
     }])
-    this.setData({ session, showPicker: false })
+    this.setData(Object.assign({ session, showPicker: false }, this.sessionStats(session)))
   },
 
   removeExercise(e) {
     const idx = Number(e.currentTarget.dataset.idx)
     const session = this.data.session.slice()
     session.splice(idx, 1)
-    this.setData({ session })
+    this.setData(Object.assign({ session }, this.sessionStats(session)))
   },
 
   addSet(e) {
@@ -150,7 +160,7 @@ Page({
     const session = this.data.session.slice()
     session[idx] = Object.assign({}, session[idx])
     session[idx].sets = session[idx].sets.concat([blankSet()])
-    this.setData({ session })
+    this.setData(Object.assign({ session }, this.sessionStats(session)))
   },
 
   removeSet(e) {
@@ -164,7 +174,7 @@ Page({
     session[idx] = Object.assign({}, session[idx])
     session[idx].sets = session[idx].sets.slice()
     session[idx].sets.splice(si, 1)
-    this.setData({ session })
+    this.setData(Object.assign({ session }, this.sessionStats(session)))
   },
 
   onReps(e) {
@@ -184,7 +194,7 @@ Page({
     session[idx] = Object.assign({}, session[idx])
     session[idx].sets = session[idx].sets.slice()
     session[idx].sets[si] = Object.assign({}, session[idx].sets[si], { [field]: e.detail.value })
-    this.setData({ session })
+    this.setData(Object.assign({ session }, this.sessionStats(session)))
   },
 
   // ===== 保存训练：先写 workouts，再批量写 sets =====
@@ -251,7 +261,7 @@ Page({
         return Promise.all(tasks)
       })
       .then(() => {
-        this.setData({ saving: false, session: [], showPicker: false })
+        this.setData(Object.assign({ saving: false, session: [], showPicker: false }, this.sessionStats([])))
         wx.showToast({ title: '已保存', icon: 'success' })
       })
       .catch((err) => {

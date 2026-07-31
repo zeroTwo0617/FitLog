@@ -1,25 +1,24 @@
-<view class="page tab-page">
-  <view class="head">
+<view class="page tab-page theme-{{theme ? theme : 'dark'}}">
+  <view class="head stats-head">
     <text class="h-title">数据统计</text>
-    <text class="h-sub">训练量、打卡与力量成长，一目了然</text>
+    <text class="h-sub">训练量、打卡与力量成长，集中在一页看清</text>
   </view>
 
   <view class="loading" wx:if="{{loading}}">加载中…</view>
 
   <block wx:if="{{!loading}}">
-    <!-- 摘要卡 -->
-    <view class="summary" wx:if="{{hasData}}">
-      <view class="sum-card">
-        <text class="sum-num">{{totalWorkouts}}</text>
-        <text class="sum-label">次训练</text>
+    <view class="metric-grid stats-metrics" wx:if="{{hasData}}">
+      <view class="metric-card">
+        <text class="metric-value grad-text">{{totalWorkouts}}</text>
+        <text class="metric-label">次训练</text>
       </view>
-      <view class="sum-card">
-        <text class="sum-num">{{totalVolume}}</text>
-        <text class="sum-label">总容量(kg)</text>
+      <view class="metric-card">
+        <text class="metric-value">{{totalVolume}}</text>
+        <text class="metric-label">总容量 kg</text>
       </view>
-      <view class="sum-card">
-        <text class="sum-num">{{monthCheckins}}</text>
-        <text class="sum-label">本月打卡</text>
+      <view class="metric-card">
+        <text class="metric-value">{{monthCheckins}}</text>
+        <text class="metric-label">本月打卡</text>
       </view>
     </view>
 
@@ -30,8 +29,11 @@
     </view>
 
     <!-- 训练量趋势 -->
-    <view class="card" wx:if="{{hasData}}">
-      <text class="card-title">近 14 天训练量</text>
+    <view class="card stats-card" wx:if="{{hasData}}">
+      <view class="section-head">
+        <text class="section-title">近 14 天训练量</text>
+        <text class="section-meta">有柱即有训练</text>
+      </view>
       <view class="chart">
         <view class="bar-col" wx:for="{{trend}}" wx:key="dateStr">
           <view class="bar {{item.trained ? 'bar-on' : ''}}" style="height:{{item.heightPct}}%"></view>
@@ -40,22 +42,12 @@
       </view>
     </view>
 
-    <!-- 打卡日历 -->
-    <view class="card" wx:if="{{hasData}}">
-      <text class="card-title">{{calYear}} 年 {{calMonth}} 月 · 打卡</text>
-      <view class="cal-week">
-        <text wx:for="{{['日','一','二','三','四','五','六']}}" wx:key="*this" class="cal-wd">{{item}}</text>
-      </view>
-      <view class="cal-grid">
-        <view wx:for="{{calendar}}" wx:key="dateStr" class="cal-cell {{item.trained ? 'on' : ''}} {{item.isToday ? 'today' : ''}}">
-          <text>{{item.day}}</text>
-        </view>
-      </view>
-    </view>
-
     <!-- 动作最大重量 Top5 -->
-    <view class="card" wx:if="{{maxByExercise.length > 0}}">
-      <text class="card-title">动作最大重量 Top 5</text>
+    <view class="card stats-card" wx:if="{{maxByExercise.length > 0}}">
+      <view class="section-head">
+        <text class="section-title">动作最大重量</text>
+        <text class="section-meta">Top 5</text>
+      </view>
       <view class="ex-list">
         <view class="ex-row" wx:for="{{maxByExercise}}" wx:key="name">
           <text class="ex-name">{{item.name}}</text>
@@ -68,7 +60,7 @@
     </view>
 
     <!-- 身体数据入口 -->
-    <view class="card link-card" bindtap="goBody">
+    <view class="card link-card stats-card" bindtap="goBody">
       <text class="lc-label">身体数据</text>
       <text class="lc-sub">记录体重 / 体脂 / 围度</text>
       <text class="lc-arrow">›</text>

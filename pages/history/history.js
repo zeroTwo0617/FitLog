@@ -4,10 +4,14 @@ const hd = require('../../utils/historyData.js')
 Page({
   data: {
     list: [],
-    loading: true
+    loading: true,
+    trainedDays: 0,
+    totalSets: 0,
+    latestDate: ''
   },
 
   onShow() {
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     this.load()
   },
 
@@ -22,7 +26,15 @@ Page({
           const extra = names.length > 3 ? (' 等' + names.length + '项') : ''
           return Object.assign({}, w, { namesText: shown + extra })
         })
-        this.setData({ list, loading: false })
+        const dates = {}
+        list.forEach((item) => { if (item.dateStr) dates[item.dateStr] = true })
+        this.setData({
+          list,
+          loading: false,
+          trainedDays: Object.keys(dates).length,
+          totalSets: list.reduce((sum, item) => sum + (Number(item.setTotal) || 0), 0),
+          latestDate: list.length ? list[0].dateStr : ''
+        })
       })
       .catch((err) => {
         this.setData({ loading: false })

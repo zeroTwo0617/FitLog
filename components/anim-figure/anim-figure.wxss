@@ -1,0 +1,123 @@
+/* ===== 风格化小人播放器（原创 CSS 动画，零素材 / 离线 / 版权干净） ===== */
+
+.stage {
+  position: relative;
+  height: 280rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(140rpx 140rpx at 50% 38%, rgba(110,168,255,0.20), transparent 70%),
+    rgba(255,255,255,0.04);
+  border: 1rpx solid rgba(255,255,255,0.10);
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+/* 基础小人：头 / 躯干 / 双臂 / 双腿，全部绝对定位 */
+.fig {
+  position: relative;
+  width: 120rpx;
+  height: 210rpx;
+  margin: 0 auto;
+}
+.fig view {
+  position: absolute;
+  background: linear-gradient(180deg, #dce9ff, #7aa7ff);
+  border-radius: 20rpx;
+  box-sizing: border-box;
+}
+.fig-head {
+  width: 40rpx; height: 40rpx;
+  left: 40rpx; top: 0;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #e8f0ff, #9cc0ff);
+}
+.fig-torso {
+  width: 32rpx; height: 74rpx;
+  left: 44rpx; top: 40rpx;
+  border-radius: 16rpx;
+}
+.fig-arm {
+  width: 14rpx; height: 68rpx;
+  top: 44rpx;
+  border-radius: 10rpx;
+  transform-origin: top center;
+}
+.fig-arm-l { left: 26rpx; }
+.fig-arm-r { left: 80rpx; }
+.fig-leg {
+  width: 16rpx; height: 84rpx;
+  top: 108rpx;
+  border-radius: 10rpx;
+  transform-origin: top center;
+}
+.fig-leg-l { left: 42rpx; }
+.fig-leg-r { left: 62rpx; }
+
+/* 通用：轻微呼吸，让静止时也「活着」 */
+@keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+/* ---------- 1. 深蹲 squat ---------- */
+@keyframes squat-body { 0%,100% { transform: translateY(0); } 50% { transform: translateY(26rpx); } }
+@keyframes squat-leg-l { 0%,100% { transform: rotate(0); } 50% { transform: rotate(17deg); } }
+@keyframes squat-leg-r { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-17deg); } }
+.anim-squat .fig { animation: squat-body 1.6s ease-in-out infinite; }
+.anim-squat .fig-leg-l { animation: squat-leg-l 1.6s ease-in-out infinite; }
+.anim-squat .fig-leg-r { animation: squat-leg-r 1.6s ease-in-out infinite; }
+
+/* ---------- 2. 卧推 bench ---------- */
+@keyframes push-arm { 0%,100% { transform: rotate(-14deg); } 50% { transform: rotate(20deg); } }
+.anim-bench .fig-arm-l, .anim-bench .fig-arm-r { animation: push-arm 1.4s ease-in-out infinite; }
+.anim-bench .fig { animation: breathe 2.8s ease-in-out infinite; }
+
+/* ---------- 3. 硬拉 deadlift ---------- */
+@keyframes dl-body { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(30rpx) rotate(6deg); } }
+@keyframes dl-arm { 0%,100% { transform: rotate(8deg); } 50% { transform: rotate(40deg); } }
+.anim-deadlift .fig { animation: dl-body 1.7s ease-in-out infinite; }
+.anim-deadlift .fig-arm-l, .anim-deadlift .fig-arm-r { animation: dl-arm 1.7s ease-in-out infinite; }
+
+/* ---------- 4. 弯举 curl ---------- */
+@keyframes curl-arm { 0%,100% { transform: rotate(10deg); } 50% { transform: rotate(-72deg); } }
+.anim-curl .fig-arm-l, .anim-curl .fig-arm-r { animation: curl-arm 1.3s ease-in-out infinite; }
+
+/* ---------- 5. 平板 plank ---------- */
+.anim-plank .fig { animation: breathe 3s ease-in-out infinite; }
+.anim-plank .fig-leg-l, .anim-plank .fig-leg-r { transform: rotate(4deg); }
+
+/* ---------- 6. 俯卧撑 pushup ---------- */
+@keyframes pu-body { 0%,100% { transform: translateY(0); } 50% { transform: translateY(28rpx); } }
+.anim-pushup .fig { animation: pu-body 1.2s ease-in-out infinite; }
+
+/* ---------- 7. 引体向上 pullup ---------- */
+@keyframes pu-body-up { 0%,100% { transform: translateY(6rpx); } 50% { transform: translateY(-20rpx); } }
+.anim-pullup .fig { animation: pu-body-up 1.5s ease-in-out infinite; }
+.anim-pullup .fig-arm-l, .anim-pullup .fig-arm-r { animation: push-arm 1.5s ease-in-out infinite; }
+
+/* ---------- 8. 箭步蹲 lunge ---------- */
+@keyframes lunge-leg { 0%,100% { transform: rotate(0) translateX(0); } 50% { transform: rotate(22deg) translateX(22rpx); } }
+.anim-lunge .fig-leg-l { animation: lunge-leg 1.8s ease-in-out infinite; }
+.anim-lunge .fig { animation: breathe 3.6s ease-in-out infinite; }
+
+/* ---------- 9. 肩上推举 shoulder ---------- */
+@keyframes shoulder-arm { 0%,100% { transform: rotate(64deg); } 50% { transform: rotate(-12deg); } }
+.anim-shoulder .fig-arm-l, .anim-shoulder .fig-arm-r { animation: shoulder-arm 1.4s ease-in-out infinite; }
+
+/* ---------- 10. 划船 row ---------- */
+@keyframes row-arm { 0%,100% { transform: rotate(42deg); } 50% { transform: rotate(8deg); } }
+.anim-row .fig-arm-l, .anim-row .fig-arm-r { animation: row-arm 1.4s ease-in-out infinite; }
+.anim-row .fig { animation: breathe 2.8s ease-in-out infinite; }
+
+/* ---------- 11. 卷腹 crunch ---------- */
+@keyframes crunch-body { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(14rpx) rotate(9deg); } }
+.anim-crunch .fig { animation: crunch-body 1.2s ease-in-out infinite; }
+
+/* ---------- 12. 举腿 legraise ---------- */
+@keyframes legraise-leg { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-62deg); } }
+.anim-legraise .fig-leg-l, .anim-legraise .fig-leg-r { animation: legraise-leg 1.6s ease-in-out infinite; }
+.anim-legraise .fig { animation: breathe 3.2s ease-in-out infinite; }
+
+/* 尊重「减少动态效果」无障碍偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .fig, .fig view { animation: none !important; }
+}
