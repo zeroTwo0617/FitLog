@@ -68,8 +68,8 @@
   padding: 14rpx 18rpx;
   margin-bottom: 12rpx;
   border-radius: 10rpx;
-  background: #fff7ed;
-  color: #b45309;
+  background: var(--accent-soft);
+  color: var(--accent);
   font-size: 22rpx;
 }
 
@@ -130,9 +130,9 @@
   font-weight: 650;
 }
 
-.meal-action-primary { grid-column: 1 / -1; color: #fff; background: var(--primary); border-color: var(--primary); }
+.meal-action-primary { grid-column: 1 / -1; color: var(--on-primary); background: var(--primary); border-color: var(--primary); font-weight: 800; }
 .meal-action image { width: 30rpx; height: 30rpx; flex: none; }
-.meal-action-primary image { filter: brightness(0) invert(1); }
+.meal-action-primary image { filter: brightness(0); }
 .meal-action-symbol { color: var(--primary); font-size: 30rpx; line-height: 1; }
 .meal-action:active { opacity: .78; }
 
@@ -175,9 +175,10 @@
 
 .message.user .bubble {
   border-radius: 18rpx 6rpx 18rpx 18rpx;
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
+  background: linear-gradient(135deg, #d9ff6b, #9fd42f);
+  border-color: transparent;
+  color: #12160a;
+  font-weight: 600;
 }
 
 .typing {
@@ -304,6 +305,7 @@
 
 .composer {
   display: flex;
+  align-items: flex-end;
   gap: 12rpx;
   padding: 10rpx;
   background: var(--surface);
@@ -312,6 +314,7 @@
   box-shadow: 0 8rpx 22rpx rgba(25, 35, 55, 0.08);
 }
 
-.agent-input { flex: 1; min-width: 0; height: 68rpx; line-height: 68rpx; padding: 0 16rpx; border-radius: 8rpx; background: var(--surface-2); color: var(--text); }
-.btn-send, .btn-stop { width: 108rpx; height: 68rpx; line-height: 68rpx; border-radius: 8rpx; color: #fff; background: var(--primary); font-size: 24rpx; }
+.agent-input { flex: 1 1 auto; min-width: 0; height: 84rpx; box-sizing: border-box; line-height: 84rpx; padding: 0 18rpx; border: 1rpx solid var(--border); border-radius: 10rpx; background: var(--surface-2); color: var(--text); }
+.btn-send, .btn-stop { display: flex; align-items: center; justify-content: center; width: 96rpx !important; min-width: 96rpx; max-width: 96rpx; height: 64rpx; box-sizing: border-box; flex: 0 0 96rpx; padding: 0; line-height: 1; border-radius: 9rpx; color: var(--on-primary); background: var(--primary); font-size: 23rpx; font-weight: 800; }
+.btn-send[disabled] { opacity: 1; color: var(--text-dim); background: var(--surface-3); }
 .btn-stop { background: var(--danger); }

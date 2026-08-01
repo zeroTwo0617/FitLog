@@ -6,7 +6,7 @@ Page({
     ex: null
   },
   onLoad(opts) {
-    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     const e = ex.getById(opts.id)
     if (!e) {
       this.setData({ loading: false, ex: null })

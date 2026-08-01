@@ -7,7 +7,7 @@ Page({
     loading: true
   },
   onLoad(options) {
-    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     const id = options && options.id ? options.id : ''
     this.setData({ id })
     if (id) this.load(id)

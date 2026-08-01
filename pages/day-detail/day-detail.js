@@ -19,7 +19,7 @@ Page({
   },
 
   onLoad(options) {
-    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     const date = (options && options.date) || ''
     if (!date) {
       wx.showToast({ title: '缺少日期', icon: 'none' })

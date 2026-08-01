@@ -33,7 +33,7 @@ Page({
   },
 
   onShow() {
-    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 3 })
     }

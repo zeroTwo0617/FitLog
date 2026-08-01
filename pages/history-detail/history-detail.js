@@ -10,7 +10,7 @@ Page({
   },
 
   onLoad(options) {
-    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     const id = options && options.id
     if (!id) {
       wx.showToast({ title: '缺少记录ID', icon: 'none' })

@@ -55,7 +55,7 @@ Page({
   onLoad() {
     this._destroyed = false
     this._requestToken = 0
-    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     this.loadMode('training')
   },
 
@@ -65,7 +65,7 @@ Page({
   },
 
   onShow() {
-    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 2 })
     }

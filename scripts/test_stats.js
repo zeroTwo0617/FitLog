@@ -58,6 +58,28 @@ ok(bt[0].dateStr === '2026-07-01' && bt[bt.length - 1].dateStr === '2026-07-20',
 ok(bt[0].heightPct > bt[bt.length - 1].heightPct, '体重更高 → 柱更高(72>70>68 对应 100>60>20)')
 ok(bt.every(t => t.heightPct >= 20 && t.heightPct <= 100), 'bodyTrend heightPct 落在 20-100')
 
+// ---- Epley 1RM 估算与趋势（新增）----
+ok(sd.estimate1RM(100, 10) === 133.3, 'estimate1RM(100,10)=133.3（Epley）')
+ok(sd.estimate1RM(80, 0) === 80, 'estimate1RM 缺次数退化为重量本身')
+ok(sd.estimate1RM(0, 10) === 0, 'estimate1RM 无重量为 0')
+
+const orm = sd.oneRMTrend(workouts, sets, '卧推', 14)
+ok(orm.length === 14, 'oneRMTrend 返回 14 天')
+const ormVals = orm.filter((o) => o.value != null)
+ok(ormVals.length === 2, '卧推 2 天有 1RM 数据')
+ok(ormVals[1].value === sd.estimate1RM(62, 12), '最近一天取当日最佳估算 1RM（62×12 → 91.8）')
+ok(orm.filter((o) => o.value == null).length === 12, '无数据日为 null（折线断点）')
+
+// 未完成组（completed:false）不计入统计与 1RM
+const setsWithIncomplete = sets.concat([
+  { sessionId: 'w2', exerciseId: 'a', exerciseName: '卧推', reps: 5, weight: 999, completed: false }
+])
+const agg2 = sd.aggregate(workouts, setsWithIncomplete)
+ok(agg2.totalVolume === agg.totalVolume, 'completed:false 的组不计入总容量')
+ok(agg2.maxByExercise[1].max === 62, 'completed:false 的组不计入最大重量')
+const orm2 = sd.oneRMTrend(workouts, setsWithIncomplete, '卧推', 14)
+ok(orm2.filter((o) => o.value != null)[1].value === sd.estimate1RM(62, 12), 'completed:false 的组不计入 1RM 趋势')
+
 // ============ 2) mock 云：stats 页加载聚合 ============
 const MOCK_DB = {
   workouts: workouts.slice(),

@@ -1,65 +1,85 @@
+/* ============================================================
+   FitLog 设计系统 ·「暗夜训练场」
+   - 基础（默认）主题：深碳黑绿 + Volt 荧光绿
+   - .theme-light：浅色变体（同一套设计语言）
+   - .theme-dark 保留为显式别名，与基础主题一致
+   ============================================================ */
 page {
-  --bg: #f4f6f5;
-  --surface: #ffffff;
-  --surface-2: #eef2f0;
-  --surface-3: #e5ebe8;
-  --overlay: #f3f6f4;
-  --card-bg: #ffffff;
-  --card-border: #dfe7e3;
-  --border: #e4ebe7;
-  --hairline: #edf1ef;
-  --text: #17211e;
-  --text-dim: #71807a;
-  --primary: #0f766e;
-  --primary-strong: #115e59;
-  --primary-soft: #e2f1ed;
-  --accent: #f97316;
-  --accent-soft: #fff0e6;
-  --success: #159570;
-  --warn: #d97706;
-  --danger: #dc5b5b;
-  --mask: rgba(16, 24, 21, 0.46);
-  --sheet-bg: #ffffff;
-  --placeholder: #a0ada7;
-  --inset: #f3f6f4;
-  --radius-sm: 8rpx;
-  --radius: 12rpx;
-  --radius-lg: 16rpx;
+  --bg: #0a0c0b;
+  --surface: #151915;
+  --surface-2: #1c221d;
+  --surface-3: #232a24;
+  --overlay: #1c221d;
+  --card-bg: #151915;
+  --card-border: #272f29;
+  --border: #272f29;
+  --hairline: #20261f;
+  --text: #eff3ec;
+  --text-dim: #7e8a81;
+  --primary: #c6f24e;
+  --primary-strong: #d9ff6b;
+  --primary-soft: rgba(198, 242, 78, 0.12);
+  --on-primary: #12160a;
+  --accent: #ff7a45;
+  --accent-soft: rgba(255, 122, 69, 0.12);
+  --teal: #5bc8af;
+  --success: #c6f24e;
+  --warn: #ff7a45;
+  --danger: #ff6b6b;
+  --mask: rgba(0, 0, 0, 0.66);
+  --sheet-bg: #151915;
+  --placeholder: #5a655c;
+  --inset: #1c221d;
+  --radius-sm: 12rpx;
+  --radius: 20rpx;
+  --radius-lg: 28rpx;
   --gap: 24rpx;
-  --pad: 24rpx;
-  --shadow-card: 0 6rpx 20rpx rgba(34, 55, 47, 0.045);
-  --shadow-btn: 0 6rpx 14rpx rgba(15, 118, 110, 0.16);
+  --pad: 28rpx;
+  --shadow-card: 0 8rpx 24rpx rgba(0, 0, 0, 0.25);
+  --shadow-btn: 0 8rpx 20rpx rgba(198, 242, 78, 0.22);
   --shadow-glow: none;
   background: var(--bg);
+  background-image: radial-gradient(1100rpx 560rpx at 85% -8%, rgba(198, 242, 78, 0.055), transparent 62%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
   font-size: 28rpx;
 }
 
-.theme-dark {
-  --bg: #111816;
-  --surface: #1a2421;
-  --surface-2: #202d29;
-  --surface-3: #2a3934;
-  --overlay: #202d29;
-  --card-bg: #1a2421;
-  --card-border: #31413b;
-  --border: #2b3a35;
-  --hairline: #293831;
-  --text: #eef5f1;
-  --text-dim: #a7b8b0;
-  --primary: #53b8a6;
-  --primary-strong: #79cfbd;
-  --primary-soft: #193c35;
-  --accent: #fb923c;
-  --accent-soft: #452716;
-  --mask: rgba(0, 0, 0, 0.64);
-  --sheet-bg: #1a2421;
-  --placeholder: #71827b;
-  --inset: #202d29;
-  --shadow-card: 0 8rpx 22rpx rgba(0, 0, 0, 0.16);
-  --shadow-btn: 0 6rpx 16rpx rgba(0, 0, 0, 0.2);
+/* 显式深色别名（页面 theme-dark 类，与基础主题一致） */
+.theme-dark { }
+
+/* 浅色变体：同一设计语言的日间表达 */
+.theme-light {
+  --bg: #f5f6f1;
+  --surface: #ffffff;
+  --surface-2: #eef1e9;
+  --surface-3: #e2e7da;
+  --overlay: #f2f4ec;
+  --card-bg: #ffffff;
+  --card-border: #e0e5d8;
+  --border: #e0e5d8;
+  --hairline: #ebefe4;
+  --text: #171d14;
+  --text-dim: #75806f;
+  --primary: #4d7c0f;
+  --primary-strong: #3f660b;
+  --primary-soft: rgba(77, 124, 15, 0.1);
+  --on-primary: #ffffff;
+  --accent: #ea580c;
+  --accent-soft: rgba(234, 88, 12, 0.1);
+  --teal: #0d9488;
+  --success: #4d7c0f;
+  --warn: #d97706;
+  --danger: #dc5b5b;
+  --mask: rgba(16, 24, 21, 0.46);
+  --sheet-bg: #ffffff;
+  --placeholder: #a3ad9c;
+  --inset: #f2f4ec;
+  --shadow-card: 0 6rpx 20rpx rgba(34, 55, 47, 0.05);
+  --shadow-btn: 0 6rpx 14rpx rgba(77, 124, 15, 0.18);
   background: var(--bg);
+  background-image: none;
 }
 
 view, text, input, scroll-view, button, picker { box-sizing: border-box; }
@@ -78,20 +98,21 @@ button::after { border: none; }
 .page {
   min-height: 100vh;
   padding: 28rpx 24rpx;
-  background: var(--bg);
+  background: transparent;
   color: var(--text);
 }
 
-.tab-page { padding-bottom: calc(148rpx + env(safe-area-inset-bottom)); }
+.tab-page { padding-bottom: calc(168rpx + env(safe-area-inset-bottom)); }
 
 .head, .h-top { margin-bottom: 28rpx; }
 
 .h-title {
   display: block;
   color: var(--text);
-  font-size: 44rpx;
-  font-weight: 760;
-  line-height: 1.18;
+  font-size: 48rpx;
+  font-weight: 800;
+  letter-spacing: -1rpx;
+  line-height: 1.16;
 }
 
 .h-sub {
@@ -131,55 +152,55 @@ button::after { border: none; }
   font-weight: 700;
 }
 
-.metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10rpx; }
+.metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12rpx; }
 
 .metric-card {
   min-width: 0;
-  padding: 20rpx 16rpx;
+  padding: 22rpx 18rpx;
   border: 1rpx solid var(--card-border);
   border-radius: var(--radius-sm);
   background: var(--surface);
 }
 
-.metric-value { display: block; color: var(--text); font-size: 38rpx; font-weight: 760; line-height: 1.1; }
+.metric-value { display: block; color: var(--text); font-size: 40rpx; font-weight: 800; line-height: 1.1; }
 .metric-label { display: block; margin-top: 9rpx; color: var(--text-dim); font-size: 21rpx; line-height: 1.3; }
 .metric-note { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 19rpx; line-height: 1.3; }
 .grad-text { color: var(--primary); }
 
 .btn-primary, .btn-save, .btn-start {
   width: 100%;
-  padding: 21rpx 24rpx;
+  padding: 24rpx 24rpx;
   border: 0;
   border-radius: var(--radius-sm);
   background: var(--primary);
-  color: #ffffff;
+  color: var(--on-primary);
   font-size: 28rpx;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.4;
   box-shadow: var(--shadow-btn);
 }
 
 .btn-secondary, .btn-add, .btn-ghost {
   width: 100%;
-  padding: 20rpx 24rpx;
+  padding: 22rpx 24rpx;
   border: 1rpx solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--surface);
+  background: var(--surface-2);
   color: var(--text);
   font-size: 28rpx;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
 }
 
 .btn-import {
   width: 100%;
-  padding: 19rpx 24rpx;
+  padding: 21rpx 24rpx;
   border: 1rpx dashed var(--primary);
   border-radius: var(--radius-sm);
   background: var(--primary-soft);
-  color: var(--primary-strong);
+  color: var(--primary);
   font-size: 27rpx;
-  font-weight: 650;
+  font-weight: 700;
   line-height: 1.4;
 }
 
@@ -195,7 +216,7 @@ button::after { border: none; }
   padding: 0 20rpx;
   border: 1rpx solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--surface);
+  background: var(--surface-2);
   color: var(--text);
   font-size: 25rpx;
   font-weight: 600;
@@ -208,31 +229,32 @@ button::after { border: none; }
 }
 
 .chip {
-  margin-right: 10rpx;
-  padding: 10rpx 18rpx;
+  margin-right: 12rpx;
+  padding: 12rpx 22rpx;
   border: 1rpx solid var(--border);
-  background: var(--surface);
+  background: var(--surface-2);
   color: var(--text-dim);
   font-size: 23rpx;
+  font-weight: 600;
 }
 
-.chip-on { border-color: var(--primary); background: var(--primary); color: #fff; }
-.tag { padding: 6rpx 12rpx; background: var(--primary-soft); color: var(--primary-strong); font-size: 20rpx; }
+.chip-on { border-color: var(--primary); background: var(--primary); color: var(--on-primary); font-weight: 700; }
+.tag { padding: 7rpx 14rpx; background: var(--primary-soft); color: var(--primary); font-size: 20rpx; font-weight: 600; }
 .tag.dim { background: var(--surface-2); color: var(--text-dim); }
 
 .input, .search-input {
   width: 100%;
-  height: 82rpx;
-  padding: 0 18rpx;
+  height: 84rpx;
+  padding: 0 20rpx;
   border: 1rpx solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface-2);
   color: var(--text);
   font-size: 27rpx;
-  line-height: 82rpx;
+  line-height: 84rpx;
 }
 
-.search-input { height: 78rpx; padding: 0 20rpx; line-height: 78rpx; background: var(--surface); }
+.search-input { height: 80rpx; padding: 0 22rpx; line-height: 80rpx; }
 
 .empty {
   display: flex;

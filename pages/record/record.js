@@ -9,9 +9,9 @@ function fmtToday() {
   return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
 }
 
-// 一组默认空数据
+// 一组默认空数据（completed 复用 sets.completed 字段：练一组勾一组）
 function blankSet() {
-  return { reps: '', weight: '', rest: '' }
+  return { reps: '', weight: '', rest: '', completed: false }
 }
 
 Page({
@@ -40,7 +40,7 @@ Page({
   },
 
   onLoad(options) {
-    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     this.refreshPicker()
     if (options && options.planId) {
       this.loadPlan(options.planId)
@@ -159,8 +159,28 @@ Page({
     const idx = Number(e.currentTarget.dataset.idx)
     const session = this.data.session.slice()
     session[idx] = Object.assign({}, session[idx])
-    session[idx].sets = session[idx].sets.concat([blankSet()])
+    // 默认带出上一组的次数/重量/休息，训练中只需微调（PRD「快速 +1 录入」）
+    const prevSets = session[idx].sets
+    const last = prevSets.length ? prevSets[prevSets.length - 1] : null
+    const next = last
+      ? { reps: last.reps, weight: last.weight, rest: last.rest, completed: false }
+      : blankSet()
+    session[idx].sets = prevSets.concat([next])
     this.setData(Object.assign({ session }, this.sessionStats(session)))
+  },
+
+  // 练一组勾一组：完成状态切换 + 震动反馈
+  toggleSet(e) {
+    const idx = Number(e.currentTarget.dataset.idx)
+    const si = Number(e.currentTarget.dataset.sidx)
+    const session = this.data.session.slice()
+    session[idx] = Object.assign({}, session[idx])
+    session[idx].sets = session[idx].sets.slice()
+    const target = session[idx].sets[si]
+    const completed = !target.completed
+    session[idx].sets[si] = Object.assign({}, target, { completed })
+    this.setData({ session })
+    if (completed && wx.vibrateShort) wx.vibrateShort({ type: 'light' })
   },
 
   removeSet(e) {
@@ -197,7 +217,7 @@ Page({
     this.setData(Object.assign({ session }, this.sessionStats(session)))
   },
 
-  // ===== 保存训练：先写 workouts，再批量写 sets =====
+  // ===== 保存训练：先读历史最大重量（PR 检测），再写 workouts + sets =====
   save() {
     if (this.data.saving) return
     const session = this.data.session
@@ -217,8 +237,13 @@ Page({
 
     this.setData({ saving: true })
     const db = cloud.db()
+    let prevSets = []
 
-    return auth.ensureUser()
+    // PR 检测的历史基线：保存前先读一次已有 sets；失败不阻塞保存
+    return db.collection(cloud.C.SETS).limit(1000).get()
+      .then((res) => { prevSets = (res && res.data) || [] })
+      .catch((err) => { console.warn('读取历史记录失败，跳过 PR 检测', err) })
+      .then(() => auth.ensureUser())
       .then(() => {
         const summary = session.map(s => ({
           exerciseId: s.exerciseId,
@@ -252,7 +277,7 @@ Page({
                 reps: (st.reps === '' || st.reps == null) ? null : Number(st.reps),
                 weight: (st.weight === '' || st.weight == null) ? null : Number(st.weight),
                 restSec: (st.rest === '' || st.rest == null) ? null : Number(st.rest),
-                completed: true,
+                completed: !!st.completed,
                 createdAt: new Date()
               }
             }))
@@ -261,8 +286,33 @@ Page({
         return Promise.all(tasks)
       })
       .then(() => {
+        // ===== PR（个人纪录）检测：已完成组的最大重量 > 历史最大重量 =====
+        const prevMax = {}
+        prevSets.forEach((s) => {
+          const w = Number(s.weight)
+          if (w > 0 && s.exerciseName) {
+            prevMax[s.exerciseName] = Math.max(prevMax[s.exerciseName] || 0, w)
+          }
+        })
+        const prs = []
+        session.forEach((s) => {
+          let m = 0
+          s.sets.forEach((st) => {
+            if (!st.completed) return
+            const w = Number(st.weight)
+            if (w > m) m = w
+          })
+          const prev = prevMax[s.name] || 0
+          if (m > 0 && prev > 0 && m > prev) prs.push({ name: s.name, weight: m, prev })
+        })
+
         this.setData(Object.assign({ saving: false, session: [], showPicker: false }, this.sessionStats([])))
-        wx.showToast({ title: '已保存', icon: 'success' })
+        if (prs.length) {
+          const lines = prs.map((p) => p.name + '  ' + p.weight + ' kg（原 ' + p.prev + ' kg）').join('\n')
+          wx.showModal({ title: '🏆 新纪录！', content: lines, showCancel: false, confirmText: '继续加油' })
+        } else {
+          wx.showToast({ title: '已保存', icon: 'success' })
+        }
       })
       .catch((err) => {
         this.setData({ saving: false })

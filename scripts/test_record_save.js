@@ -25,6 +25,7 @@ function makeCollection(name) {
       return Promise.resolve({ _id: 'o_' + writes.other.length })
     },
     get() { return Promise.resolve({ data: [] }) },
+    limit() { return this },
     doc() { return { update: () => Promise.resolve({}) } }
   }
 }
@@ -33,7 +34,9 @@ global.wx = {
   login: (o) => o.success({ code: 'test_code' }),
   getStorageSync: () => false,
   setStorageSync: () => {},
-  showToast: () => {}
+  showToast: () => {},
+  showModal: () => {},
+  vibrateShort: () => {}
 }
 
 // 3) 加载页面模块（会执行 Page(options)）

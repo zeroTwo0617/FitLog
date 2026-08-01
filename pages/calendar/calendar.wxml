@@ -1,4 +1,4 @@
-<view class="page tab-page calendar-page theme-{{theme ? theme : 'light'}}">
+<view class="page tab-page calendar-page theme-{{theme ? theme : 'dark'}}">
   <view class="calendar-header">
     <view><text class="eyebrow">TRAINING LOG</text><text class="h-title">训练日历</text><text class="h-sub">选中日期，在当前页面查看训练和饮食记录</text></view>
     <view class="month-total"><text>{{monthWorkoutCount}}</text><text>本月训练</text></view>

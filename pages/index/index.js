@@ -33,7 +33,7 @@ Page({
 
   onShow() {
     this.setData({
-      theme: getApp().globalData.theme || 'light',
+      theme: getApp().globalData.theme || 'dark',
       todayText: formatToday()
     })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {

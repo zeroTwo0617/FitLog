@@ -1,4 +1,4 @@
-<view class="page tab-page mine-page theme-{{theme ? theme : 'light'}}">
+<view class="page tab-page mine-page theme-{{theme ? theme : 'dark'}}">
   <view class="mine-header"><view class="avatar-large">FL</view><view class="profile-copy"><text class="eyebrow">YOUR SPACE</text><text class="profile-name">{{displayName}}</text><view class="sync-status pstatus-{{cloud.status}}"><view class="status-dot"></view><text>{{cloud.text}}</text></view></view></view>
 
   <view class="mine-summary"><view><text>{{workoutCount}}</text><text>训练记录</text></view><view><text>{{planCount}}</text><text>训练计划</text></view><view><text>Fit</text><text>持续记录</text></view></view>

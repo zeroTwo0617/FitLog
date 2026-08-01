@@ -1,6 +1,6 @@
 .mine-page { padding-top: 24rpx; }
 .mine-header { display: flex; align-items: center; gap: 18rpx; margin-bottom: 18rpx; }
-.avatar-large { display: flex; align-items: center; justify-content: center; width: 78rpx; height: 78rpx; flex: none; border-radius: 50%; background: var(--primary); color: #fff; font-size: 26rpx; font-weight: 800; }
+.avatar-large { display: flex; align-items: center; justify-content: center; width: 84rpx; height: 84rpx; flex: none; border-radius: 24rpx; background: linear-gradient(135deg, var(--primary), #9fd42f); color: #12160a; font-size: 28rpx; font-weight: 800; }
 .profile-copy { min-width: 0; }
 .eyebrow { display: block; margin-bottom: 6rpx; color: var(--primary); font-size: 18rpx; font-weight: 750; letter-spacing: 2rpx; }
 .profile-name { display: block; overflow: hidden; color: var(--text); font-size: 31rpx; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
@@ -41,7 +41,7 @@
 .link-icon { display: flex; align-items: center; justify-content: center; width: 35rpx; height: 35rpx; border-radius: 7rpx; font-size: 17rpx; font-weight: 800; }
 .history-icon { background: var(--accent-soft); color: var(--accent); }
 .plan-icon { background: var(--primary-soft); color: var(--primary); }
-.stats-icon { background: #e6eef8; color: #3974a9; }
+.stats-icon { background: rgba(91, 200, 175, 0.12); color: var(--teal); }
 
 .settings-group { margin-top: 18rpx; border-top: 1rpx solid var(--card-border); }
 .settings-group .group-label { padding-top: 14rpx; }

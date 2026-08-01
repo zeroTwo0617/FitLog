@@ -1,8 +1,10 @@
 const cloud = require('../../utils/cloud.js')
 const sd = require('../../utils/statsData.js')
+const lc = require('../../utils/lineChart.js')
 
 Page({
   data: {
+    theme: 'dark',
     loading: true,
     hasData: false,
     totalWorkouts: 0,
@@ -10,11 +12,13 @@ Page({
     monthCheckins: 0,
     trend: [],
     maxByExercise: [],
-    calendar: []
+    calendar: [],
+    ormExercises: [],   // Top 动作（可切换 1RM 趋势）
+    ormActive: ''
   },
 
   onShow() {
-    this.setData({ theme: getApp().globalData.theme || 'light' })
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
     this.load()
   },
 
@@ -27,6 +31,7 @@ Page({
     ]).then(([wRes, sRes]) => {
       const workouts = (wRes && wRes.data) || []
       const sets = (sRes && sRes.data) || []
+      this._raw = { workouts, sets }
       const agg = sd.aggregate(workouts, sets)
 
       // 近 14 天训练量趋势
@@ -46,6 +51,12 @@ Page({
         heightPct: maxW > 0 ? Math.round((e.max / maxW) * 100) : 0
       }))
 
+      // 1RM 趋势可切换动作（Top 3）
+      const ormExercises = agg.maxByExercise.slice(0, 3)
+      const ormActive = this.data.ormActive && ormExercises.some((e) => e.name === this.data.ormActive)
+        ? this.data.ormActive
+        : (ormExercises.length ? ormExercises[0].name : '')
+
       this.setData({
         loading: false,
         hasData: agg.totalWorkouts > 0,
@@ -54,13 +65,67 @@ Page({
         monthCheckins: monthCheckins,
         trend: trend,
         maxByExercise: maxByExercise,
-        calendar: calendar
-      })
+        calendar: calendar,
+        ormExercises: ormExercises,
+        ormActive: ormActive
+      }, () => this.drawCharts())
     }).catch((err) => {
       this.setData({ loading: false })
       wx.showToast({ title: '加载失败', icon: 'none' })
       console.error('加载统计失败', err)
     })
+  },
+
+  // ===== 图表绘制（canvas 2d 折线） =====
+  chartColors() {
+    const dark = this.data.theme !== 'light'
+    return {
+      color: dark ? '#c6f24e' : '#4d7c0f',
+      areaTop: dark ? 'rgba(198,242,78,0.26)' : 'rgba(77,124,15,0.16)',
+      areaBottom: dark ? 'rgba(198,242,78,0)' : 'rgba(77,124,15,0)',
+      dotRing: dark ? '#151915' : '#ffffff',
+      dimColor: dark ? '#7e8a81' : '#9aa693'
+    }
+  },
+
+  drawInto(id, points, unit) {
+    wx.createSelectorQuery().in(this).select('#' + id)
+      .fields({ node: true, size: true })
+      .exec((res) => {
+        if (!res || !res[0] || !res[0].node) return
+        const info = (wx.getWindowInfo && wx.getWindowInfo()) || { pixelRatio: 2 }
+        lc.drawLineChart(res[0].node, Object.assign({
+          width: res[0].width,
+          height: res[0].height,
+          dpr: info.pixelRatio || 2,
+          points: points,
+          unit: unit
+        }, this.chartColors()))
+      })
+  },
+
+  drawCharts() {
+    if (!this.data.hasData || !this._raw) return
+    // 训练量：休息日置 null（折线断开，不误导为「训练量为 0」）
+    const volPts = this.data.trend.map((t) => ({
+      label: t.day,
+      value: t.trained ? t.volume : null
+    }))
+    this.drawInto('volumeChart', volPts, 'kg')
+    this.drawOrmChart()
+  },
+
+  drawOrmChart() {
+    if (!this.data.ormActive || !this._raw) return
+    const series = sd.oneRMTrend(this._raw.workouts, this._raw.sets, this.data.ormActive, 14)
+    const pts = series.map((s) => ({ label: s.day, value: s.value }))
+    this.drawInto('ormChart', pts, 'kg')
+  },
+
+  onOrmPick(e) {
+    const name = e.currentTarget.dataset.name
+    if (!name || name === this.data.ormActive) return
+    this.setData({ ormActive: name }, () => this.drawOrmChart())
   },
 
   goBody() {

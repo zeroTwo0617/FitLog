@@ -5,15 +5,15 @@ const KEY = 'fitlog_theme'
 
 // 顶栏（原生 navigationBar）跟随主题的颜色配置
 const NAV = {
-  dark:  { frontColor: '#ffffff', backgroundColor: '#111816' },
-  light: { frontColor: '#000000', backgroundColor: '#ffffff' }
+  dark:  { frontColor: '#ffffff', backgroundColor: '#0a0c0b' },
+  light: { frontColor: '#000000', backgroundColor: '#f5f6f1' }
 }
 
 let syncedNavTheme = ''
 
 function getTheme() {
   const s = wx.getStorageSync(KEY)
-  return s === 'light' || s === 'dark' ? s : 'light'
+  return s === 'light' || s === 'dark' ? s : 'dark'
 }
 
 // 同步原生顶栏颜色（frontColor 仅支持 #ffffff / #000000）

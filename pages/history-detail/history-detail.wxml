@@ -1,4 +1,4 @@
-<view class="page detail theme-{{theme ? theme : 'light'}}">
+<view class="page detail theme-{{theme ? theme : 'dark'}}">
   <view class="loading" wx:if="{{loading}}">加载中…</view>
 
   <block wx:if="{{!loading && workout}}">

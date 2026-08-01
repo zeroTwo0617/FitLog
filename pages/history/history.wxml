@@ -1,4 +1,4 @@
-<view class="page tab-page history-page theme-{{theme ? theme : 'light'}}">
+<view class="page tab-page history-page theme-{{theme ? theme : 'dark'}}">
   <view class="history-header"><view><text class="eyebrow">TRAINING ARCHIVE</text><text class="h-title">训练历史</text><text class="h-sub">每次训练都会留下可回看的进步</text></view><text class="latest-date" wx:if="{{latestDate}}">最近 {{latestDate}}</text></view>
   <view class="history-summary"><view><text>{{list.length}}</text><text>训练次数</text></view><view><text>{{trainedDays}}</text><text>训练天数</text></view><view><text>{{totalSets}}</text><text>完成组数</text></view></view>
   <view class="loading" wx:if="{{loading}}">正在加载历史</view>

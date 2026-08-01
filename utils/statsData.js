@@ -41,6 +41,7 @@ function aggregate(workouts, sets) {
   let totalVolume = 0
 
   ;(sets || []).forEach((s) => {
+    if (s.completed === false) return // 未勾完成的组不计入统计（旧数据无该字段，不受影响）
     const dateStr = wMap[s.sessionId]
     if (!dateStr) return
     const vol = volumeOf(s)
@@ -134,4 +135,36 @@ function bodyTrend(records, field) {
   })
 }
 
-module.exports = { fmtDate, lastNDates, volumeOf, aggregate, volumeTrend, buildCalendar, bodyTrend }
+// Epley 公式估算 1RM（kg）：weight × (1 + reps/30)。缺次数时退化为重量本身
+function estimate1RM(weight, reps) {
+  const w = Number(weight)
+  const r = Number(reps)
+  if (!w || w <= 0) return 0
+  if (!r || r <= 0) return w
+  return Math.round(w * (1 + r / 30) * 10) / 10
+}
+
+// 某动作近 n 天的估算 1RM 趋势。返回 [{dateStr, day, value}]，无数据日 value 为 null（折线图断点）
+function oneRMTrend(workouts, sets, exerciseName, n) {
+  const dates = lastNDates(n)
+  const wMap = {}
+  ;(workouts || []).forEach((w) => {
+    if (w && w._id) wMap[w._id] = w.dateStr
+  })
+  const best = {}
+  ;(sets || []).forEach((s) => {
+    if (s.completed === false) return
+    if (s.exerciseName !== exerciseName) return
+    const ds = wMap[s.sessionId]
+    if (!ds) return
+    const v = estimate1RM(s.weight, s.reps)
+    if (v > 0 && (!best[ds] || v > best[ds])) best[ds] = v
+  })
+  return dates.map((ds) => ({
+    dateStr: ds,
+    day: Number(ds.slice(8, 10)),
+    value: best[ds] != null ? best[ds] : null
+  }))
+}
+
+module.exports = { fmtDate, lastNDates, volumeOf, aggregate, volumeTrend, buildCalendar, bodyTrend, estimate1RM, oneRMTrend }

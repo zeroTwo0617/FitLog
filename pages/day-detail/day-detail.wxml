@@ -1,4 +1,4 @@
-<view class="page detail theme-{{theme ? theme : 'light'}}">
+<view class="page detail theme-{{theme ? theme : 'dark'}}">
   <view class="head">
     <text class="date">{{date}}</text>
     <text class="summary" wx:if="{{sessionCount > 0}}">{{sessionCount}} 次训练</text>

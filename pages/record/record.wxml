@@ -1,4 +1,4 @@
-<view class="page record theme-{{theme ? theme : 'light'}}">
+<view class="page record theme-{{theme ? theme : 'dark'}}">
   <view class="record-header"><view><text class="eyebrow">NEW SESSION</text><text class="h-title">{{title ? title : '记录训练'}}</text><text class="h-sub">{{today}} · 每一组都算数</text></view><view class="record-mode">{{planId ? '计划' : '自由'}}</view></view>
   <view class="record-summary"><view><text>{{exerciseCount}}</text><text>动作</text></view><view><text>{{totalSets}}</text><text>总组数</text></view><view><text>{{planId ? '已选' : '待选'}}</text><text>训练计划</text></view></view>
 
@@ -9,8 +9,8 @@
     <view class="exercise-card" wx:for="{{session}}" wx:key="exerciseId">
       <view class="exercise-header"><view><text class="exercise-index">0{{index + 1}}</text><text class="exercise-name">{{item.name}}</text></view><text class="exercise-remove" bindtap="removeExercise" data-idx="{{index}}">移除</text></view>
       <view class="exercise-target" wx:if="{{item.targetSets || item.targetReps || item.targetWeight}}"><text wx:if="{{item.targetSets}}">目标 {{item.targetSets}} 组</text><text wx:if="{{item.targetReps}}"> · {{item.targetReps}} 次</text><text wx:if="{{item.targetWeight}}"> · {{item.targetWeight}} kg</text></view>
-      <view class="set-row set-head"><text>组</text><text>次数</text><text>重量</text><text>休息</text><text></text></view>
-      <view class="set-row" wx:for="{{item.sets}}" wx:for-item="s" wx:for-index="si" wx:key="si"><text class="set-no">{{si + 1}}</text><input class="set-input" type="number" placeholder="-" value="{{s.reps}}" bindinput="onReps" data-idx="{{index}}" data-sidx="{{si}}" /><input class="set-input" type="digit" placeholder="-" value="{{s.weight}}" bindinput="onWeight" data-idx="{{index}}" data-sidx="{{si}}" /><input class="set-input" type="number" placeholder="-" value="{{s.rest}}" bindinput="onRest" data-idx="{{index}}" data-sidx="{{si}}" /><text class="set-remove" bindtap="removeSet" data-idx="{{index}}" data-sidx="{{si}}">×</text></view>
+      <view class="set-row set-head"><text>组</text><text>次数</text><text>重量</text><text>休息</text><text>完成</text><text></text></view>
+      <view class="set-row {{s.completed ? 'set-done' : ''}}" wx:for="{{item.sets}}" wx:for-item="s" wx:for-index="si" wx:key="si"><text class="set-no">{{si + 1}}</text><input class="set-input" type="number" placeholder="-" value="{{s.reps}}" bindinput="onReps" data-idx="{{index}}" data-sidx="{{si}}" /><input class="set-input" type="digit" placeholder="-" value="{{s.weight}}" bindinput="onWeight" data-idx="{{index}}" data-sidx="{{si}}" /><input class="set-input" type="number" placeholder="-" value="{{s.rest}}" bindinput="onRest" data-idx="{{index}}" data-sidx="{{si}}" /><view class="set-check {{s.completed ? 'ok' : ''}}" catchtap="toggleSet" data-idx="{{index}}" data-sidx="{{si}}">✓</view><text class="set-remove" bindtap="removeSet" data-idx="{{index}}" data-sidx="{{si}}">×</text></view>
       <button class="add-set" bindtap="addSet" data-idx="{{index}}">＋ 添加一组</button>
     </view>
   </view>
