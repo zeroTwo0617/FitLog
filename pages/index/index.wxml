@@ -31,6 +31,16 @@
     </view>
   </view>
 
+  <view class="nutrition-snapshot" bindtap="goNutrition">
+    <view class="nutrition-snapshot-mark">营</view>
+    <view class="nutrition-snapshot-copy">
+      <text class="nutrition-snapshot-title">今日饮食</text>
+      <text class="nutrition-snapshot-main">{{todayNutritionText}}</text>
+      <text class="nutrition-snapshot-meta">{{todayNutritionMeta}}</text>
+    </view>
+    <text class="nutrition-snapshot-arrow">→</text>
+  </view>
+
   <view class="section">
     <view class="section-head">
       <text class="section-title">常用入口</text>

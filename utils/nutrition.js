@@ -18,6 +18,10 @@ function numberOrZero(value) {
   return Number.isFinite(n) && n >= 0 ? Math.round(n * 10) / 10 : 0
 }
 
+function macroCalories(protein, carbs, fat) {
+  return Math.round((numberOrZero(protein) * 4 + numberOrZero(carbs) * 4 + numberOrZero(fat) * 9) * 10) / 10
+}
+
 function normalizeFood(food) {
   return {
     name: String((food && food.name) || '').trim().slice(0, 80),
@@ -119,6 +123,7 @@ module.exports = {
   normalizeDietPlan,
   aggregateByDate,
   mealLabel,
+  macroCalories,
   numberOrZero,
   collection: () => cloud.collection(cloud.C.NUTRITION_LOGS)
 }

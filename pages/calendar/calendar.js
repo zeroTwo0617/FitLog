@@ -41,6 +41,7 @@ Page({
   },
 
   load() {
+    const previousSelectedDate = this.data.selectedDate
     this.setData({ loading: true })
     const db = cloud.db()
     Promise.all([
@@ -72,8 +73,12 @@ Page({
           selectedWorkouts: [],
           selectedNutrition: null,
           dailyTargetCalories: this._dailyTargetCalories
+        }, () => {
+          this.renderCalendar(year, month)
+          if (previousSelectedDate) {
+            this.tapDay({ currentTarget: { dataset: { date: previousSelectedDate } } })
+          }
         })
-        this.renderCalendar(year, month)
       })
       .catch((err) => {
         this.setData({ loading: false })
@@ -190,5 +195,11 @@ Page({
       wx.showToast({ title: '当天详情加载失败', icon: 'none' })
       console.error('加载当天训练详情失败', err)
     })
+  },
+
+  openNutrition(e) {
+    const date = (e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.date) || this.data.selectedDate
+    if (!date) return
+    wx.navigateTo({ url: `/pages/nutrition/nutrition?date=${date}` })
   }
 })

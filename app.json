@@ -13,6 +13,7 @@
     "pages/plan-detail/plan-detail",
     "pages/exercise-detail/exercise-detail",
     "pages/calendar/calendar",
+    "pages/nutrition/nutrition",
     "pages/day-detail/day-detail",
     "pages/agent/agent"
   ],

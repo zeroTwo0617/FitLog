@@ -28,7 +28,7 @@
 .calorie-dot { position: absolute; bottom: 6rpx; width: 8rpx; height: 8rpx; border-radius: 50%; background: var(--primary); }
 .calorie-dot.over { background: var(--danger); }
 .calendar-legend { display: flex; gap: 22rpx; padding: 16rpx 8rpx 0; border-top: 1rpx solid var(--hairline); color: var(--text-dim); font-size: 20rpx; }
-.calendar-legend text { display: flex; align-items: center; gap: 7rpx; }
+.calendar-legend .legend-item { display: flex; align-items: center; gap: 7rpx; }
 .legend-dot { display: inline-block; width: 14rpx; height: 14rpx; border: 1rpx solid var(--border); border-radius: 50%; background: var(--surface-2); }
 .legend-dot.trained { border-color: var(--primary); background: var(--primary); }
 .legend-dot.today { border-color: var(--accent); }
@@ -40,7 +40,9 @@
 .detail-summary, .session-meta, .group-count { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 20rpx; }
 .detail-close { display: flex; align-items: center; justify-content: center; width: 46rpx; height: 46rpx; border-radius: 50%; background: var(--surface-2); color: var(--text-dim); font-size: 32rpx; }
 .nutrition-summary, .nutrition-empty { margin-top: 18rpx; padding: 16rpx; border-radius: var(--radius-sm); background: var(--primary-soft); }
+.nutrition-summary-head { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; }
 .nutrition-title { display: block; color: var(--text); font-size: 24rpx; font-weight: 700; }
+.nutrition-action { flex: none; color: var(--primary); font-size: 20rpx; font-weight: 650; }
 .nutrition-macro { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 19rpx; line-height: 1.4; }
 .nutrition-meal { display: flex; justify-content: space-between; margin-top: 10rpx; padding-top: 10rpx; border-top: 1rpx solid var(--border); color: var(--text); font-size: 20rpx; }
 .nutrition-empty, .detail-loading, .detail-empty { color: var(--text-dim); font-size: 21rpx; }

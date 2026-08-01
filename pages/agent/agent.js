@@ -209,6 +209,10 @@ Page({
     if (this.data.mealDraft) this.setData({ 'mealDraft.mealType': this.data.mealTypes[index].value })
   },
 
+  openNutrition() {
+    wx.navigateTo({ url: `/pages/nutrition/nutrition?date=${this.data.mealDate}` })
+  },
+
   createManualMeal() {
     this.setData({
       mealDraft: nutrition.normalizeMeal({
@@ -265,7 +269,17 @@ Page({
     if (!this.data.mealDraft) return
     const field = e.currentTarget.dataset.field
     const numeric = ['calories', 'protein', 'carbs', 'fat'].includes(field)
-    this.setData({ [`mealDraft.${field}`]: numeric ? Number(e.detail.value) || 0 : e.detail.value })
+    const value = numeric ? Number(e.detail.value) || 0 : e.detail.value
+    const next = { [`mealDraft.${field}`]: value }
+    if (this.data.mealDraft.source === 'manual' && ['protein', 'carbs', 'fat'].includes(field)) {
+      const draft = this.data.mealDraft
+      next['mealDraft.calories'] = nutrition.macroCalories(
+        field === 'protein' ? value : draft.protein,
+        field === 'carbs' ? value : draft.carbs,
+        field === 'fat' ? value : draft.fat
+      )
+    }
+    this.setData(next)
   },
 
   onFoodField(e) {

@@ -1,7 +1,7 @@
 <view class="page agent-page theme-{{theme}}">
   <view class="agent-head">
     <view>
-      <text class="h-title">助手</text>
+      <text class="h-title">教练</text>
       <text class="h-sub">训练建议与饮食记录</text>
     </view>
     <button class="text-btn" bindtap="clearSession" disabled="{{sending}}">新会话</button>
@@ -17,14 +17,19 @@
 
   <block wx:if="{{mode === 'diet'}}">
     <view class="meal-tools">
-      <picker mode="date" value="{{mealDate}}" bindchange="onMealDate">
-        <view class="date-picker">{{mealDate}}</view>
-      </picker>
-      <picker mode="selector" range="{{mealTypes}}" range-key="label" value="{{mealTypeIndex}}" bindchange="onMealType">
-        <view class="meal-picker">{{mealTypeLabel}}</view>
-      </picker>
-      <button class="small-primary" bindtap="chooseMealImage" loading="{{mealAnalyzing}}" disabled="{{mealAnalyzing}}">拍照估算</button>
-      <button class="small-outline" bindtap="createManualMeal" disabled="{{mealAnalyzing}}">手动记录</button>
+      <view class="meal-context">
+        <picker mode="date" value="{{mealDate}}" bindchange="onMealDate">
+          <view class="tool-picker"><text class="tool-label">日期</text><text class="tool-value">{{mealDate}}</text><text class="tool-chevron">›</text></view>
+        </picker>
+        <picker mode="selector" range="{{mealTypes}}" range-key="label" value="{{mealTypeIndex}}" bindchange="onMealType">
+          <view class="tool-picker"><text class="tool-label">餐次</text><text class="tool-value">{{mealTypeLabel}}</text><text class="tool-chevron">›</text></view>
+        </picker>
+      </view>
+      <view class="meal-actions">
+        <button class="meal-action meal-action-primary" bindtap="chooseMealImage" loading="{{mealAnalyzing}}" disabled="{{mealAnalyzing}}"><image src="/assets/icons/sparkles-active.svg" mode="aspectFit"></image><text>拍照估算</text></button>
+        <button class="meal-action" bindtap="createManualMeal" disabled="{{mealAnalyzing}}"><text class="meal-action-symbol">＋</text><text>手动记录</text></button>
+        <button class="meal-action" bindtap="openNutrition"><image src="/assets/icons/calendar-days-active.svg" mode="aspectFit"></image><text>管理饮食</text></button>
+      </view>
     </view>
   </block>
 
@@ -83,11 +88,12 @@
         <text class="draft-count">估算值</text>
       </view>
       <view class="meal-fields">
-        <view class="meal-field"><text>热量 kcal</text><input type="digit" value="{{mealDraft.calories}}" data-field="calories" bindinput="onMealField" /></view>
+        <view class="meal-field"><text>热量 kcal{{mealDraft.source === 'manual' ? ' · 自动' : ''}}</text><input type="digit" value="{{mealDraft.calories}}" data-field="calories" bindinput="onMealField" disabled="{{mealDraft.source === 'manual'}}" /></view>
         <view class="meal-field"><text>蛋白质 g</text><input type="digit" value="{{mealDraft.protein}}" data-field="protein" bindinput="onMealField" /></view>
         <view class="meal-field"><text>碳水 g</text><input type="digit" value="{{mealDraft.carbs}}" data-field="carbs" bindinput="onMealField" /></view>
         <view class="meal-field"><text>脂肪 g</text><input type="digit" value="{{mealDraft.fat}}" data-field="fat" bindinput="onMealField" /></view>
       </view>
+      <text class="macro-note" wx:if="{{mealDraft.source === 'manual'}}">热量按蛋白质、碳水和脂肪自动换算</text>
       <view wx:for="{{mealDraft.foods}}" wx:key="index" class="food-row">
         <input class="food-name" value="{{item.name}}" data-index="{{index}}" data-field="name" bindinput="onFoodField" />
         <input class="food-portion" value="{{item.portion}}" data-index="{{index}}" data-field="portion" bindinput="onFoodField" />

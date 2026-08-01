@@ -16,17 +16,14 @@
   border-radius: 20rpx 20rpx 0 0;
   background-color: #ffffff;
   opacity: 1;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   box-shadow: 0 -8rpx 24rpx rgba(21, 42, 35, 0.06);
   pointer-events: auto;
 }
 
-.theme-dark.tabbar {
-  background-color: #1a2421;
-}
+.theme-dark.tabbar { background-color: #1a2421; }
 
 .tab {
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -38,117 +35,27 @@
   color: var(--text-dim);
 }
 
+.tab::before {
+  position: absolute;
+  top: -8rpx;
+  width: 32rpx;
+  height: 4rpx;
+  border-radius: 0 0 5rpx 5rpx;
+  background: transparent;
+  content: '';
+}
+
 .tab.active {
   background: var(--primary-soft);
   color: var(--primary);
 }
 
+.tab.active::before { background: var(--primary); }
+
 .tab-icon {
-  position: relative;
   display: block;
-  width: 34rpx;
-  height: 30rpx;
-  color: currentColor;
-}
-
-.icon-home::before {
-  position: absolute;
-  right: 4rpx;
-  bottom: 1rpx;
-  left: 4rpx;
-  height: 19rpx;
-  border: 2rpx solid currentColor;
-  border-radius: 4rpx;
-  content: '';
-}
-
-.icon-home::after {
-  position: absolute;
-  top: 2rpx;
-  left: 7rpx;
-  width: 18rpx;
-  height: 18rpx;
-  border-top: 2rpx solid currentColor;
-  border-left: 2rpx solid currentColor;
-  transform: rotate(45deg);
-  content: '';
-}
-
-.icon-library::before {
-  position: absolute;
-  top: 3rpx;
-  left: 4rpx;
-  width: 26rpx;
-  height: 3rpx;
-  border-radius: 3rpx;
-  background: currentColor;
-  box-shadow: 0 9rpx 0 currentColor, 0 18rpx 0 currentColor;
-  content: '';
-}
-
-.icon-library::after {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3rpx;
-  height: 25rpx;
-  border-radius: 3rpx;
-  background: currentColor;
-  content: '';
-}
-
-.icon-spark::before {
-  position: absolute;
-  top: -2rpx;
-  left: 6rpx;
-  color: currentColor;
-  content: '✦';
-  font-size: 34rpx;
-  line-height: 30rpx;
-}
-
-.icon-calendar::before {
-  position: absolute;
-  top: 4rpx;
-  right: 3rpx;
-  bottom: 0;
-  left: 3rpx;
-  border: 2rpx solid currentColor;
-  border-radius: 4rpx;
-  content: '';
-}
-
-.icon-calendar::after {
-  position: absolute;
-  top: 10rpx;
-  left: 7rpx;
-  width: 20rpx;
-  height: 3rpx;
-  background: currentColor;
-  box-shadow: 0 7rpx 0 currentColor;
-  content: '';
-}
-
-.icon-profile::before {
-  position: absolute;
-  top: 1rpx;
-  left: 11rpx;
-  width: 11rpx;
-  height: 11rpx;
-  border: 2rpx solid currentColor;
-  border-radius: 50%;
-  content: '';
-}
-
-.icon-profile::after {
-  position: absolute;
-  right: 5rpx;
-  bottom: 0;
-  left: 5rpx;
-  height: 13rpx;
-  border: 2rpx solid currentColor;
-  border-radius: 14rpx 14rpx 4rpx 4rpx;
-  content: '';
+  width: 40rpx;
+  height: 40rpx;
 }
 
 .tab-label {
@@ -160,4 +67,9 @@
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tab.active .tab-label {
+  color: var(--primary);
+  font-weight: 750;
 }
