@@ -112,6 +112,6 @@
   <view class="composer">
     <input class="agent-input" value="{{input}}" bindinput="onInput" confirm-type="send" bindconfirm="send" maxlength="500" placeholder="{{mode === 'diet' ? '例如：我想减脂，安排三餐饮食' : '例如：安排一个 3 天增肌计划'}}" />
     <button wx:if="{{sending}}" class="btn-stop" bindtap="stop">停止</button>
-    <button wx:else class="btn-send" bindtap="send" disabled="{{!input}}">发送</button>
+    <button wx:else class="btn-send" bindtap="send" disabled="{{!input}}">↑</button>
   </view>
 </view>

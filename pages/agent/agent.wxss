@@ -318,6 +318,7 @@
 }
 
 .agent-input { flex: 1 1 auto; min-width: 0; height: 84rpx; box-sizing: border-box; line-height: 84rpx; padding: 0 20rpx; border: 1rpx solid var(--border); border-radius: 14rpx; background: var(--surface-2); color: var(--text); }
-.btn-send, .btn-stop { display: flex; align-items: center; justify-content: center; width: 84rpx !important; min-width: 84rpx; max-width: 84rpx; height: 84rpx; box-sizing: border-box; flex: 0 0 84rpx; padding: 0; line-height: 1; border-radius: 14rpx; color: var(--on-primary); background: var(--primary); font-size: 23rpx; font-weight: 800; box-shadow: 0 6rpx 16rpx rgba(198, 242, 78, 0.25); }
-.btn-send[disabled] { opacity: 1; color: var(--primary); background: var(--primary-soft); box-shadow: none; }
-.btn-stop { background: var(--danger); color: #fff; box-shadow: none; }
+/* 小程序 button[disabled] 默认样式优先级极高（白底 #f7f7f7），必须 !important 压制 */
+.btn-send, .btn-stop { display: flex; align-items: center; justify-content: center; width: 84rpx !important; min-width: 84rpx; max-width: 84rpx; height: 84rpx; box-sizing: border-box; flex: 0 0 84rpx; padding: 0; line-height: 1; border-radius: 14rpx; color: var(--on-primary) !important; background: var(--primary) !important; font-size: 34rpx; font-weight: 800; box-shadow: 0 6rpx 16rpx rgba(198, 242, 78, 0.25); }
+.btn-send[disabled] { opacity: 1; color: var(--primary) !important; background: var(--primary-soft) !important; box-shadow: none; }
+.btn-stop { background: var(--danger) !important; color: #fff !important; box-shadow: none; font-size: 23rpx; }

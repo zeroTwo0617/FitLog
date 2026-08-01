@@ -206,7 +206,17 @@ button::after { border: none; }
 
 .btn-primary:active, .btn-save:active, .btn-start:active,
 .btn-secondary:active, .btn-add:active, .btn-ghost:active, .btn-import:active { opacity: 0.82; }
-.btn-primary[disabled], .btn-save[disabled], .btn-start[disabled], .btn-secondary[disabled] { opacity: 0.5; }
+/* 小程序 button[disabled] 默认样式（白底 #f7f7f7）优先级高于普通类，必须 !important 压制 */
+.btn-primary[disabled], .btn-save[disabled], .btn-start[disabled] {
+  opacity: 0.55;
+  background: var(--primary) !important;
+  color: var(--on-primary) !important;
+}
+.btn-secondary[disabled], .btn-add[disabled], .btn-ghost[disabled] {
+  opacity: 0.55;
+  background: var(--surface-2) !important;
+  color: var(--text-dim) !important;
+}
 
 .pill-btn {
   display: flex;
