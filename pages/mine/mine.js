@@ -10,6 +10,7 @@ Page({
     displayName: 'FitLog 用户',
     workoutCount: 0,
     planCount: 0,
+    weekDone: 0,
     goalText: '未设置',
     levelText: '未设置',
     bodySummary: {
@@ -33,14 +34,25 @@ Page({
       auth.ensureUser(),
       cloud.collection(cloud.C.WORKOUTS).count(),
       cloud.collection(cloud.C.PLANS).count(),
-      cloud.collection(cloud.C.BODY).limit(1).get().catch(() => ({ data: [] }))
-    ]).then(([u, workoutCnt, planCnt, bodyRes]) => {
+      cloud.collection(cloud.C.BODY).limit(1).get().catch(() => ({ data: [] })),
+      cloud.collection(cloud.C.WORKOUTS).orderBy('dateStr', 'desc').limit(30).get().catch(() => ({ data: [] }))
+    ]).then(([u, workoutCnt, planCnt, bodyRes, workoutListRes]) => {
       const profile = (u && u.profile) || {}
       const latestBody = bodyRes && bodyRes.data && bodyRes.data[0]
       const height = latestBody && Number(latestBody.height) > 0 ? Number(latestBody.height) / 100 : 0
       const bmi = latestBody && Number(latestBody.weight) > 0 && height > 0
         ? (Number(latestBody.weight) / (height * height)).toFixed(1)
         : '--'
+      // 本周打卡天数（近 7 天有训练记录的天数）
+      const trainedSet = {}
+      ;(((workoutListRes && workoutListRes.data) || [])).forEach((w) => { if (w && w.dateStr) trainedSet[w.dateStr] = true })
+      const p2 = (n) => (n < 10 ? '0' + n : '' + n)
+      let weekDone = 0
+      for (let i = 0; i < 7; i++) {
+        const d = new Date()
+        d.setDate(d.getDate() - i)
+        if (trainedSet[d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate())]) weekDone++
+      }
       this.setData({
         profile: profile,
         displayName: profile.nickName || 'FitLog 用户',
@@ -48,6 +60,7 @@ Page({
         'cloud.text': '云端同步正常',
         workoutCount: (workoutCnt && workoutCnt.total) || 0,
         planCount: (planCnt && planCnt.total) || 0,
+        weekDone: weekDone,
         goalText: profile.goal || profile.trainingGoal || '未设置',
         levelText: profile.level || profile.trainingLevel || '未设置',
         bodySummary: {
