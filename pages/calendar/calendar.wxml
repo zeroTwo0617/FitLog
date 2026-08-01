@@ -31,7 +31,7 @@
       <view class="calendar-week"><text wx:for="{{weekLabels}}" wx:key="*this">{{item}}</text></view>
       <view class="calendar-grid">
         <view wx:for="{{calendar}}" wx:key="dateStr" class="calendar-cell {{item.trained ? 'trained' : ''}} {{item.isToday ? 'today' : ''}} {{selectedDate === item.dateStr ? 'selected' : ''}}" data-date="{{item.dateStr}}" bindtap="tapDay">
-          <text class="calendar-day">{{item.day}}</text>
+          <text class="calendar-day {{item.dateStr === '' ? 'blank' : ''}}">{{item.day}}</text>
           <text class="calendar-count" wx:if="{{item.count > 1}}">{{item.count}}</text>
           <view class="calorie-dot {{item.calorieStatus}}" wx:if="{{item.calories > 0}}"></view>
         </view>

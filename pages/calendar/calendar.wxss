@@ -41,6 +41,7 @@
 .calendar-week text { width: 14.28%; color: var(--text-dim); font-size: 20rpx; text-align: center; }
 .calendar-cell { position: relative; display: flex; align-items: center; justify-content: center; width: 14.28%; height: 84rpx; }
 .calendar-day { display: flex; align-items: center; justify-content: center; width: 58rpx; height: 58rpx; border-radius: 16rpx; background: var(--surface-2); color: var(--text-dim); font-size: 24rpx; }
+.calendar-day.blank { background: transparent; }
 .calendar-cell.trained .calendar-day { background: var(--primary); color: #12160a; font-weight: 800; }
 .calendar-cell.today .calendar-day { border: 2rpx solid var(--primary); background: var(--primary-soft); color: var(--primary); font-weight: 700; }
 .calendar-cell.trained.today .calendar-day { background: var(--primary); color: #12160a; }

@@ -20,6 +20,7 @@
 .stats-cell text { display: flex; align-items: center; justify-content: center; width: 46rpx; height: 46rpx; border-radius: 13rpx; background: var(--surface-2); }
 .stats-cell.on text { background: var(--primary); color: #12160a; font-weight: 800; }
 .stats-cell.today text { border: 2rpx solid var(--primary); background: var(--primary-soft); color: var(--primary); }
+.stats-cell.blank text { background: transparent; }
 .max-list { display: flex; flex-direction: column; gap: 14rpx; }
 .max-row { display: flex; align-items: center; gap: 10rpx; }
 .max-name { width: 150rpx; overflow: hidden; color: var(--text); font-size: 21rpx; text-overflow: ellipsis; white-space: nowrap; }

@@ -57,7 +57,7 @@
 .menu-item > text:last-child { color: var(--text-dim); font-size: 20rpx; }
 .static-item > text:last-child { font-size: 18rpx; }
 .switch { position: relative; width: 76rpx; height: 42rpx; flex: none; border-radius: 999rpx; background: var(--surface-3); }
-.switch.light { background: var(--primary); }
+.switch.dark { background: var(--primary); }
 .switch view { position: absolute; top: 4rpx; left: 4rpx; width: 34rpx; height: 34rpx; border-radius: 50%; background: #fff; }
-.switch.light view { transform: translateX(34rpx); }
+.switch.dark view { transform: translateX(34rpx); background: #12160a; }
 .mine-foot { display: block; margin-top: 26rpx; color: var(--text-dim); font-size: 18rpx; text-align: center; }
