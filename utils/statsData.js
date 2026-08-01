@@ -167,4 +167,33 @@ function oneRMTrend(workouts, sets, exerciseName, n) {
   }))
 }
 
-module.exports = { fmtDate, lastNDates, volumeOf, aggregate, volumeTrend, buildCalendar, bodyTrend, estimate1RM, oneRMTrend }
+// 连续打卡周数：从本周往前数，每周至少有 1 天训练即连续
+// trainedDates: ['2026-08-02', ...]（dateStr 数组，无序亦可）
+function weekStreak(trainedDates) {
+  const set = new Set(trainedDates || [])
+  if (!set.size) return 0
+  const trainedWeek = (offset) => {
+    // offset=0 本周，1 上周……（周一为一周起点）
+    const now = new Date()
+    const monday = new Date(now)
+    const dow = (now.getDay() + 6) % 7 // 周一=0
+    monday.setDate(now.getDate() - dow - offset * 7)
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday)
+      d.setDate(monday.getDate() + i)
+      if (d.getTime() > now.getTime()) break
+      if (set.has(fmtDate(d))) return true
+    }
+    return false
+  }
+  let streak = 0
+  // 本周还没练：不断签，从上周开始数（给用户留到周日的机会）
+  const startOffset = trainedWeek(0) ? 0 : 1
+  for (let o = startOffset; o < 520; o++) {
+    if (trainedWeek(o)) streak++
+    else break
+  }
+  return streak
+}
+
+module.exports = { fmtDate, lastNDates, volumeOf, aggregate, volumeTrend, buildCalendar, bodyTrend, estimate1RM, oneRMTrend, weekStreak }

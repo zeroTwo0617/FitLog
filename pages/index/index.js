@@ -9,6 +9,26 @@ function formatToday() {
   return `${month}月${day}日 ${weekday}`
 }
 
+function fmtDate(d) {
+  const p = (n) => (n < 10 ? '0' + n : '' + n)
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+}
+
+// 近 7 天打卡条：[{dateStr, label, trained, isToday}]，最右为今天
+function buildWeekDays(workouts) {
+  const trained = {}
+  ;(workouts || []).forEach((w) => { if (w && w.dateStr) trained[w.dateStr] = true })
+  const labels = ['日', '一', '二', '三', '四', '五', '六']
+  const days = []
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date()
+    d.setDate(d.getDate() - i)
+    const ds = fmtDate(d)
+    days.push({ dateStr: ds, label: labels[d.getDay()], trained: !!trained[ds], isToday: i === 0 })
+  }
+  return days
+}
+
 function buildFallback() {
   return {
     stats: [
@@ -16,6 +36,8 @@ function buildFallback() {
       { label: '训练计划', value: '0', note: '先建一个模板' },
       { label: '近7天', value: '0', note: '保持节奏' }
     ],
+    weekDays: [],
+    weekDone: 0,
     recentPlans: [],
     todayNutrition: { calories: 0, protein: 0, carbs: 0, fat: 0, mealCount: 0 },
     todayNutritionText: '还没有饮食记录',
@@ -92,6 +114,8 @@ Page({
         todayNutritionText,
         todayNutritionMeta,
         recentPlans: plans,
+        weekDays: buildWeekDays(workouts),
+        weekDone: buildWeekDays(workouts).filter((d) => d.trained).length,
         stats: [
           {
             label: '训练记录',
@@ -134,6 +158,10 @@ Page({
 
   goNutrition() {
     wx.navigateTo({ url: `/pages/nutrition/nutrition?date=${nutrition.today()}` })
+  },
+
+  goBody() {
+    wx.navigateTo({ url: '/pages/body/body' })
   },
 
   openPlan(e) {

@@ -80,6 +80,17 @@ ok(agg2.maxByExercise[1].max === 62, 'completed:false 的组不计入最大重�
 const orm2 = sd.oneRMTrend(workouts, setsWithIncomplete, '卧推', 14)
 ok(orm2.filter((o) => o.value != null)[1].value === sd.estimate1RM(62, 12), 'completed:false 的组不计入 1RM 趋势')
 
+// ---- 连续打卡周数（新增）----
+const today = fmt(now)
+const yesterday = fmt((() => { const d = new Date(now); d.setDate(now.getDate() - 1); return d })())
+ok(sd.weekStreak([today]) >= 1, '本周有训练 → 连续周数 ≥ 1')
+ok(sd.weekStreak([today, yesterday]) >= 1, '本周两天训练仍算同一连续周')
+ok(sd.weekStreak([]) === 0, '无训练记录 → 连续周数 0')
+const farPast = fmt((() => { const d = new Date(now); d.setDate(now.getDate() - 200); return d })())
+const weekAgo = fmt((() => { const d = new Date(now); d.setDate(now.getDate() - 7); return d })())
+const streakMixed = sd.weekStreak([weekAgo, farPast])
+ok(streakMixed >= 0 && streakMixed <= 30, '跨周训练的连续周数在合理区间（断档即停数）')
+
 // ============ 2) mock 云：stats 页加载聚合 ============
 const MOCK_DB = {
   workouts: workouts.slice(),

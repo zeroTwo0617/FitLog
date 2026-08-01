@@ -10,7 +10,7 @@ function fmtNow() {
 
 Page({
   data: {
-    theme: 'light',
+    theme: 'dark',
     loading: true,
     calYear: 0,
     calMonth: 0,
@@ -20,6 +20,7 @@ Page({
     trainedDays: 0,
     workoutCount: 0,
     monthWorkoutCount: 0,
+    weekStreak: 0,
     weekLabels: ['日', '一', '二', '三', '四', '五', '六'],
     selectedDate: '',
     selectedWorkouts: [],
@@ -69,6 +70,7 @@ Page({
           loading: false,
           workoutCount: list.length,
           trainedDays: this._trained.length,
+          weekStreak: sd.weekStreak(this._trained),
           selectedDate: '',
           selectedWorkouts: [],
           selectedNutrition: null,

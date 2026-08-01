@@ -51,6 +51,20 @@
 .start-button text { margin-left: 12rpx; font-size: 28rpx; }
 .start-button:active { opacity: 0.85; }
 
+/* 本周打卡条 */
+.week-strip { margin-top: 20rpx; padding: 22rpx 20rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-card); }
+.week-head { display: flex; align-items: baseline; justify-content: space-between; }
+.week-title { color: var(--text); font-size: 26rpx; font-weight: 700; }
+.week-meta { color: var(--text-dim); font-size: 20rpx; }
+.week-days { display: flex; justify-content: space-between; margin-top: 18rpx; }
+.wd { display: flex; flex-direction: column; align-items: center; gap: 8rpx; }
+.wd-cell { display: flex; align-items: center; justify-content: center; width: 56rpx; height: 56rpx; border: 1rpx solid var(--border); border-radius: 16rpx; background: var(--surface-2); color: var(--text-dim); font-size: 24rpx; font-weight: 700; }
+.wd.done .wd-cell { border-color: var(--primary); background: var(--primary); color: #12160a; font-weight: 800; }
+.wd.today .wd-cell { border: 2rpx solid var(--primary); background: var(--primary-soft); color: var(--primary); }
+.wd.done.today .wd-cell { background: var(--primary); color: #12160a; }
+.wd-label { color: var(--text-dim); font-size: 18rpx; }
+.wd.today .wd-label { color: var(--primary); font-weight: 700; }
+
 /* 概览数据卡 */
 .overview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12rpx; }
 .overview-item { min-height: 152rpx; padding: 22rpx 18rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); }
@@ -70,19 +84,23 @@
 .nutrition-snapshot-meta { overflow: hidden; margin-top: 4rpx; color: var(--text-dim); font-size: 19rpx; text-overflow: ellipsis; white-space: nowrap; }
 .nutrition-snapshot-arrow { flex: none; color: var(--text-dim); font-size: 28rpx; }
 
-/* 快捷入口 / 最近计划 */
-.shortcut-list, .plan-list { border-top: 1rpx solid var(--card-border); }
-.shortcut-row, .plan-row { display: flex; align-items: center; gap: 18rpx; padding: 20rpx 0; border-bottom: 1rpx solid var(--card-border); }
-.shortcut-row:active, .plan-row:active { opacity: 0.7; }
-.shortcut-icon { display: flex; align-items: center; justify-content: center; width: 64rpx; height: 64rpx; flex: none; border-radius: 18rpx; font-size: 26rpx; font-weight: 800; }
-.shortcut-icon.teal { background: var(--primary-soft); color: var(--primary); }
-.shortcut-icon.orange { background: var(--accent-soft); color: var(--accent); }
-.shortcut-icon.blue { background: rgba(91, 200, 175, 0.12); color: var(--teal); }
-.shortcut-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 6rpx; }
-.shortcut-copy text:first-child { color: var(--text); font-size: 27rpx; font-weight: 650; }
-.shortcut-copy text:last-child { overflow: hidden; color: var(--text-dim); font-size: 21rpx; text-overflow: ellipsis; white-space: nowrap; }
-.shortcut-arrow { color: var(--text-dim); font-size: 30rpx; }
-.plan-row { justify-content: space-between; }
+/* 快捷入口 2×2 图标网格 / 最近计划 */
+.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; }
+.quick-cell { display: flex; align-items: center; gap: 16rpx; padding: 20rpx 18rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); }
+.quick-cell:active { opacity: 0.7; }
+.quick-ic { display: flex; align-items: center; justify-content: center; width: 64rpx; height: 64rpx; flex: none; border-radius: 18rpx; }
+.quick-ic image { width: 34rpx; height: 34rpx; }
+.qi-volt { background: var(--primary-soft); }
+.qi-orange { background: var(--accent-soft); }
+.qi-teal { background: rgba(91, 200, 175, 0.12); }
+.qi-plain { background: var(--surface-3); }
+.quick-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 5rpx; }
+.quick-copy text:first-child { color: var(--text); font-size: 26rpx; font-weight: 700; }
+.quick-copy text:last-child { overflow: hidden; color: var(--text-dim); font-size: 20rpx; text-overflow: ellipsis; white-space: nowrap; }
+
+.plan-list { border-top: 1rpx solid var(--card-border); }
+.plan-row { display: flex; align-items: center; gap: 18rpx; padding: 20rpx 0; border-bottom: 1rpx solid var(--card-border); justify-content: space-between; }
+.plan-row:active { opacity: 0.7; }
 .plan-name { display: block; color: var(--text); font-size: 27rpx; font-weight: 650; }
 .plan-preview { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 21rpx; }
 .plan-count { flex: none; color: var(--primary); font-size: 28rpx; font-weight: 750; }

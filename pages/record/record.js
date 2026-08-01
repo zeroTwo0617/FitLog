@@ -29,13 +29,24 @@ Page({
     planList: [],          // 导入计划选择器列表
     showPlanPicker: false,
     exerciseCount: 0,
-    totalSets: 0
+    totalSets: 0,
+    sessionVolume: 0
   },
 
   sessionStats(session) {
+    // 实时容量：Σ 次数×重量（kg），训练中随时看到「今天搬了多少铁」
+    let volume = 0
+    ;(session || []).forEach((item) => {
+      ;(item.sets || []).forEach((st) => {
+        const r = Number(st.reps)
+        const w = Number(st.weight)
+        if (r > 0 && w > 0) volume += Math.round(r * w)
+      })
+    })
     return {
       exerciseCount: (session || []).length,
-      totalSets: (session || []).reduce((sum, item) => sum + ((item.sets || []).length), 0)
+      totalSets: (session || []).reduce((sum, item) => sum + ((item.sets || []).length), 0),
+      sessionVolume: volume
     }
   },
 

@@ -17,6 +17,16 @@
     <button class="start-button" bindtap="goRecord">开始训练 <text>→</text></button>
   </view>
 
+  <view class="week-strip" wx:if="{{weekDays.length > 0}}">
+    <view class="week-head"><text class="week-title">本周打卡</text><text class="week-meta">{{weekDone}} / 7 天</text></view>
+    <view class="week-days">
+      <view class="wd {{item.trained ? 'done' : ''}} {{item.isToday ? 'today' : ''}}" wx:for="{{weekDays}}" wx:key="dateStr">
+        <view class="wd-cell">{{item.trained ? '✓' : (item.isToday ? '今' : '·')}}</view>
+        <text class="wd-label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
   <view class="section overview-section">
     <view class="section-head">
       <text class="section-title">训练概览</text>
@@ -46,21 +56,22 @@
       <text class="section-title">常用入口</text>
       <text class="section-meta">快速到达</text>
     </view>
-    <view class="shortcut-list">
-      <view class="shortcut-row" bindtap="goPlans">
-        <view class="shortcut-icon teal">P</view>
-        <view class="shortcut-copy"><text>训练计划</text><text>整理常练动作，一键带入记录</text></view>
-        <text class="shortcut-arrow">→</text>
+    <view class="quick-grid">
+      <view class="quick-cell" bindtap="goPlans">
+        <view class="quick-ic qi-volt"><image src="/assets/icons/quick-plan.svg" mode="aspectFit" /></view>
+        <view class="quick-copy"><text>训练计划</text><text>整理常练动作</text></view>
       </view>
-      <view class="shortcut-row" bindtap="goHistory">
-        <view class="shortcut-icon orange">H</view>
-        <view class="shortcut-copy"><text>训练历史</text><text>回看每次完成的动作和组数</text></view>
-        <text class="shortcut-arrow">→</text>
+      <view class="quick-cell" bindtap="goHistory">
+        <view class="quick-ic qi-orange"><image src="/assets/icons/quick-history.svg" mode="aspectFit" /></view>
+        <view class="quick-copy"><text>训练历史</text><text>回看每次训练</text></view>
       </view>
-      <view class="shortcut-row" bindtap="goStats">
-        <view class="shortcut-icon blue">S</view>
-        <view class="shortcut-copy"><text>数据统计</text><text>查看训练量与力量趋势</text></view>
-        <text class="shortcut-arrow">→</text>
+      <view class="quick-cell" bindtap="goStats">
+        <view class="quick-ic qi-teal"><image src="/assets/icons/quick-stats.svg" mode="aspectFit" /></view>
+        <view class="quick-copy"><text>数据统计</text><text>趋势与 PR</text></view>
+      </view>
+      <view class="quick-cell" bindtap="goBody">
+        <view class="quick-ic qi-plain"><image src="/assets/icons/quick-body.svg" mode="aspectFit" /></view>
+        <view class="quick-copy"><text>身体数据</text><text>体重与围度</text></view>
       </view>
     </view>
   </view>

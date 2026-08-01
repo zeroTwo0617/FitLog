@@ -4,6 +4,17 @@
     <view class="month-total"><text>{{monthWorkoutCount}}</text><text>本月训练</text></view>
   </view>
 
+  <view class="streak-card">
+    <view class="streak-copy">
+      <text class="streak-label">连续训练</text>
+      <text class="streak-num">{{weekStreak}} 周</text>
+      <text class="streak-sub">本月已打卡 {{monthWorkoutCount}} 次 · 累计 {{trainedDays}} 个训练日</text>
+    </view>
+    <view class="streak-flame">
+      <image src="/assets/icons/flame.svg" mode="aspectFit" />
+    </view>
+  </view>
+
   <view class="calendar-summary">
     <view><text>{{trainedDays}}</text><text>累计训练日</text></view>
     <view><text>{{workoutCount}}</text><text>训练次数</text></view>

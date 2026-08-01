@@ -32,16 +32,19 @@
 
 .link-section { margin-top: 18rpx; }
 .group-label { display: block; padding: 0 0 8rpx; color: var(--text-dim); font-size: 19rpx; font-weight: 650; }
-.link-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8rpx; }
-.link-card { position: relative; min-height: 108rpx; padding: 12rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); }
-.link-card:active { opacity: 0.65; }
-.link-card > text { display: block; }
-.link-card > text:nth-child(2) { margin-top: 11rpx; color: var(--text); font-size: 21rpx; font-weight: 650; }
-.link-card > text:last-child { position: absolute; top: 13rpx; right: 12rpx; color: var(--text-dim); font-size: 20rpx; }
-.link-icon { display: flex; align-items: center; justify-content: center; width: 35rpx; height: 35rpx; border-radius: 7rpx; font-size: 17rpx; font-weight: 800; }
-.history-icon { background: var(--accent-soft); color: var(--accent); }
-.plan-icon { background: var(--primary-soft); color: var(--primary); }
-.stats-icon { background: rgba(91, 200, 175, 0.12); color: var(--teal); }
+/* 分组菜单列表：图标底托 + 行式扫读 */
+.menu-card { padding: 4rpx 18rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-card); }
+.menu-row { display: flex; align-items: center; gap: 16rpx; padding: 20rpx 0; border-bottom: 1rpx solid var(--hairline); }
+.menu-row:last-child { border-bottom: none; }
+.menu-row:active { opacity: 0.65; }
+.menu-ic { display: flex; align-items: center; justify-content: center; width: 52rpx; height: 52rpx; flex: none; border-radius: 15rpx; }
+.menu-ic image { width: 28rpx; height: 28rpx; }
+.mi-volt { background: var(--primary-soft); }
+.mi-orange { background: var(--accent-soft); }
+.mi-teal { background: rgba(91, 200, 175, 0.12); }
+.mi-plain { background: var(--surface-3); }
+.menu-t { flex: 1; min-width: 0; color: var(--text); font-size: 25rpx; font-weight: 650; }
+.menu-a { flex: none; color: var(--text-dim); font-size: 26rpx; }
 
 .settings-group { margin-top: 18rpx; border-top: 1rpx solid var(--card-border); }
 .settings-group .group-label { padding-top: 14rpx; }
