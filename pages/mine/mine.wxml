@@ -1,81 +1,12 @@
-<view class="page tab-page theme-{{theme ? theme : 'light'}}">
-  <view class="profile-hero">
-    <view class="avatar">FL</view>
-    <view class="pinfo">
-      <text class="pname">{{displayName}}</text>
-      <view class="pstatus pstatus-{{cloud.status}}">
-        <view class="pdot"></view>
-        <text>{{cloud.text}}</text>
-      </view>
-    </view>
-  </view>
+<view class="page tab-page mine-page theme-{{theme ? theme : 'light'}}">
+  <view class="mine-header"><view class="avatar-large">FL</view><view class="profile-copy"><text class="eyebrow">YOUR SPACE</text><text class="profile-name">{{displayName}}</text><view class="sync-status pstatus-{{cloud.status}}"><view class="status-dot"></view><text>{{cloud.text}}</text></view></view></view>
 
-  <view class="section">
-    <view class="section-head">
-      <text class="section-title">个人概览</text>
-      <text class="section-meta">你的训练资产</text>
-    </view>
-    <view class="stat-grid">
-      <view class="stat-tile">
-        <text class="stat-num grad-text">{{workoutCount}}</text>
-        <text class="stat-label">训练记录</text>
-      </view>
-      <view class="stat-tile">
-        <text class="stat-num">{{planCount}}</text>
-        <text class="stat-label">训练计划</text>
-      </view>
-    </view>
-  </view>
+  <view class="mine-summary"><view><text>{{workoutCount}}</text><text>训练记录</text></view><view><text>{{planCount}}</text><text>训练计划</text></view><view><text>Fit</text><text>持续记录</text></view></view>
 
-  <view class="card settings">
-    <view class="menu-item theme-item" bindtap="toggleTheme">
-      <view>
-        <text class="mi-label">外观主题</text>
-        <text class="mi-sub">切换深色 / 浅色模式</text>
-      </view>
-      <view class="switch {{theme === 'dark' ? 's-dark' : 's-light'}}">
-        <view class="knob">{{theme === 'dark' ? '夜' : '日'}}</view>
-      </view>
-    </view>
-  </view>
+  <view class="profile-section"><view class="section-title-row"><text>个人状态</text><text>资料摘要</text></view><view class="profile-grid"><view><text class="profile-label">训练目标</text><text class="profile-value">{{goalText}}</text><text class="profile-hint">设置后更容易坚持</text></view><view><text class="profile-label">训练水平</text><text class="profile-value">{{levelText}}</text><text class="profile-hint">还未填写</text></view><view class="body-status" bindtap="goBody"><text class="profile-label">身体数据</text><text class="profile-value">{{bodySummary.weight}}</text><text class="profile-hint">{{bodySummary.date}} · BMI {{bodySummary.bmi}} →</text></view></view></view>
 
-  <view class="card menu">
-    <view class="menu-item" bindtap="goAgent">
-      <view>
-        <text class="mi-label">训练方案助手</text>
-        <text class="mi-sub">根据你的训练记录设计计划草案</text>
-      </view>
-      <text class="mi-arrow">›</text>
-    </view>
-    <view class="menu-item" bindtap="goHistory">
-      <view>
-        <text class="mi-label">训练历史</text>
-        <text class="mi-sub">按日期回看每次训练内容</text>
-      </view>
-      <text class="mi-arrow">›</text>
-    </view>
-    <view class="menu-item" bindtap="goPlans">
-      <view>
-        <text class="mi-label">训练计划</text>
-        <text class="mi-sub">维护常用训练模板</text>
-      </view>
-      <text class="mi-arrow">›</text>
-    </view>
-    <view class="menu-item" bindtap="goStats">
-      <view>
-        <text class="mi-label">数据统计</text>
-        <text class="mi-sub">查看训练趋势和累计表现</text>
-      </view>
-      <text class="mi-arrow">›</text>
-    </view>
-    <view class="menu-item" bindtap="goBody">
-      <view>
-        <text class="mi-label">身体数据</text>
-        <text class="mi-sub">记录体重和围度变化</text>
-      </view>
-      <text class="mi-arrow">›</text>
-    </view>
-  </view>
+  <view class="settings-group"><text class="group-label">训练管理</text><view class="menu-item" bindtap="goAgent"><view><text>训练助手</text><text>根据记录生成训练与饮食建议</text></view><text>→</text></view><view class="menu-item" bindtap="goHistory"><view><text>训练历史</text><text>按日期查看每次训练</text></view><text>→</text></view><view class="menu-item" bindtap="goPlans"><view><text>训练计划</text><text>维护常用训练模板</text></view><text>→</text></view><view class="menu-item" bindtap="goStats"><view><text>数据统计</text><text>查看训练量和力量趋势</text></view><text>→</text></view></view>
 
-  <view class="foot">FitLog · 让进步被看见</view>
+  <view class="settings-group appearance"><text class="group-label">应用设置</text><view class="menu-item" bindtap="toggleTheme"><view><text>深色模式</text><text>{{theme === 'dark' ? '当前已开启' : '当前为浅色模式'}}</text></view><view class="switch {{theme === 'dark' ? 'dark' : 'light'}}"><view></view></view></view><view class="menu-item static-item"><view><text>关于 FitLog</text><text>训练记录本 · v1.0.0</text></view><text>·</text></view></view>
+  <text class="mine-foot">FitLog · 让进步可见</text>
 </view>

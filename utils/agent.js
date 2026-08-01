@@ -12,6 +12,10 @@ const DEFAULT_MESSAGES = [{
   role: 'assistant',
   content: '告诉我你的训练目标、每周可训练几天，以及有没有需要避开的动作。'
 }]
+const DEFAULT_DIET_MESSAGES = [{
+  role: 'assistant',
+  content: '告诉我你的饮食目标、忌口和每天大概几餐。我会给你一份可编辑的饮食方案。'
+}]
 
 function asArray(value) {
   return Array.isArray(value) ? value : []
@@ -39,6 +43,32 @@ function buildContext() {
     })),
     bodyMetrics: body[0]
       ? { weight: body[0].weight, height: body[0].height, bodyFat: body[0].bodyFat }
+      : null
+  }))
+}
+
+function buildDietContext() {
+  const db = cloud.db()
+  return Promise.all([
+    safeGet(db.collection(cloud.C.NUTRITION_LOGS), (c) => c.orderBy('dateStr', 'desc').limit(30)),
+    safeGet(db.collection(cloud.C.DIET_PLANS), (c) => c.limit(5)),
+    safeGet(db.collection(cloud.C.BODY), (c) => c.orderBy('date', 'desc').limit(3))
+  ]).then(([logs, plans, body]) => ({
+    recentMeals: logs.map((item) => ({
+      dateStr: item.dateStr || '',
+      mealType: item.mealType || 'other',
+      calories: Number(item.calories) || 0,
+      protein: Number(item.protein) || 0,
+      carbs: Number(item.carbs) || 0,
+      fat: Number(item.fat) || 0
+    })),
+    existingDietPlans: plans.map((item) => ({
+      name: item.name || '',
+      dailyTarget: item.dailyTarget || {},
+      meals: Array.isArray(item.meals) ? item.meals.slice(0, 8) : []
+    })),
+    bodyMetrics: body[0]
+      ? { weight: body[0].weight, height: body[0].height, bodyFat: body[0].bodyFat || body[0].fatPct }
       : null
   }))
 }
@@ -142,7 +172,9 @@ function reply(query, context) {
 module.exports = {
   SESSION_KEY,
   DEFAULT_MESSAGES,
+  DEFAULT_DIET_MESSAGES,
   buildContext,
+  buildDietContext,
   loadSession,
   persistSession,
   reply,

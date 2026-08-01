@@ -1,25 +1,44 @@
 <view class="page agent-page theme-{{theme}}">
   <view class="agent-head">
     <view>
-      <text class="h-title">训练助手</text>
-      <text class="h-sub">基于你的云端训练数据，整理下一步怎么练。</text>
+      <text class="h-title">助手</text>
+      <text class="h-sub">训练建议与饮食记录</text>
     </view>
     <button class="text-btn" bindtap="clearSession" disabled="{{sending}}">新会话</button>
   </view>
 
-  <view wx:if="{{loadingContext}}" class="context-note">正在读取云端训练数据...</view>
+  <view class="mode-tabs">
+    <view class="mode-tab {{mode === 'training' ? 'mode-on' : ''}}" data-mode="training" bindtap="switchMode">训练</view>
+    <view class="mode-tab {{mode === 'diet' ? 'mode-on' : ''}}" data-mode="diet" bindtap="switchMode">饮食</view>
+  </view>
+
+  <view wx:if="{{loadingContext}}" class="context-note">正在同步云端数据...</view>
+  <view wx:if="{{error}}" class="error-note">{{error}}</view>
+
+  <block wx:if="{{mode === 'diet'}}">
+    <view class="meal-tools">
+      <picker mode="date" value="{{mealDate}}" bindchange="onMealDate">
+        <view class="date-picker">{{mealDate}}</view>
+      </picker>
+      <picker mode="selector" range="{{mealTypes}}" range-key="label" value="{{mealTypeIndex}}" bindchange="onMealType">
+        <view class="meal-picker">{{mealTypeLabel}}</view>
+      </picker>
+      <button class="small-primary" bindtap="chooseMealImage" loading="{{mealAnalyzing}}" disabled="{{mealAnalyzing}}">拍照估算</button>
+      <button class="small-outline" bindtap="createManualMeal" disabled="{{mealAnalyzing}}">手动记录</button>
+    </view>
+  </block>
 
   <scroll-view class="messages" scroll-y="true" scroll-into-view="msg-{{messages.length - 1}}">
     <view wx:for="{{messages}}" wx:key="index" id="msg-{{index}}" class="message {{item.role}}">
       <view wx:if="{{item.role === 'assistant'}}" class="message-label">FITLOG</view>
       <view class="bubble">{{item.content}}</view>
     </view>
-    <view wx:if="{{sending}}" class="typing"><view class="typing-dot"></view>正在整理建议...</view>
+    <view wx:if="{{sending}}" class="typing"><view class="typing-dot"></view>正在整理...</view>
 
     <view wx:if="{{planDraft}}" class="draft card">
       <view class="draft-head">
         <view>
-          <text class="draft-kicker">可编辑草案</text>
+          <text class="draft-kicker">训练草案</text>
           <text class="draft-title">{{planDraft.name}}</text>
         </view>
         <text class="draft-count">{{planDraft.items.length}} 个动作</text>
@@ -28,7 +47,54 @@
         <text class="draft-name">{{item.exerciseName}}</text>
         <text class="draft-meta">{{item.targetSets}} 组 × {{item.targetReps}} 次</text>
       </view>
-      <button class="btn-primary" bindtap="saveDraft">确认并编辑计划</button>
+      <button class="btn-primary" bindtap="saveDraft">确认并编辑训练计划</button>
+    </view>
+
+    <view wx:if="{{dietPlanDraft}}" class="draft card diet-plan">
+      <view class="draft-head">
+        <view>
+          <text class="draft-kicker">饮食草案</text>
+          <text class="draft-title">{{dietPlanDraft.name}}</text>
+        </view>
+        <text class="draft-count">{{dietPlanDraft.dailyTarget.calories}} kcal/天</text>
+      </view>
+      <view class="diet-targets">
+        <view><text>热量</text><input type="digit" value="{{dietPlanDraft.dailyTarget.calories}}" data-field="calories" bindinput="onDietTarget" /></view>
+        <view><text>蛋白质</text><input type="digit" value="{{dietPlanDraft.dailyTarget.protein}}" data-field="protein" bindinput="onDietTarget" /></view>
+        <view><text>碳水</text><input type="digit" value="{{dietPlanDraft.dailyTarget.carbs}}" data-field="carbs" bindinput="onDietTarget" /></view>
+        <view><text>脂肪</text><input type="digit" value="{{dietPlanDraft.dailyTarget.fat}}" data-field="fat" bindinput="onDietTarget" /></view>
+      </view>
+      <view wx:for="{{dietPlanDraft.meals}}" wx:key="name" class="draft-item">
+        <view>
+          <text class="draft-name">{{item.name}}</text>
+          <text class="meal-foods">{{item.foods[0].name}}<text wx:if="{{item.foods.length > 1}}"> 等 {{item.foods.length}} 项</text></text>
+        </view>
+        <input class="diet-meal-calories" type="digit" value="{{item.calories}}" data-index="{{index}}" bindinput="onDietMealField" />
+      </view>
+      <button class="btn-primary" bindtap="saveDietPlan" disabled="{{dietPlanSaved}}">{{dietPlanSaved ? '已保存饮食计划' : '保存饮食计划'}}</button>
+    </view>
+
+    <view wx:if="{{mealDraft}}" class="meal-draft card">
+      <view class="draft-head">
+        <view>
+          <text class="draft-kicker">待确认记录</text>
+          <text class="draft-title">{{mealDraft.dateStr}} · {{mealDraft.mealLabel}}</text>
+        </view>
+        <text class="draft-count">估算值</text>
+      </view>
+      <view class="meal-fields">
+        <view class="meal-field"><text>热量 kcal</text><input type="digit" value="{{mealDraft.calories}}" data-field="calories" bindinput="onMealField" /></view>
+        <view class="meal-field"><text>蛋白质 g</text><input type="digit" value="{{mealDraft.protein}}" data-field="protein" bindinput="onMealField" /></view>
+        <view class="meal-field"><text>碳水 g</text><input type="digit" value="{{mealDraft.carbs}}" data-field="carbs" bindinput="onMealField" /></view>
+        <view class="meal-field"><text>脂肪 g</text><input type="digit" value="{{mealDraft.fat}}" data-field="fat" bindinput="onMealField" /></view>
+      </view>
+      <view wx:for="{{mealDraft.foods}}" wx:key="index" class="food-row">
+        <input class="food-name" value="{{item.name}}" data-index="{{index}}" data-field="name" bindinput="onFoodField" />
+        <input class="food-portion" value="{{item.portion}}" data-index="{{index}}" data-field="portion" bindinput="onFoodField" />
+        <input class="food-calories" type="digit" value="{{item.calories}}" data-index="{{index}}" data-field="calories" bindinput="onFoodField" />
+      </view>
+      <text class="privacy-note">确认后只保存营养数据，原始图片会删除。</text>
+      <button class="btn-primary" bindtap="saveMeal" loading="{{mealSaving}}" disabled="{{mealSaving}}">确认保存饮食记录</button>
     </view>
   </scroll-view>
 
@@ -37,7 +103,7 @@
   </view>
 
   <view class="composer">
-    <input class="agent-input" value="{{input}}" bindinput="onInput" confirm-type="send" bindconfirm="send" placeholder="例如：安排一个 3 天增肌计划" maxlength="500" />
+    <input class="agent-input" value="{{input}}" bindinput="onInput" confirm-type="send" bindconfirm="send" maxlength="500" placeholder="{{mode === 'diet' ? '例如：我想减脂，安排三餐饮食' : '例如：安排一个 3 天增肌计划'}}" />
     <button wx:if="{{sending}}" class="btn-stop" bindtap="stop">停止</button>
     <button wx:else class="btn-send" bindtap="send" disabled="{{!input}}">发送</button>
   </view>

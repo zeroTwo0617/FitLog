@@ -1,98 +1,68 @@
-/* ========================================================================
-   FitLog · Global Design System
-   A single source of truth for tokens + reusable components.
-   Performance: content cards are translucent (no backdrop-filter) so
-   scrolling stays at 60fps; blur is reserved for fixed tabbar/sheets.
-   Motion: only transform/opacity are animated (GPU-friendly).
-   ======================================================================== */
-
 page {
-  /* ---- Color tokens ---- */
-  --bg: #f7f8fa;
+  --bg: #f4f6f5;
   --surface: #ffffff;
-  --surface-2: #f0f3f7;
+  --surface-2: #eef2f0;
+  --surface-3: #e5ebe8;
+  --overlay: #f3f6f4;
   --card-bg: #ffffff;
-  --card-bg-hover: #f5f8fc;
-  --card-border: #e3e8ef;
-  --border: #e8edf3;
-  --text: #18212f;
-  --text-dim: #657083;
-
-  --primary: #2563eb;
-  --primary-2: #0ea5e9;
-  --primary-soft: #eaf2ff;
-  --primary-soft-2: #e9f7ff;
-  --success: #34d399;
-  --warn: #fbbf24;
-  --danger: #f87171;
-
-  /* 主题语义 token（深浅色共用，浅色在 .theme-light 覆盖） */
-  --accent: #1d4ed8;                   /* 主色 soft 底上的文字 */
-  --overlay: rgba(15, 23, 42, 0.06);   /* 输入/卡片内陷填充 */
-  --mask: rgba(15, 23, 42, 0.35);      /* 底部弹层遮罩 */
-  --sheet-bg: #ffffff;                 /* 固定/弹出面板底色 */
-  --placeholder: #93a4bd;              /* 占位首字/幽灵文字 */
-  --hairline: #e8edf3;                 /* 通用细分隔线 */
-  --inset: #f0f3f7;                    /* 通用内陷填充 */
-  --glow-1: transparent;
-  --glow-2: transparent;
-
-  /* ---- Shape & depth ---- */
-  --radius-sm: 12rpx;
-  --radius: 20rpx;
-  --radius-lg: 28rpx;
-  --shadow-card: 0 6rpx 22rpx rgba(31, 48, 74, 0.06);
-  --shadow-btn: 0 8rpx 18rpx rgba(37, 99, 235, 0.18);
-  --shadow-glow: 0 0 18rpx rgba(37, 99, 235, 0.2);
-
-  /* ---- Spacing & type ---- */
+  --card-border: #dfe7e3;
+  --border: #e4ebe7;
+  --hairline: #edf1ef;
+  --text: #17211e;
+  --text-dim: #71807a;
+  --primary: #0f766e;
+  --primary-strong: #115e59;
+  --primary-soft: #e2f1ed;
+  --accent: #f97316;
+  --accent-soft: #fff0e6;
+  --success: #159570;
+  --warn: #d97706;
+  --danger: #dc5b5b;
+  --mask: rgba(16, 24, 21, 0.46);
+  --sheet-bg: #ffffff;
+  --placeholder: #a0ada7;
+  --inset: #f3f6f4;
+  --radius-sm: 8rpx;
+  --radius: 12rpx;
+  --radius-lg: 16rpx;
   --gap: 24rpx;
-  --pad: 28rpx;
-
-  /* 背景底色由主题类 (.theme-dark/.theme-light) 在根视图上绘制辉光，page 仅兜底纯色 */
+  --pad: 24rpx;
+  --shadow-card: 0 6rpx 20rpx rgba(34, 55, 47, 0.045);
+  --shadow-btn: 0 6rpx 14rpx rgba(15, 118, 110, 0.16);
+  --shadow-glow: none;
   background: var(--bg);
-
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
   font-size: 28rpx;
 }
 
-/* ---------- Theme: dark (默认) / light 覆盖 ---------- */
 .theme-dark {
-  color: var(--text);
-  background:
-    radial-gradient(120% 80% at 0% 0%, var(--glow-1), transparent 55%),
-    radial-gradient(120% 80% at 100% 100%, var(--glow-2), transparent 55%),
-    var(--bg);
-  background-attachment: initial;
-}
-.theme-light {
-  --bg: #f7f8fa;
-  --surface: #ffffff;
-  --surface-2: #f0f3f7;
-  --card-bg: #ffffff;
-  --card-bg-hover: #f5f8fc;
-  --card-border: #e3e8ef;
-  --border: #e8edf3;
-  --text: #161b24;
-  --text-dim: #5b6573;
-  --primary-soft: #eaf2ff;
-  --primary-soft-2: #e9f7ff;
-  --accent: #2f5fd0;
-  --overlay: rgba(15, 17, 21, 0.06);
-  --mask: rgba(15, 17, 21, 0.35);
-  --sheet-bg: #ffffff;
-  --placeholder: rgba(15, 17, 21, 0.22);
-  --hairline: rgba(15, 17, 21, 0.08);
-  --inset: rgba(15, 17, 21, 0.04);
-  --glow-1: transparent;
-  --glow-2: transparent;
-  color: var(--text);
+  --bg: #111816;
+  --surface: #1a2421;
+  --surface-2: #202d29;
+  --surface-3: #2a3934;
+  --overlay: #202d29;
+  --card-bg: #1a2421;
+  --card-border: #31413b;
+  --border: #2b3a35;
+  --hairline: #293831;
+  --text: #eef5f1;
+  --text-dim: #a7b8b0;
+  --primary: #53b8a6;
+  --primary-strong: #79cfbd;
+  --primary-soft: #193c35;
+  --accent: #fb923c;
+  --accent-soft: #452716;
+  --mask: rgba(0, 0, 0, 0.64);
+  --sheet-bg: #1a2421;
+  --placeholder: #71827b;
+  --inset: #202d29;
+  --shadow-card: 0 8rpx 22rpx rgba(0, 0, 0, 0.16);
+  --shadow-btn: 0 6rpx 16rpx rgba(0, 0, 0, 0.2);
   background: var(--bg);
 }
 
-/* ---------- Reset ---------- */
-view, text, input, scroll-view, button { box-sizing: border-box; }
+view, text, input, scroll-view, button, picker { box-sizing: border-box; }
 
 button {
   padding: 0;
@@ -102,341 +72,186 @@ button {
   font-size: inherit;
   color: inherit;
 }
+
 button::after { border: none; }
 
-/* ---------- Layout primitives ---------- */
 .page {
-  padding: var(--gap);
   min-height: 100vh;
-  box-sizing: border-box;
+  padding: 28rpx 24rpx;
+  background: var(--bg);
+  color: var(--text);
 }
 
-.tab-page {
-  padding-bottom: calc(var(--gap) + 150rpx + env(safe-area-inset-bottom));
-}
+.tab-page { padding-bottom: calc(148rpx + env(safe-area-inset-bottom)); }
 
-/* ---------- Page header ---------- */
-.head, .h-top { margin-bottom: 30rpx; }
+.head, .h-top { margin-bottom: 28rpx; }
 
 .h-title {
   display: block;
-  font-size: 46rpx;
-  font-weight: 700;
-  letter-spacing: 0.5rpx;
   color: var(--text);
+  font-size: 44rpx;
+  font-weight: 760;
+  line-height: 1.18;
 }
 
 .h-sub {
   display: block;
   margin-top: 10rpx;
-  font-size: 26rpx;
   color: var(--text-dim);
-  line-height: 1.5;
+  font-size: 24rpx;
+  line-height: 1.55;
 }
 
-/* ---------- Card (glass, no scroll blur) ---------- */
+.section { margin-top: 32rpx; }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.section-title { color: var(--text); font-size: 30rpx; font-weight: 700; }
+.section-meta { color: var(--text-dim); font-size: 22rpx; }
+
 .card {
-  background: var(--card-bg);
+  padding: var(--pad);
   border: 1rpx solid var(--card-border);
   border-radius: var(--radius);
-  padding: var(--pad);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-card);
 }
 
 .card-title {
   display: block;
-  font-size: 30rpx;
-  font-weight: 600;
-  margin-bottom: 22rpx;
-  color: var(--text);
-}
-
-.section {
-  margin-top: 28rpx;
-}
-
-.section-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
   margin-bottom: 18rpx;
-}
-
-.section-title {
+  color: var(--text);
   font-size: 30rpx;
   font-weight: 700;
-  color: var(--text);
 }
 
-.section-meta {
-  font-size: 22rpx;
-  color: var(--text-dim);
-}
-
-.metric-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16rpx;
-}
+.metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10rpx; }
 
 .metric-card {
   min-width: 0;
-  padding: 24rpx;
-  border-radius: var(--radius);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  padding: 20rpx 16rpx;
   border: 1rpx solid var(--card-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
 }
 
-.theme-light .metric-card {
-  background: linear-gradient(180deg, rgba(15, 17, 21, 0.02), rgba(15, 17, 21, 0.04));
+.metric-value { display: block; color: var(--text); font-size: 38rpx; font-weight: 760; line-height: 1.1; }
+.metric-label { display: block; margin-top: 9rpx; color: var(--text-dim); font-size: 21rpx; line-height: 1.3; }
+.metric-note { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 19rpx; line-height: 1.3; }
+.grad-text { color: var(--primary); }
+
+.btn-primary, .btn-save, .btn-start {
+  width: 100%;
+  padding: 21rpx 24rpx;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 700;
+  line-height: 1.4;
+  box-shadow: var(--shadow-btn);
 }
 
-.metric-value {
-  display: block;
-  font-size: 42rpx;
-  font-weight: 800;
-  line-height: 1.1;
+.btn-secondary, .btn-add, .btn-ghost {
+  width: 100%;
+  padding: 20rpx 24rpx;
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
   color: var(--text);
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
-.metric-label {
-  display: block;
-  margin-top: 10rpx;
-  font-size: 22rpx;
-  color: var(--text-dim);
+.btn-import {
+  width: 100%;
+  padding: 19rpx 24rpx;
+  border: 1rpx dashed var(--primary);
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+  font-size: 27rpx;
+  font-weight: 650;
+  line-height: 1.4;
 }
 
-.metric-note {
-  display: block;
-  margin-top: 6rpx;
-  font-size: 20rpx;
-  color: var(--text-dim);
-  opacity: 0.78;
-}
+.btn-primary:active, .btn-save:active, .btn-start:active,
+.btn-secondary:active, .btn-add:active, .btn-ghost:active, .btn-import:active { opacity: 0.82; }
+.btn-primary[disabled], .btn-save[disabled], .btn-start[disabled], .btn-secondary[disabled] { opacity: 0.5; }
 
 .pill-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 92rpx;
-  border-radius: var(--radius);
-  padding: 0 28rpx;
-  background: var(--surface-2);
-  border: 1rpx solid var(--border);
-  color: var(--text);
-  font-size: 28rpx;
-  font-weight: 600;
-}
-
-.pill-btn:active {
-  transform: scale(0.98);
-}
-
-/* ---------- Gradient text (for big numbers) ---------- */
-.grad-text {
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* ---------- Buttons ---------- */
-.btn-primary,
-.btn-save,
-.btn-start {
-  width: 100%;
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  padding: 22rpx 0;
-  text-align: center;
-  font-weight: 600;
-  font-size: 30rpx;
-  line-height: 1.4;
-  box-shadow: var(--shadow-btn);
-}
-
-.btn-add {
-  width: 100%;
-  background: var(--surface-2);
-  color: var(--text);
-  border: 1rpx solid var(--border);
-  border-radius: var(--radius);
-  padding: 20rpx 0;
-  text-align: center;
-  font-size: 28rpx;
-}
-
-.btn-import {
-  width: 100%;
-  background: var(--primary-soft);
-  color: var(--primary);
-  border: 1rpx dashed var(--primary);
-  border-radius: var(--radius);
-  padding: 22rpx 0;
-  text-align: center;
-  font-weight: 600;
-  font-size: 28rpx;
-}
-
-.btn-secondary {
-  width: 100%;
-  background: var(--surface-2);
-  color: var(--text);
-  border: 1rpx solid var(--border);
-  border-radius: var(--radius);
-  padding: 22rpx 0;
-  text-align: center;
-  font-weight: 600;
-  font-size: 30rpx;
-}
-
-.btn-ghost {
-  width: 100%;
-  background: transparent;
-  color: var(--text);
-  border: 1rpx solid var(--border);
-  border-radius: var(--radius);
-  padding: 20rpx 0;
-  text-align: center;
-  font-size: 28rpx;
-}
-
-.btn-primary:active,
-.btn-save:active,
-.btn-start:active,
-.btn-add:active,
-.btn-import:active,
-.btn-secondary:active,
-.btn-ghost:active {
-  transform: scale(0.98);
-}
-
-.btn-primary[disabled],
-.btn-save[disabled],
-.btn-start[disabled],
-.btn-add[disabled],
-.btn-import[disabled],
-.btn-secondary[disabled],
-.btn-ghost[disabled] {
-  opacity: 0.55;
-}
-
-/* ---------- Chip ---------- */
-.chip {
-  display: inline-block;
-  padding: 12rpx 28rpx;
-  margin-right: 14rpx;
-  background: var(--surface-2);
-  border: 1rpx solid var(--border);
-  border-radius: 999rpx;
-  color: var(--text-dim);
-  font-size: 24rpx;
-  transition: all 0.2s ease;
-}
-
-.chip-on {
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  color: #fff;
-  border-color: transparent;
-}
-
-/* ---------- Inputs ---------- */
-/* 关键：微信 <input> 必须显式 height + 相等 line-height，否则文字被上下裁切（只显示一半）。
-   垂直居中由 line-height 提供，padding 只负责左右内边距。 */
-.input,
-.search-input {
-  width: 100%;
-  background: var(--surface-2);
+  min-height: 76rpx;
+  padding: 0 20rpx;
   border: 1rpx solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 0 18rpx;
+  background: var(--surface);
   color: var(--text);
-  font-size: 28rpx;
-  height: 84rpx;
-  line-height: 84rpx;
-  box-sizing: border-box;
+  font-size: 25rpx;
+  font-weight: 600;
 }
 
-.search-input {
-  padding: 0 22rpx;
-  height: 88rpx;
-  line-height: 88rpx;
-  border-radius: var(--radius);
-}
-
-/* ---------- Pill tag (targets, metrics) ---------- */
-.tag {
+.chip, .tag {
   display: inline-block;
-  font-size: 22rpx;
-  padding: 6rpx 16rpx;
   border-radius: 999rpx;
-  background: var(--primary-soft);
-  color: var(--accent);
   white-space: nowrap;
 }
-.tag.dim { background: var(--inset); color: var(--text-dim); }
 
-/* ---------- Empty state ---------- */
+.chip {
+  margin-right: 10rpx;
+  padding: 10rpx 18rpx;
+  border: 1rpx solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+  font-size: 23rpx;
+}
+
+.chip-on { border-color: var(--primary); background: var(--primary); color: #fff; }
+.tag { padding: 6rpx 12rpx; background: var(--primary-soft); color: var(--primary-strong); font-size: 20rpx; }
+.tag.dim { background: var(--surface-2); color: var(--text-dim); }
+
+.input, .search-input {
+  width: 100%;
+  height: 82rpx;
+  padding: 0 18rpx;
+  border: 1rpx solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 27rpx;
+  line-height: 82rpx;
+}
+
+.search-input { height: 78rpx; padding: 0 20rpx; line-height: 78rpx; background: var(--surface); }
+
 .empty {
-  text-align: center;
-  padding: 90rpx 40rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12rpx;
+  gap: 10rpx;
+  padding: 84rpx 28rpx;
   color: var(--text-dim);
-}
-.empty-emoji { font-size: 76rpx; }
-.empty-text { font-size: 30rpx; font-weight: 600; color: var(--text); }
-.empty-sub { font-size: 24rpx; color: var(--text-dim); text-align: center; }
-
-/* ---------- Loading ---------- */
-.loading {
   text-align: center;
-  color: var(--text-dim);
-  padding: 90rpx 0;
-  font-size: 28rpx;
 }
 
-/* ---------- Divider ---------- */
-.divider {
-  height: 1rpx;
-  background: var(--border);
-  margin: 16rpx 0;
-}
+.empty-text { color: var(--text); font-size: 28rpx; font-weight: 650; }
+.empty-sub { color: var(--text-dim); font-size: 23rpx; line-height: 1.5; }
+.empty-emoji { display: none; }
+.loading { padding: 90rpx 0; color: var(--text-dim); font-size: 25rpx; text-align: center; }
+.divider { height: 1rpx; margin: 16rpx 0; background: var(--hairline); }
 
-/* ---------- Bottom-sheet entrance (modal, fixed) ---------- */
-.sheet, .plan-sheet {
-  animation: sheetUp 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@keyframes sheetUp {
-  from { transform: translateY(100%); }
-  to { transform: none; }
-}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10rpx); } to { opacity: 1; transform: none; } }
+@keyframes sheetUp { from { transform: translateY(100%); } to { transform: none; } }
 
-/* ---------- One-shot page entrance (transform/opacity only) ---------- */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18rpx); }
-  to { opacity: 1; transform: none; }
-}
-.page > view:not(.picker-mask):not(.plan-picker-mask) {
-  animation: fadeUp 0.16s ease-out both;
-}
-
-/* Light mode keeps surfaces flat and predictable while scrolling. */
-.theme-light .hero-card,
-.theme-light .overview-card,
-.theme-light .profile-hero,
-.theme-light .accent-blue,
-.theme-light .accent-purple,
-.theme-light .cat-on {
-  background: var(--surface);
-}
-
-.theme-light .hero-card,
-.theme-light .overview-card,
-.theme-light .profile-hero {
-  box-shadow: var(--shadow-card);
-}
+.page > view:not(.picker-mask):not(.plan-picker-mask) { animation: fadeUp 0.16s ease-out both; }
+.sheet, .plan-sheet { animation: sheetUp 0.22s ease-out both; }

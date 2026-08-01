@@ -24,6 +24,24 @@
 /* Meta tags */
 .tags { display: flex; flex-wrap: wrap; gap: 14rpx; margin-bottom: 28rpx; }
 
+.quick-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10rpx;
+  margin-bottom: 28rpx;
+}
+
+.quick-facts > view {
+  padding: 18rpx 12rpx;
+  border-radius: var(--radius-sm);
+  background: var(--inset);
+  text-align: center;
+}
+
+.fact-label, .fact-value { display: block; }
+.fact-label { color: var(--text-dim); font-size: 20rpx; }
+.fact-value { margin-top: 6rpx; color: var(--text); font-size: 24rpx; font-weight: 600; }
+
 /* Steps */
 .step { display: flex; gap: 16rpx; padding: 16rpx 0; }
 .step + .step { border-top: 1rpx solid var(--border); }

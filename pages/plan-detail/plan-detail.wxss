@@ -8,7 +8,7 @@
 .d-targets { display: flex; gap: 10rpx; flex-shrink: 0; }
 .d-chip {
   font-size: 22rpx; padding: 8rpx 16rpx; border-radius: 999rpx;
-  background: rgba(79, 140, 255, 0.18); color: var(--accent); white-space: nowrap;
+  background: var(--primary-soft); color: var(--primary-strong); white-space: nowrap;
 }
 .d-chip.dim { background: var(--inset); color: var(--text-dim); }
 

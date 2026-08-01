@@ -35,17 +35,15 @@
 }
 .sheet {
   background: var(--sheet-bg);
-  border-radius: 28rpx 28rpx 0 0;
+  border-radius: 16rpx 16rpx 0 0;
   border-top: 1rpx solid var(--hairline);
-  padding: 8rpx 28rpx 28rpx;
+  padding: 8rpx 24rpx 24rpx;
   max-height: 82vh;
   display: flex; flex-direction: column;
   box-sizing: border-box;
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
 }
 .sheet-handle {
-  width: 72rpx; height: 8rpx; border-radius: 999rpx;
+  width: 68rpx; height: 7rpx; border-radius: 999rpx;
   background: var(--hairline);
   margin: 10rpx auto 18rpx;
 }

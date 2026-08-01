@@ -4,7 +4,7 @@
   <block wx:if="{{!loading && ex}}">
     <view class="hero">
       <text class="hero-initial">{{ex.initial}}</text>
-      <text class="hero-caption">动作说明</text>
+      <text class="hero-caption">文字动作卡</text>
     </view>
 
     <view class="title-block">
@@ -16,6 +16,12 @@
       <text class="tag">{{ex.bpZh}}</text>
       <text class="tag">{{ex.eqZh}}</text>
       <text class="tag">{{ex.tgZh}}</text>
+    </view>
+
+    <view class="quick-facts">
+      <view><text class="fact-label">目标</text><text class="fact-value">{{ex.tgZh}}</text></view>
+      <view><text class="fact-label">部位</text><text class="fact-value">{{ex.bpZh}}</text></view>
+      <view><text class="fact-label">器械</text><text class="fact-value">{{ex.eqZh}}</text></view>
     </view>
 
     <view class="card">

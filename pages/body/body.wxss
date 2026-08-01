@@ -45,9 +45,8 @@
 }
 .bar {
   width: 100%; min-height: 4rpx;
-  border-radius: 8rpx 8rpx 0 0;
-  background: linear-gradient(180deg, var(--primary), var(--primary-2));
-  box-shadow: var(--shadow-glow);
+  border-radius: 6rpx 6rpx 0 0;
+  background: var(--primary);
   transition: height 0.4s ease;
 }
 .bar-day { margin-top: 8rpx; font-size: 16rpx; color: var(--text-dim); white-space: nowrap; }

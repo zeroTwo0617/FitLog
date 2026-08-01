@@ -5,7 +5,7 @@ const KEY = 'fitlog_theme'
 
 // 顶栏（原生 navigationBar）跟随主题的颜色配置
 const NAV = {
-  dark:  { frontColor: '#ffffff', backgroundColor: '#0f1115' },
+  dark:  { frontColor: '#ffffff', backgroundColor: '#111816' },
   light: { frontColor: '#000000', backgroundColor: '#ffffff' }
 }
 

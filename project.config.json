@@ -18,14 +18,23 @@
         }
     },
     "compileType": "miniprogram",
+    "cloudfunctionRoot": "cloudfunctions/",
     "libVersion": "latest",
     "condition": {},
     "packOptions": {
-        "ignore": [],
+        "ignore": [
+            { "type": "folder", "value": "fitlog-backend" },
+            { "type": "folder", "value": "docs" },
+            { "type": "folder", "value": "scripts" },
+            { "type": "folder", "value": "output" },
+            { "type": "file", "value": "开发文档.md" },
+            { "type": "file", "value": "README.md" }
+        ],
         "include": []
     },
     "editorSetting": {
         "tabIndent": "insertSpaces",
         "tabSize": 4
-    }
+    },
+    "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }

@@ -16,7 +16,9 @@ const config = {
     PLANS: 'plans',        // 训练计划/模板
     BODY: 'bodyMetrics',   // 身体数据（体重/围度）
     EXERCISES: 'exercises', // 动作库（可选，当前使用内置预设动作）
-    AGENT_SESSIONS: 'agentSessions' // Agent 会话消息，按云端 _openid 隔离
+    AGENT_SESSIONS: 'agentSessions', // Agent 会话消息，按云端 _openid 隔离
+    NUTRITION_LOGS: 'nutritionLogs', // 已确认的每日饮食记录
+    DIET_PLANS: 'dietPlans' // 已确认的饮食计划
   }
 }
 

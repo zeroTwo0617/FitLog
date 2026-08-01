@@ -1,161 +1,50 @@
-.page.record { padding-bottom: calc(60rpx + env(safe-area-inset-bottom)); }
+.record { padding-bottom: calc(48rpx + env(safe-area-inset-bottom)); }
+.record-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; margin-bottom: 22rpx; }
+.eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
+.record-mode { flex: none; margin-top: 26rpx; padding: 8rpx 14rpx; border: 1rpx solid var(--primary); border-radius: 999rpx; color: var(--primary); font-size: 20rpx; }
+.record-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10rpx; margin-bottom: 22rpx; }
+.record-summary view { padding: 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); }
+.record-summary text { display: block; }
+.record-summary text:first-child { color: var(--text); font-size: 30rpx; font-weight: 750; }
+.record-summary text:last-child { margin-top: 7rpx; color: var(--text-dim); font-size: 20rpx; }
+.plan-bar { margin-bottom: 18rpx; }
+.plan-active { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; padding: 14rpx 16rpx; border-left: 5rpx solid var(--primary); background: var(--primary-soft); }
+.plan-on-label, .plan-on-name { display: block; }
+.plan-on-label { color: var(--primary); font-size: 19rpx; font-weight: 700; }
+.plan-on-name { margin-top: 4rpx; color: var(--text); font-size: 25rpx; font-weight: 650; }
+.plan-on-clear { flex: none; color: var(--text-dim); font-size: 21rpx; }
+.session { display: flex; flex-direction: column; gap: 16rpx; }
+.exercise-card { padding: 20rpx 16rpx 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-card); }
+.exercise-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12rpx; }
+.exercise-index { display: inline-block; margin-right: 10rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; vertical-align: 3rpx; }
+.exercise-name { color: var(--text); font-size: 29rpx; font-weight: 700; }
+.exercise-remove { color: var(--danger); font-size: 21rpx; }
+.exercise-target { margin: 9rpx 0; color: var(--primary); font-size: 20rpx; }
+.set-row { display: grid; grid-template-columns: 0.62fr 1fr 1fr 1fr 0.48fr; align-items: center; gap: 7rpx; padding: 8rpx 0; }
+.set-row text { min-width: 0; color: var(--text-dim); font-size: 20rpx; text-align: center; }
+.set-head { border-bottom: 1rpx solid var(--hairline); }
+.set-head text { font-size: 18rpx; }
+.set-no { color: var(--text) !important; }
+.set-input { width: 100%; height: 60rpx; border: 1rpx solid var(--border); border-radius: 6rpx; background: var(--surface-2); color: var(--text); font-size: 24rpx; line-height: 60rpx; text-align: center; }
+.set-remove { color: var(--danger) !important; font-size: 29rpx !important; }
+.add-set { width: 100%; margin-top: 10rpx; padding: 14rpx; border: 1rpx dashed var(--border); border-radius: 6rpx; color: var(--primary); font-size: 22rpx; }
+.record-empty { padding: 56rpx 28rpx 32rpx; }
+.add-exercise { margin: 16rpx 0 12rpx; }
+.save-button { margin-top: 12rpx; }
 
-.record-head { margin-bottom: 22rpx; }
-.record-metrics { margin-bottom: 24rpx; }
-.record-metrics .metric-card { padding: 20rpx 18rpx; }
-.record-metrics .metric-value { font-size: 34rpx; }
-.mode-value { font-size: 30rpx !important; }
-
-/* 兼容旧结构 */
-.topbar {
-  display: flex;
-  align-items: baseline;
-  gap: 16rpx;
-  margin-bottom: 28rpx;
-}
-.topbar .date { color: var(--text-dim); font-size: 26rpx; }
-.topbar .title { font-size: 44rpx; font-weight: 700; }
-
-/* 计划导入条 */
-.plan-bar { margin-bottom: 24rpx; }
-.plan-bar.on {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18rpx 22rpx;
-  background: var(--primary-soft);
-  border: 1rpx solid var(--primary);
-  border-radius: var(--radius);
-}
-.plan-on-name { font-size: 26rpx; color: var(--text); font-weight: 600; }
-.plan-on-clear { font-size: 24rpx; color: var(--text-dim); }
-
-/* 训练动作卡片（外观由全局 .card 提供） */
-.session { display: flex; flex-direction: column; gap: var(--gap); }
-.ex-card { transition: border-color 0.2s ease, transform 0.2s ease; }
-.ex-card:active { transform: scale(0.995); border-color: var(--primary); }
-
-.ex-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14rpx;
-}
-.ex-name { font-size: 30rpx; font-weight: 600; }
-.ex-del { color: var(--danger); font-size: 24rpx; }
-
-/* 跟练目标参照 */
-.ex-target {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6rpx;
-  margin-bottom: 12rpx;
-  font-size: 22rpx;
-  color: var(--primary);
-}
-
-.set-row {
-  display: flex;
-  align-items: center;
-  gap: 10rpx;
-  padding: 10rpx 0;
-}
-.set-row.head {
-  color: var(--text-dim);
-  font-size: 22rpx;
-  border-bottom: 1rpx solid var(--border);
-  margin-bottom: 4rpx;
-}
-.c-no { width: 56rpx; text-align: center; color: var(--text-dim); font-size: 24rpx; flex: none; }
-.c-reps, .c-weight, .c-rest { flex: 1; text-align: center; font-size: 22rpx; color: var(--text-dim); }
-.c-op { width: 48rpx; text-align: center; flex: none; }
-
-.inp {
-  flex: 1;
-  min-width: 0;
-  background: var(--surface-2);
-  border: 1rpx solid var(--border);
-  border-radius: 12rpx;
-  padding: 12rpx 0;
-  color: var(--text);
-  font-size: 28rpx;
-  text-align: center;
-}
-.del { color: var(--danger); font-size: 34rpx; }
-
-.add-set {
-  margin: 14rpx 0 0;
-  background: transparent;
-  color: var(--primary);
-  border: 1rpx solid var(--border);
-  font-size: 24rpx;
-}
-
-/* 空态 */
-.empty { text-align: center; color: var(--text-dim); padding: 100rpx 40rpx; font-size: 28rpx; line-height: 1.6; }
-
-.btn-add { margin: 32rpx 0 20rpx; }
-
-/* 动作选择器 / 计划选择器：底部弹出遮罩面板（fixed，保留模糊） */
-.picker-mask, .plan-picker-mask {
-  position: fixed;
-  left: 0; right: 0; top: 0; bottom: 0;
-  background: var(--mask);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-.sheet, .plan-sheet {
-  background: var(--sheet-bg);
-  border-radius: 28rpx 28rpx 0 0;
-  border-top: 1rpx solid var(--hairline);
-  padding: 8rpx 28rpx 28rpx;
-  max-height: 82vh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-}
-.sheet-handle {
-  width: 72rpx; height: 8rpx; border-radius: 999rpx;
-  background: var(--hairline);
-  margin: 10rpx auto 18rpx;
-}
-.search { margin-bottom: 16rpx; flex-shrink: 0; }
-.cats { white-space: nowrap; margin-bottom: 16rpx; flex-shrink: 0; }
-.pick-list { max-height: 56vh; flex: 1; }
-
-.sheet-title { font-size: 30rpx; font-weight: 600; margin-bottom: 16rpx; flex-shrink: 0; }
-.plan-pick-list { max-height: 56vh; flex: 1; }
-.plan-pick-item {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 24rpx 8rpx;
-  border-bottom: 1rpx solid var(--border);
-}
-.plan-pick-item:active { background: var(--surface-2); }
-.pp-name { font-size: 30rpx; color: var(--text); }
-.pp-meta { font-size: 22rpx; color: var(--text-dim); }
-.plan-empty { text-align: center; color: var(--text-dim); padding: 60rpx 20rpx; font-size: 26rpx; }
-.pp-cancel {
-  margin-top: 18rpx;
-  background: var(--surface-2);
-  color: var(--text-dim);
-  border: 1rpx solid var(--border);
-  border-radius: var(--radius);
-  font-size: 28rpx;
-  padding: 18rpx 0;
-  flex-shrink: 0;
-}
-
-.pick-item {
-  display: flex; flex-direction: column; gap: 4rpx;
-  padding: 18rpx 12rpx;
-  border-bottom: 1rpx solid var(--border);
-}
-.pick-item:active { background: var(--surface-2); }
-.pick-name { font-size: 28rpx; color: var(--text); }
-.pick-meta { font-size: 22rpx; color: var(--text-dim); }
-
-.btn-save { margin-top: 12rpx; }
+.picker-mask, .plan-picker-mask { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; justify-content: flex-end; background: var(--mask); }
+.sheet, .plan-sheet { display: flex; flex-direction: column; max-height: 84vh; padding: 8rpx 24rpx 24rpx; border-radius: 16rpx 16rpx 0 0; background: var(--sheet-bg); }
+.sheet-handle { width: 68rpx; height: 7rpx; margin: 8rpx auto 18rpx; border-radius: 999rpx; background: var(--surface-3); }
+.sheet-title-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16rpx; }
+.sheet-title { display: block; color: var(--text); font-size: 30rpx; font-weight: 750; }
+.sheet-count { color: var(--text-dim); font-size: 20rpx; }
+.cats { flex: none; margin: 14rpx 0 12rpx; white-space: nowrap; }
+.pick-list, .plan-pick-list { flex: 1; max-height: 55vh; }
+.pick-item, .plan-pick-item { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; padding: 17rpx 4rpx; border-bottom: 1rpx solid var(--hairline); }
+.pick-item:active, .plan-pick-item:active { background: var(--surface-2); }
+.pick-name, .pp-name { display: block; color: var(--text); font-size: 26rpx; }
+.pick-meta, .pp-meta { display: block; margin-top: 5rpx; color: var(--text-dim); font-size: 20rpx; }
+.pick-add { color: var(--primary); font-size: 30rpx; }
+.plan-sheet > .sheet-title { margin: 0 0 12rpx 4rpx; }
+.plan-empty { padding: 56rpx 16rpx; color: var(--text-dim); font-size: 23rpx; text-align: center; }
+.pp-cancel { margin-top: 16rpx; padding: 18rpx; border: 1rpx solid var(--border); border-radius: var(--radius-sm); color: var(--text-dim); font-size: 25rpx; }

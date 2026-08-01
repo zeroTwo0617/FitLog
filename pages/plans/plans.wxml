@@ -1,52 +1,7 @@
-<view class="page tab-page theme-{{theme ? theme : 'light'}}">
-  <view class="overview-card">
-    <text class="overview-kicker">训练模板</text>
-    <text class="overview-title">把常用组合收成计划</text>
-    <text class="overview-desc">记录训练时一键带入动作、目标组数和次数，省掉重复录入。</text>
-    <view class="metric-grid plan-metrics">
-      <view class="metric-card">
-        <text class="metric-value grad-text">{{list.length}}</text>
-        <text class="metric-label">计划数量</text>
-      </view>
-      <view class="metric-card">
-        <text class="metric-value">{{totalExercises}}</text>
-        <text class="metric-label">已配置动作</text>
-      </view>
-      <view class="metric-card">
-        <text class="metric-value">{{list.length > 0 ? 'Ready' : 'Empty'}}</text>
-        <text class="metric-label">当前状态</text>
-      </view>
-    </view>
-  </view>
-
-  <view class="section">
-    <view class="section-head">
-      <text class="section-title">计划列表</text>
-      <text class="section-meta">{{list.length > 0 ? '点开查看详情' : '先建一个属于你的模板'}}</text>
-    </view>
-
-    <view class="list" wx:if="{{list.length > 0}}">
-      <view class="plan-item" wx:for="{{list}}" wx:key="_id" bindtap="goDetail" data-id="{{item._id}}">
-        <view class="plan-item-top">
-          <view class="plan-item-copy">
-            <text class="plan-item-name">{{item.name}}</text>
-            <text class="plan-item-meta">{{item.count}} 个动作 · {{item.totalSets || item.count}} 组目标</text>
-          </view>
-          <text class="plan-item-arrow">›</text>
-        </view>
-        <view class="chip-row" wx:if="{{item.previewNames.length > 0}}">
-          <text class="tag" wx:for="{{item.previewNames}}" wx:key="*this">{{item}}</text>
-          <text class="tag dim" wx:if="{{item.moreCount > 0}}">+{{item.moreCount}}</text>
-        </view>
-        <text class="plan-item-desc">{{item.namesText}}</text>
-      </view>
-    </view>
-
-    <view class="empty plan-empty" wx:if="{{list.length === 0 && !loading}}">
-      <text class="empty-text">还没有训练计划</text>
-      <text class="empty-sub">先整理一套你常练的动作组合，之后记录训练会顺手很多。</text>
-    </view>
-  </view>
-
-  <button class="btn-primary create-btn" bindtap="goCreate">新建计划</button>
+<view class="page tab-page plans-page theme-{{theme ? theme : 'light'}}">
+  <view class="plans-header"><view><text class="eyebrow">WORKOUT PLANS</text><text class="h-title">训练计划</text><text class="h-sub">把常练动作整理好，记录时直接开始</text></view><button class="header-add" bindtap="goCreate">＋</button></view>
+  <view class="plans-summary"><view><text>{{list.length}}</text><text>个计划</text></view><view><text>{{totalExercises}}</text><text>个动作</text></view><view><text>{{list.length > 0 ? 'Ready' : 'Empty'}}</text><text>当前状态</text></view></view>
+  <view class="plans-list" wx:if="{{list.length > 0}}"><view class="plan-item" wx:for="{{list}}" wx:key="_id" bindtap="goDetail" data-id="{{item._id}}"><view class="plan-item-head"><view><text class="plan-item-name">{{item.name}}</text><text class="plan-item-meta">{{item.count}} 个动作 · {{item.totalSets || item.count}} 组目标</text></view><text class="plan-item-arrow">→</text></view><view class="chip-row" wx:if="{{item.previewNames.length > 0}}"><text class="tag" wx:for="{{item.previewNames}}" wx:key="*this">{{item}}</text><text class="tag dim" wx:if="{{item.moreCount > 0}}">+{{item.moreCount}}</text></view><text class="plan-item-desc">{{item.namesText}}</text></view></view>
+  <view class="empty" wx:if="{{list.length === 0 && !loading}}"><text class="empty-text">还没有训练计划</text><text class="empty-sub">创建一套常练组合，记录训练会更快</text></view>
+  <button class="btn-primary create-plan" bindtap="goCreate">新建训练计划</button>
 </view>

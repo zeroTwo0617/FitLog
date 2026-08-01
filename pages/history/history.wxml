@@ -1,44 +1,7 @@
-<view class="page history theme-{{theme ? theme : 'light'}}">
-  <view class="h-top">
-    <text class="h-title">训练历史</text>
-    <text class="h-sub">按日期倒序，回看每次训练的完成情况</text>
-  </view>
-
-  <view class="metric-grid history-metrics">
-    <view class="metric-card">
-      <text class="metric-value grad-text">{{list.length}}</text>
-      <text class="metric-label">训练次数</text>
-    </view>
-    <view class="metric-card">
-      <text class="metric-value">{{trainedDays}}</text>
-      <text class="metric-label">训练天数</text>
-    </view>
-    <view class="metric-card">
-      <text class="metric-value">{{totalSets}}</text>
-      <text class="metric-label">完成组数</text>
-    </view>
-  </view>
-
-  <view class="loading" wx:if="{{loading}}">加载中…</view>
-
-  <view class="list" wx:if="{{!loading && list.length > 0}}">
-    <view class="card history-card" wx:for="{{list}}" wx:key="_id" bindtap="goDetail" data-id="{{item._id}}">
-      <view class="card-top">
-        <view>
-          <text class="date">{{item.dateStr}}</text>
-          <text class="history-time" wx:if="{{item.title}}">{{item.title}}</text>
-        </view>
-        <text class="count">{{item.exercises.length}} 个动作 · {{item.setTotal}} 组</text>
-      </view>
-      <view class="history-body">
-        <view class="names">{{item.namesText}}</view>
-        <text class="history-arrow">›</text>
-      </view>
-    </view>
-  </view>
-
-  <view class="empty" wx:if="{{!loading && list.length === 0}}">
-    <text>还没有训练记录</text>
-    <text class="empty-sub">去首页点「开始训练」记录第一次吧</text>
-  </view>
+<view class="page tab-page history-page theme-{{theme ? theme : 'light'}}">
+  <view class="history-header"><view><text class="eyebrow">TRAINING ARCHIVE</text><text class="h-title">训练历史</text><text class="h-sub">每次训练都会留下可回看的进步</text></view><text class="latest-date" wx:if="{{latestDate}}">最近 {{latestDate}}</text></view>
+  <view class="history-summary"><view><text>{{list.length}}</text><text>训练次数</text></view><view><text>{{trainedDays}}</text><text>训练天数</text></view><view><text>{{totalSets}}</text><text>完成组数</text></view></view>
+  <view class="loading" wx:if="{{loading}}">正在加载历史</view>
+  <view class="history-list" wx:if="{{!loading && list.length > 0}}"><view class="history-row" wx:for="{{list}}" wx:key="_id" bindtap="goDetail" data-id="{{item._id}}"><view class="history-date"><text>{{item.dateStr}}</text><text wx:if="{{item.title}}">{{item.title}}</text></view><view class="history-main"><text class="history-names">{{item.namesText}}</text><text class="history-meta">{{item.exercises.length}} 个动作 · {{item.setTotal}} 组</text></view><text class="history-arrow">→</text></view></view>
+  <view class="empty" wx:if="{{!loading && list.length === 0}}"><text class="empty-text">还没有训练记录</text><text class="empty-sub">完成第一次训练后，这里会自动生成历史</text></view>
 </view>

@@ -1,88 +1,40 @@
-<view class="page tab-page theme-{{theme ? theme : 'light'}}">
-  <view class="calendar-hero">
-    <view class="head">
-      <text class="h-title">训练日历</text>
-      <text class="h-sub">用月历观察训练节奏，选中日期后直接查看当天内容。</text>
-    </view>
-    <view class="metric-grid">
-      <view class="metric-card">
-        <text class="metric-value grad-text">{{trainedDays}}</text>
-        <text class="metric-label">累计训练天数</text>
-      </view>
-      <view class="metric-card">
-        <text class="metric-value">{{workoutCount}}</text>
-        <text class="metric-label">总训练次数</text>
-      </view>
-      <view class="metric-card">
-        <text class="metric-value">{{monthWorkoutCount}}</text>
-        <text class="metric-label">本月训练次数</text>
-      </view>
-    </view>
+<view class="page tab-page calendar-page theme-{{theme ? theme : 'light'}}">
+  <view class="calendar-header">
+    <view><text class="eyebrow">TRAINING LOG</text><text class="h-title">训练日历</text><text class="h-sub">选中日期，在当前页面查看训练和饮食记录</text></view>
+    <view class="month-total"><text>{{monthWorkoutCount}}</text><text>本月训练</text></view>
   </view>
 
-  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="calendar-summary">
+    <view><text>{{trainedDays}}</text><text>累计训练日</text></view>
+    <view><text>{{workoutCount}}</text><text>训练次数</text></view>
+    <view><text>{{monthCalories}}</text><text>本月 kcal</text></view>
+  </view>
 
+  <view class="loading" wx:if="{{loading}}">正在加载日历</view>
   <block wx:if="{{!loading}}">
-    <view class="card calendar-card">
-      <view class="cal-top">
-        <view>
-          <text class="card-title">打卡日历</text>
-          <text class="cal-subtitle">{{calYear}} 年 {{calMonth}} 月</text>
-        </view>
-        <view class="cal-nav">
-          <view class="cal-arrow {{canPrev ? '' : 'disabled'}}" bindtap="prevMonth">‹</view>
-          <view class="cal-arrow {{canNext ? '' : 'disabled'}}" bindtap="nextMonth">›</view>
-        </view>
+    <view class="calendar-board">
+      <view class="calendar-toolbar">
+        <view><text class="calendar-month">{{calYear}} / {{calMonth}}</text><text class="calendar-caption">训练与摄入</text></view>
+        <view class="calendar-nav"><view class="calendar-arrow {{canPrev ? '' : 'disabled'}}" bindtap="prevMonth">‹</view><view class="calendar-arrow {{canNext ? '' : 'disabled'}}" bindtap="nextMonth">›</view></view>
       </view>
-      <view class="cal-week">
-        <text wx:for="{{weekLabels}}" wx:key="*this" class="cal-wd">{{item}}</text>
-      </view>
-      <view class="cal-grid">
-        <view wx:for="{{calendar}}" wx:key="dateStr"
-              class="cal-cell {{item.trained ? 'on' : ''}} {{item.isToday ? 'today' : ''}} {{selectedDate === item.dateStr ? 'selected' : ''}}"
-              data-date="{{item.dateStr}}" bindtap="tapDay">
-          <text class="cal-day">{{item.day}}</text>
-          <text class="cal-badge" wx:if="{{item.count > 1}}">{{item.count}}</text>
+      <view class="calendar-week"><text wx:for="{{weekLabels}}" wx:key="*this">{{item}}</text></view>
+      <view class="calendar-grid">
+        <view wx:for="{{calendar}}" wx:key="dateStr" class="calendar-cell {{item.trained ? 'trained' : ''}} {{item.isToday ? 'today' : ''}} {{selectedDate === item.dateStr ? 'selected' : ''}}" data-date="{{item.dateStr}}" bindtap="tapDay">
+          <text class="calendar-day">{{item.day}}</text>
+          <text class="calendar-count" wx:if="{{item.count > 1}}">{{item.count}}</text>
+          <view class="calorie-dot {{item.calorieStatus}}" wx:if="{{item.calories > 0}}"></view>
         </view>
       </view>
-      <view class="cal-legend">
-        <view class="lg-item"><view class="lg-dot on"></view><text>已训练</text></view>
-        <view class="lg-item"><view class="lg-dot today"></view><text>今天</text></view>
-        <view class="lg-item"><view class="lg-dot selected"></view><text>已选中</text></view>
-      </view>
+      <view class="calendar-legend"><text><view class="legend-dot trained"></view>已训练</text><text><view class="legend-dot today"></view>今天</text><text><view class="legend-dot selected"></view>已选择</text></view>
     </view>
 
-    <view class="day-detail card" wx:if="{{selectedDate}}">
-      <view class="detail-head">
-        <view>
-          <text class="detail-title">{{selectedDate}}</text>
-          <text class="detail-sub" wx:if="{{selectedSessionCount > 0}}">{{selectedSessionCount}} 次训练 · {{selectedExerciseCount}} 个动作 · {{selectedSetCount}} 组</text>
-          <text class="detail-sub" wx:if="{{selectedSessionCount === 0}}">这一天没有训练记录</text>
-        </view>
-        <view class="detail-close" bindtap="tapDay" data-date="{{selectedDate}}">×</view>
-      </view>
-
-      <view class="detail-loading" wx:if="{{detailLoading}}">正在整理当天训练...</view>
-      <view class="detail-empty" wx:if="{{!detailLoading && selectedSessionCount === 0}}">休息日也算训练计划的一部分。</view>
-
-      <view class="detail-session" wx:for="{{selectedWorkouts}}" wx:key="id" wx:for-item="workout">
-        <view class="session-head">
-          <text class="session-title">{{workout.title}}</text>
-          <text class="session-meta">{{workout.time}} · {{workout.exerciseCount}} 个动作 · {{workout.totalSets}} 组</text>
-        </view>
-        <view class="detail-group" wx:for="{{workout.groups}}" wx:key="exerciseId" wx:for-item="group">
-          <view class="group-head">
-            <text class="group-name">{{group.name}}</text>
-            <text class="group-count">{{group.setCount}} 组</text>
-          </view>
-          <view class="detail-set detail-set-head">
-            <text>组</text><text>次数</text><text>重量</text><text>休息</text>
-          </view>
-          <view class="detail-set" wx:for="{{group.sets}}" wx:key="setIndex" wx:for-item="set">
-            <text>{{set.setIndex}}</text><text>{{set.repsText}}</text><text>{{set.weightText}}</text><text>{{set.restText}}</text>
-          </view>
-        </view>
-      </view>
+    <view class="day-detail" wx:if="{{selectedDate}}">
+      <view class="detail-header"><view><text class="detail-date">{{selectedDate}}</text><text class="detail-summary" wx:if="{{selectedSessionCount > 0}}">{{selectedSessionCount}} 次训练 · {{selectedExerciseCount}} 个动作 · {{selectedSetCount}} 组</text><text class="detail-summary" wx:if="{{selectedSessionCount === 0}}">休息日，没有训练记录</text></view><view class="detail-close" bindtap="tapDay" data-date="{{selectedDate}}">×</view></view>
+      <view class="nutrition-summary" wx:if="{{selectedNutrition}}"><text class="nutrition-title">饮食 {{selectedNutrition.calories}} kcal · {{selectedNutrition.mealCount}} 餐</text><text class="nutrition-macro">目标 {{dailyTargetCalories || '未设置'}} kcal · 蛋白质 {{selectedNutrition.protein}}g · 碳水 {{selectedNutrition.carbs}}g · 脂肪 {{selectedNutrition.fat}}g</text><view wx:for="{{selectedNutrition.meals}}" wx:key="_id" class="nutrition-meal"><text>{{item.mealTypeLabel}}</text><text>{{item.calories}} kcal</text></view></view>
+      <view class="nutrition-empty" wx:if="{{selectedDate && !selectedNutrition}}">暂无饮食记录</view>
+      <view class="detail-loading" wx:if="{{detailLoading}}">正在整理当日训练</view>
+      <view class="detail-empty" wx:if="{{!detailLoading && selectedSessionCount === 0}}">把休息也记录下来，节奏才能持续。</view>
+      <view class="detail-session" wx:for="{{selectedWorkouts}}" wx:key="id" wx:for-item="workout"><view class="session-head"><text class="session-title">{{workout.title}}</text><text class="session-meta">{{workout.time}} · {{workout.exerciseCount}} 个动作 · {{workout.totalSets}} 组</text></view><view class="detail-group" wx:for="{{workout.groups}}" wx:key="exerciseId" wx:for-item="group"><view class="group-head"><text class="group-name">{{group.name}}</text><text class="group-count">{{group.setCount}} 组</text></view><view class="detail-set detail-set-head"><text>组</text><text>次数</text><text>重量</text><text>休息</text></view><view class="detail-set" wx:for="{{group.sets}}" wx:key="setIndex" wx:for-item="set"><text>{{set.setIndex}}</text><text>{{set.repsText}}</text><text>{{set.weightText}}</text><text>{{set.restText}}</text></view></view></view>
     </view>
   </block>
 </view>

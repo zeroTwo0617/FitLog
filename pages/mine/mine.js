@@ -9,7 +9,14 @@ Page({
     profile: null,
     displayName: 'FitLog 用户',
     workoutCount: 0,
-    planCount: 0
+    planCount: 0,
+    goalText: '未设置',
+    levelText: '未设置',
+    bodySummary: {
+      weight: '--',
+      bmi: '--',
+      date: '暂无记录'
+    }
   },
 
   onShow() {
@@ -25,15 +32,29 @@ Page({
     Promise.all([
       auth.ensureUser(),
       cloud.collection(cloud.C.WORKOUTS).count(),
-      cloud.collection(cloud.C.PLANS).count()
-    ]).then(([u, workoutCnt, planCnt]) => {
+      cloud.collection(cloud.C.PLANS).count(),
+      cloud.collection(cloud.C.BODY).limit(1).get().catch(() => ({ data: [] }))
+    ]).then(([u, workoutCnt, planCnt, bodyRes]) => {
+      const profile = (u && u.profile) || {}
+      const latestBody = bodyRes && bodyRes.data && bodyRes.data[0]
+      const height = latestBody && Number(latestBody.height) > 0 ? Number(latestBody.height) / 100 : 0
+      const bmi = latestBody && Number(latestBody.weight) > 0 && height > 0
+        ? (Number(latestBody.weight) / (height * height)).toFixed(1)
+        : '--'
       this.setData({
-        profile: u.profile,
-        displayName: (u && u.profile && u.profile.nickName) || 'FitLog 用户',
+        profile: profile,
+        displayName: profile.nickName || 'FitLog 用户',
         'cloud.status': 'ok',
         'cloud.text': '云端同步正常',
         workoutCount: (workoutCnt && workoutCnt.total) || 0,
-        planCount: (planCnt && planCnt.total) || 0
+        planCount: (planCnt && planCnt.total) || 0,
+        goalText: profile.goal || profile.trainingGoal || '未设置',
+        levelText: profile.level || profile.trainingLevel || '未设置',
+        bodySummary: {
+          weight: latestBody && latestBody.weight ? `${latestBody.weight} kg` : '--',
+          bmi: bmi,
+          date: latestBody && latestBody.dateStr ? latestBody.dateStr : '暂无记录'
+        }
       })
     }).catch((err) => {
       this.setData({

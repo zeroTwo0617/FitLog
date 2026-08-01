@@ -1,103 +1,19 @@
-.overview-card {
-  padding: 30rpx;
-  border-radius: 28rpx;
-  background:
-    radial-gradient(110% 110% at 0% 0%, rgba(79, 140, 255, 0.18), transparent 52%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
-  border: 1rpx solid var(--card-border);
-}
-
-.overview-kicker {
-  display: block;
-  font-size: 22rpx;
-  color: var(--primary);
-  font-weight: 700;
-  letter-spacing: 4rpx;
-}
-
-.overview-title {
-  display: block;
-  margin-top: 14rpx;
-  font-size: 46rpx;
-  font-weight: 800;
-  color: var(--text);
-}
-
-.overview-desc {
-  display: block;
-  margin-top: 14rpx;
-  font-size: 25rpx;
-  line-height: 1.55;
-  color: var(--text-dim);
-}
-
-.plan-metrics {
-  margin-top: 26rpx;
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 18rpx;
-}
-
-.plan-item {
-  padding: 26rpx;
-  border-radius: var(--radius);
-  background: var(--card-bg);
-  border: 1rpx solid var(--card-border);
-}
-
-.plan-item-top {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.plan-item-copy {
-  flex: 1;
-  min-width: 0;
-}
-
-.plan-item-name {
-  display: block;
-  font-size: 32rpx;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.plan-item-meta {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
-  color: var(--text-dim);
-}
-
-.plan-item-arrow {
-  flex-shrink: 0;
-  font-size: 40rpx;
-  color: var(--text-dim);
-}
-
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10rpx;
-  margin-top: 18rpx;
-}
-
-.plan-item-desc {
-  display: block;
-  margin-top: 16rpx;
-  font-size: 23rpx;
-  line-height: 1.55;
-  color: var(--text-dim);
-}
-
-.plan-empty {
-  margin-top: 12rpx;
-}
-
-.create-btn {
-  margin-top: 36rpx;
-}
+.plans-page { padding-top: 24rpx; }
+.plans-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; margin-bottom: 22rpx; }
+.eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
+.header-add { display: flex; align-items: center; justify-content: center; width: 64rpx; height: 64rpx; margin-top: 24rpx; border: 1rpx solid var(--primary); border-radius: var(--radius-sm); color: var(--primary); font-size: 34rpx; }
+.plans-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10rpx; margin-bottom: 24rpx; }
+.plans-summary view { padding: 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); }
+.plans-summary text { display: block; }
+.plans-summary text:first-child { color: var(--text); font-size: 30rpx; font-weight: 750; }
+.plans-summary text:last-child { margin-top: 7rpx; color: var(--text-dim); font-size: 20rpx; }
+.plans-list { border-top: 1rpx solid var(--card-border); }
+.plan-item { padding: 20rpx 0; border-bottom: 1rpx solid var(--card-border); }
+.plan-item-head { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; }
+.plan-item-name { display: block; color: var(--text); font-size: 28rpx; font-weight: 700; }
+.plan-item-meta { display: block; margin-top: 7rpx; color: var(--text-dim); font-size: 20rpx; }
+.plan-item-arrow { color: var(--text-dim); font-size: 28rpx; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8rpx; margin-top: 15rpx; }
+.chip-row .tag { margin: 0; }
+.plan-item-desc { display: block; margin-top: 12rpx; overflow: hidden; color: var(--text-dim); font-size: 20rpx; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }
+.create-plan { margin-top: 24rpx; }
