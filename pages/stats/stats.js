@@ -88,11 +88,17 @@ Page({
     }
   },
 
-  drawInto(id, points, unit) {
-    wx.createSelectorQuery().in(this).select('#' + id)
+  drawInto(id, points, unit, attempt) {
+    const q = wx.createSelectorQuery().in(this)
+    q.select('#' + id)
       .fields({ node: true, size: true })
       .exec((res) => {
-        if (!res || !res[0] || !res[0].node) return
+        if (!res || !res[0] || !res[0].node) {
+          // canvas 2d 节点初始化晚于普通 view，节点未就绪时延迟重试
+          const n = attempt || 0
+          if (n < 3) setTimeout(() => this.drawInto(id, points, unit, n + 1), 250)
+          return
+        }
         const info = (wx.getWindowInfo && wx.getWindowInfo()) || { pixelRatio: 2 }
         lc.drawLineChart(res[0].node, Object.assign({
           width: res[0].width,
@@ -111,8 +117,13 @@ Page({
       label: t.day,
       value: t.trained ? t.volume : null
     }))
-    this.drawInto('volumeChart', volPts, 'kg')
-    this.drawOrmChart()
+    // wx.nextTick：等本轮渲染完成后再查 canvas 节点，避免拿不到 node
+    const draw = () => {
+      this.drawInto('volumeChart', volPts, 'kg')
+      this.drawOrmChart()
+    }
+    if (wx.nextTick) wx.nextTick(draw)
+    else setTimeout(draw, 100)
   },
 
   drawOrmChart() {
