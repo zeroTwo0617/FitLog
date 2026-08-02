@@ -17,4 +17,5 @@
   </view>
 
   <button class="btn-start" bindtap="startTraining" wx:if="{{plan}}">开始训练</button>
+  <button class="btn-delete" bindtap="deletePlan" wx:if="{{plan}}">删除计划</button>
 </view>
