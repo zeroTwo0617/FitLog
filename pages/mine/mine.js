@@ -141,6 +141,37 @@ Page({
       })
   },
 
+  // ===== 载入测试数据（开发期工具，发布前移除） =====
+  // 用当前用户真实 openid 调 seedData 云函数，灌入 8 周测试数据，小程序内立即可见
+  loadSeed() {
+    wx.showModal({
+      title: '载入测试数据',
+      content: '将灌入 8 周训练记录、3 个计划和身体数据（会先清掉旧的测试数据），用于功能验收。继续？',
+      confirmText: '载入',
+      success: (res) => {
+        if (!res.confirm) return
+        wx.showLoading({ title: '正在载入…', mask: true })
+        wx.cloud.callFunction({ name: 'seedData' })
+          .then((r) => {
+            wx.hideLoading()
+            const s = r && r.result && r.result.summary
+            wx.showModal({
+              title: '载入完成',
+              content: s
+                ? `训练 ${s.workouts} 次 · 组 ${s.sets} 条 · 计划 ${s.plans} 个 · 身体 ${s.bodyMetrics} 条`
+                : '载入失败',
+              showCancel: false
+            })
+          })
+          .catch((err) => {
+            wx.hideLoading()
+            wx.showToast({ title: '载入失败（是否已部署 seedData？）', icon: 'none' })
+            console.error('载入测试数据失败', err)
+          })
+      }
+    })
+  },
+
   toggleTheme() {
     theme.toggle()
   }
