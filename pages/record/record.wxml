@@ -19,6 +19,28 @@
   <view class="picker-mask" wx:if="{{showPicker}}" bindtap="togglePicker"><view class="sheet" catchtap="noop"><view class="sheet-handle"></view><view class="sheet-title-row"><text class="sheet-title">添加动作</text><text class="sheet-count">{{pickerList.length}} 个结果</text></view><input class="search-input" placeholder="搜索中文或英文动作" value="{{keyword}}" bindinput="onSearch" confirm-type="search" /><scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false"><view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat === item.key ? 'chip-on' : ''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}}</view></scroll-view><scroll-view class="pick-list" scroll-y="true"><view wx:for="{{pickerList}}" wx:key="id" class="pick-item" bindtap="addExercise" data-id="{{item.id}}"><view><text class="pick-name">{{item.nameZh}}</text><text class="pick-meta">{{item.bpZh}} · {{item.eqZh}}</text></view><text class="pick-add">＋</text></view></scroll-view></view></view>
   <view class="plan-picker-mask" wx:if="{{showPlanPicker}}" bindtap="closePlanPicker"><view class="plan-sheet" catchtap="noop"><view class="sheet-handle"></view><text class="sheet-title">选择训练计划</text><scroll-view class="plan-pick-list" scroll-y="true"><view wx:for="{{planList}}" wx:key="_id" class="plan-pick-item" bindtap="pickPlan" data-id="{{item._id}}"><view><text class="pp-name">{{item.name}}</text><text class="pp-meta">{{item.count}} 个动作</text></view><text class="pick-add">→</text></view><view wx:if="{{planList.length === 0}}" class="plan-empty">还没有计划，去「我的」页创建</view></scroll-view><button class="pp-cancel" bindtap="closePlanPicker">取消</button></view></view>
 
+  <view class="rest-card {{restDone ? 'rest-done' : ''}}" wx:if="{{restRunning || restDone}}">
+    <view class="rest-ring" style="background: conic-gradient(var(--primary) {{restPct}}%, var(--surface-3) 0)">
+      <view class="rest-ring-inner">
+        <text class="rest-time">{{restRemainText}}</text>
+        <text class="rest-unit">秒</text>
+      </view>
+    </view>
+    <view class="rest-copy">
+      <text class="rest-kicker">{{restDone ? 'REST OVER' : '组间休息'}}</text>
+      <text class="rest-name">{{restLabel}}</text>
+      <text class="rest-hint">{{restDone ? '该上下一组了' : '结束自动提醒 · 可 ±15s 微调'}}</text>
+    </view>
+    <view class="rest-actions" wx:if="{{!restDone}}">
+      <view class="rest-adjust" catchtap="adjustRest" data-delta="-15">−15</view>
+      <view class="rest-adjust" catchtap="adjustRest" data-delta="15">+15</view>
+      <view class="rest-skip" catchtap="skipRest">跳过</view>
+    </view>
+    <view class="rest-actions" wx:else>
+      <view class="rest-skip rest-ok" catchtap="skipRest">知道了</view>
+    </view>
+  </view>
+
   <view class="rec-bottom">
     <button class="rec-btn-ghost" bindtap="togglePicker">{{showPicker ? '收起动作库' : '＋ 添加动作'}}</button>
     <button class="rec-btn-save" bindtap="save" disabled="{{saving}}">{{saving ? '保存中…' : '保存训练 ✓'}}</button>

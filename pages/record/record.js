@@ -2,6 +2,7 @@ const ex = require('../../utils/exerciseData.js')
 const cloud = require('../../utils/cloud.js')
 const auth = require('../../utils/auth.js')
 const pd = require('../../utils/planData.js')
+const rt = require('../../utils/restTimer.js')
 
 function fmtToday() {
   const d = new Date()
@@ -30,7 +31,16 @@ Page({
     showPlanPicker: false,
     exerciseCount: 0,
     totalSets: 0,
-    sessionVolume: 0
+    sessionVolume: 0,
+    // 组间休息计时器状态
+    restRunning: false,
+    restDone: false,
+    restEndAt: 0,
+    restTotal: rt.DEFAULT_REST,
+    restRemain: rt.DEFAULT_REST,
+    restRemainText: String(rt.DEFAULT_REST),
+    restPct: 100,
+    restLabel: ''
   },
 
   sessionStats(session) {
@@ -55,6 +65,93 @@ Page({
     this.refreshPicker()
     if (options && options.planId) {
       this.loadPlan(options.planId)
+    }
+  },
+
+  onShow() {
+    // 从后台/其他页面回来：按 endAt 重算剩余，重启滴答（防漂移）
+    this._clearRestTimer()
+    if (this.data.restRunning && this.data.restEndAt) {
+      this._tickRest()
+      this._restTimerId = setInterval(() => this._tickRest(), 1000)
+    }
+  },
+
+  onHide() {
+    this._clearRestTimer()
+  },
+
+  onUnload() {
+    this._clearRestTimer()
+    if (this._restDoneTimer) clearTimeout(this._restDoneTimer)
+  },
+
+  // ===== 组间休息计时器 =====
+  startRest(idx, si) {
+    const ex0 = this.data.session[idx]
+    if (!ex0 || !ex0.sets[si]) return
+    const st = ex0.sets[si]
+    const total = Math.min(rt.MAX_REST, Math.max(5, Number(st.rest) || rt.DEFAULT_REST))
+    const endAt = Date.now() + total * 1000
+    this._clearRestTimer()
+    if (this._restDoneTimer) clearTimeout(this._restDoneTimer)
+    this.setData({
+      restRunning: true,
+      restDone: false,
+      restEndAt: endAt,
+      restTotal: total,
+      restRemain: total,
+      restRemainText: rt.fmtTime(total),
+      restPct: 100,
+      restLabel: ex0.name + ' · 第 ' + (si + 1) + ' 组'
+    })
+    this._tickRest()
+    this._restTimerId = setInterval(() => this._tickRest(), 1000)
+  },
+
+  _tickRest() {
+    const now = Date.now()
+    const remain = rt.remainSec(this.data.restEndAt, now)
+    if (remain <= 0) {
+      this.finishRest()
+      return
+    }
+    const pct = 100 - rt.elapsedPct(this.data.restEndAt, now, this.data.restTotal)
+    this.setData({ restRemain: remain, restRemainText: rt.fmtTime(remain), restPct: pct })
+  },
+
+  finishRest() {
+    this._clearRestTimer()
+    this.setData({ restRunning: false, restDone: true, restRemain: 0, restRemainText: '0', restPct: 0 })
+    if (wx.vibrateShort) {
+      wx.vibrateShort({ type: 'heavy' })
+      setTimeout(() => wx.vibrateShort({ type: 'heavy' }), 280)
+    }
+    this._restDoneTimer = setTimeout(() => this.setData({ restDone: false }), 2600)
+  },
+
+  skipRest() {
+    this._clearRestTimer()
+    if (this._restDoneTimer) clearTimeout(this._restDoneTimer)
+    this.setData({ restRunning: false, restDone: false })
+  },
+
+  adjustRest(e) {
+    const delta = Number(e.currentTarget.dataset.delta) || 0
+    const remain = Math.min(rt.MAX_REST, Math.max(0, this.data.restRemain + delta))
+    this.setData({
+      restEndAt: Date.now() + remain * 1000,
+      restTotal: remain,
+      restRemain: remain,
+      restRemainText: rt.fmtTime(remain),
+      restPct: 100
+    })
+  },
+
+  _clearRestTimer() {
+    if (this._restTimerId) {
+      clearInterval(this._restTimerId)
+      this._restTimerId = null
     }
   },
 
@@ -180,7 +277,7 @@ Page({
     this.setData(Object.assign({ session }, this.sessionStats(session)))
   },
 
-  // 练一组勾一组：完成状态切换 + 震动反馈
+  // 练一组勾一组：完成状态切换 + 震动反馈 + 启动该组休息计时
   toggleSet(e) {
     const idx = Number(e.currentTarget.dataset.idx)
     const si = Number(e.currentTarget.dataset.sidx)
@@ -191,7 +288,10 @@ Page({
     const completed = !target.completed
     session[idx].sets[si] = Object.assign({}, target, { completed })
     this.setData({ session })
-    if (completed && wx.vibrateShort) wx.vibrateShort({ type: 'light' })
+    if (completed) {
+      if (wx.vibrateShort) wx.vibrateShort({ type: 'light' })
+      this.startRest(idx, si)
+    }
   },
 
   removeSet(e) {
