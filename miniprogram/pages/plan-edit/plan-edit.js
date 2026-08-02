@@ -1,0 +1,133 @@
+const ex = require('../../utils/exerciseData.js')
+const cloud = require('../../utils/cloud.js')
+const page = require('../../utils/page.js')
+const validation = require('../../utils/validation.js')
+const planRepo = require('../../utils/repositories/plan.js')
+
+page({
+  data: {
+    id: '',                  // 编辑时存在
+    name: '',
+    items: [],               // [{exerciseId, exerciseName, targetSets, targetReps, targetWeight}]
+    showPicker: false,
+    keyword: '',
+    activeCat: '',
+    categories: ex.categoryOptions(),
+    pickerList: []
+  },
+  onLoad(options) {
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.refreshPicker()
+    const draft = wx.getStorageSync('fitlog_agent_plan_draft')
+    if (draft && draft.name && Array.isArray(draft.items)) {
+      wx.removeStorageSync('fitlog_agent_plan_draft')
+      this.setData({ name: draft.name, items: draft.items })
+    }
+    if (options && options.id) {
+      this.setData({ id: options.id })
+      this.loadPlan(options.id)
+    }
+  },
+  // 阻止面板内部点击冒泡到遮罩（避免误关闭）
+  noop() {},
+  loadPlan(id) {
+    planRepo.get(id)
+      .then((res) => {
+        const p = res && res.data ? res.data : null
+        if (!p) return
+        this.setData({ name: p.name || '', items: p.items || [] })
+      })
+      .catch((err) => {
+        wx.showToast({ title: '加载计划失败', icon: 'none' })
+        console.error('加载计划失败', err)
+      })
+  },
+  // ===== 动作选择器 =====
+  refreshPicker() {
+    const list = ex.list({
+      keyword: this.data.keyword,
+      bodyPart: this.data.activeCat
+    })
+    this.setData({ pickerList: list })
+  },
+  togglePicker() {
+    this.setData({ showPicker: !this.data.showPicker })
+  },
+  onSearch(e) {
+    this.setData({ keyword: e.detail.value }, () => this.refreshPicker())
+  },
+  onCat(e) {
+    const cat = e.currentTarget.dataset.cat
+    this.setData({ activeCat: this.data.activeCat === cat ? '' : cat }, () => this.refreshPicker())
+  },
+  addExercise(e) {
+    const id = e.currentTarget.dataset.id
+    const ex0 = ex.getById(id)
+    if (!ex0) return
+    if (this.data.items.some((it) => it.exerciseId === id)) {
+      wx.showToast({ title: '该动作已在计划中', icon: 'none' })
+      return
+    }
+    const items = this.data.items.concat([{
+      exerciseId: ex0.id,
+      exerciseName: ex0.nameZh,
+      targetSets: 3,
+      targetReps: '',
+      targetWeight: ''
+    }])
+    this.setData({ items, showPicker: false })
+  },
+  // ===== 编辑计划项 =====
+  removeItem(e) {
+    const idx = Number(e.currentTarget.dataset.idx)
+    const items = this.data.items.slice()
+    items.splice(idx, 1)
+    this.setData({ items })
+  },
+  onName(e) {
+    this.setData({ name: e.detail.value })
+  },
+  onTarget(e) {
+    const idx = Number(e.currentTarget.dataset.idx)
+    const field = e.currentTarget.dataset.field
+    const items = this.data.items.slice()
+    items[idx] = Object.assign({}, items[idx], { [field]: e.detail.value })
+    this.setData({ items })
+  },
+  // ===== 保存：新建 add / 编辑 set =====
+  save() {
+    const name = (this.data.name || '').trim()
+    if (!name || name.length > 80) {
+      wx.showToast({ title: '请填写计划名称', icon: 'none' })
+      return
+    }
+    if (this.data.items.length === 0) {
+      wx.showToast({ title: '请至少添加一个动作', icon: 'none' })
+      return
+    }
+    const validationResult = validation.validatePlanItems(this.data.items)
+    if (!validationResult.valid) {
+      wx.showToast({ title: validationResult.message, icon: 'none' })
+      return
+    }
+    const items = this.data.items.map((it) => ({
+      exerciseId: it.exerciseId,
+      exerciseName: it.exerciseName,
+      targetSets: (it.targetSets === '' || it.targetSets == null) ? null : Number(it.targetSets),
+      targetReps: (it.targetReps === '' || it.targetReps == null) ? null : Number(it.targetReps),
+      targetWeight: (it.targetWeight === '' || it.targetWeight == null) ? null : Number(it.targetWeight)
+    }))
+    const data = { name: name, items: items }
+    wx.showLoading({ title: '保存中' })
+    const p = planRepo.save(Object.assign({}, data, this.data.id ? { id: this.data.id } : {}))
+    p.then(() => {
+      wx.hideLoading()
+      wx.showToast({ title: '已保存', icon: 'success' })
+      setTimeout(() => wx.navigateBack(), 600)
+    }).catch((err) => {
+      wx.hideLoading()
+      wx.showToast({ title: '保存失败', icon: 'none' })
+      console.error('保存计划失败', err)
+    })
+  }
+})

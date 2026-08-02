@@ -1,6 +1,6 @@
 // 记录页「导入训练计划跟练」回归自测
 // 覆盖：planData.planToSession 携带目标字段、按 targetSets 生成组数、mergePlanIntoSession 去重合并
-const pd = require('../utils/planData.js')
+const pd = require('../miniprogram/utils/planData.js')
 const ex = { getById: (id) => ({ id, name: 'ex_' + id }) }
 
 let pass = 0, fail = 0

@@ -1,0 +1,26 @@
+<view class="page tab-page stats-page theme-{{theme ? theme : 'dark'}}">
+  <view class="head"><text class="eyebrow">PERFORMANCE</text><text class="h-title">训练表现</text><text class="h-sub">只看训练量、动作进步和身体变化</text></view>
+  <view class="loading" wx:if="{{loading}}">正在整理数据</view>
+  <block wx:if="{{!loading}}">
+    <view class="stats-summary" wx:if="{{hasData}}"><view><text>{{totalWorkouts}}</text><text>训练次数</text></view><view><text>{{totalVolume}}</text><text>总容量 kg</text></view><view><text>{{monthCheckins}}</text><text>本月打卡</text></view></view>
+    <view class="empty" wx:if="{{!hasData}}"><text class="empty-text">还没有训练数据</text><text class="empty-sub">完成一次训练后，这里会开始记录趋势</text></view>
+    <view class="stats-section" wx:if="{{hasData}}">
+      <view class="stats-section-head"><text>近 14 天训练量</text><text>每日容量</text></view>
+      <view class="chart-axis-title">纵轴：训练量（kg）</view>
+      <view class="volume-chart">
+        <view class="volume-y-labels"><text>{{volumeAxis.top}}</text><text>{{volumeAxis.high}}</text><text>{{volumeAxis.mid}}</text><text>{{volumeAxis.low}}</text><text>{{volumeAxis.bottom}}</text></view>
+        <view class="volume-plot">
+          <view class="volume-bars">
+            <view class="volume-grid-line grid-top"></view><view class="volume-grid-line grid-mid-top"></view><view class="volume-grid-line grid-mid-bottom"></view><view class="volume-grid-line grid-bottom"></view>
+            <view wx:for="{{trend}}" wx:key="dateStr" class="volume-column"><view class="volume-bar {{item.trained ? 'volume-bar-on' : ''}}" style="height:{{item.heightPct}}%"></view></view>
+          </view>
+          <view class="volume-labels"><view wx:for="{{trend}}" wx:key="dateStr" class="volume-label-cell"><text wx:if="{{item.showLabel}}">{{item.day}}</text></view></view>
+        </view>
+      </view>
+      <text class="chart-axis-caption">横轴：训练日期</text>
+    </view>
+    <view class="stats-section" wx:if="{{hasData && ormExercises.length > 0}}"><view class="stats-section-head"><text>估算 1RM 趋势</text><text>Epley 公式</text></view><scroll-view class="orm-chips" scroll-x="true" enhanced="true" show-scrollbar="false"><view wx:for="{{ormExercises}}" wx:key="name" class="chip {{ormActive === item.name ? 'chip-on' : ''}}" data-name="{{item.name}}" bindtap="onOrmPick">{{item.name}}</view></scroll-view><text wx:if="{{ormHint}}" class="chart-hint">{{ormHint}}</text><view class="chart-axis-title">纵轴：估算重量（kg）</view><canvas type="2d" id="ormChart" class="trend-canvas"></canvas><text class="chart-axis-caption">横轴：训练日期</text></view>
+    <view class="stats-section" wx:if="{{maxByExercise.length > 0}}"><view class="stats-section-head"><text>动作最大重量</text><text>Top 5</text></view><view class="max-list"><view class="max-row" wx:for="{{maxByExercise}}" wx:key="name"><text class="max-name">{{item.name}}</text><view class="max-track"><view class="max-bar" style="width:{{item.heightPct}}%"></view></view><text class="max-value">{{item.max}} kg</text></view></view></view>
+    <view class="stats-link" bindtap="goBody"><view><text>身体数据</text><text>记录体重、体脂与围度变化</text></view><text>→</text></view>
+  </block>
+</view>

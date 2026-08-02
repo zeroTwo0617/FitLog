@@ -1,6 +1,6 @@
 // #7-A 自测：restTimer 纯函数 + record 页计时流（start/skip/adjust/finish）
 const path = require('path')
-const rt = require(path.resolve(__dirname, '..', 'utils', 'restTimer.js'))
+const rt = require(path.resolve(__dirname, '..', 'miniprogram', 'utils', 'restTimer.js'))
 
 let pass = 0, fail = 0
 function ok(cond, msg) {
@@ -26,7 +26,7 @@ global.Page = (opts) => { pageOpts = opts }
 global.getApp = () => ({ globalData: { theme: 'dark' } })
 global.wx = { vibrateShort: () => {}, showToast: () => {}, showModal: () => {} }
 
-require(path.resolve(__dirname, '..', 'pages', 'record', 'record.js'))
+require(path.resolve(__dirname, '..', 'miniprogram', 'pages', 'record', 'record.js'))
 
 const inst = Object.assign({}, pageOpts)
 inst.data = JSON.parse(JSON.stringify(pageOpts.data))

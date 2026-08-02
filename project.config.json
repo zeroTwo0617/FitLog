@@ -1,40 +1,40 @@
 {
-    "description": "FitLog 训练记录本 - 微信小程序",
-    "appid": "wx371390f8ed0c6037",
-    "projectname": "fitlog-miniprogram",
-    "setting": {
-        "urlCheck": false,
-        "es6": true,
-        "enhance": true,
-        "postcss": true,
-        "minified": false,
-        "newFeature": true,
-        "ignoreDevUnusedFiles": false,
-        "ignoreUploadUnusedFiles": false,
-        "babelSetting": {
-            "ignore": [],
-            "disablePlugins": [],
-            "outputPath": ""
-        }
-    },
-    "compileType": "miniprogram",
-    "cloudfunctionRoot": "cloudfunctions/",
-    "libVersion": "latest",
-    "condition": {},
-    "packOptions": {
-        "ignore": [
-            { "type": "folder", "value": "fitlog-backend" },
-            { "type": "folder", "value": "docs" },
-            { "type": "folder", "value": "scripts" },
-            { "type": "folder", "value": "output" },
-            { "type": "file", "value": "开发文档.md" },
-            { "type": "file", "value": "README.md" }
-        ],
-        "include": []
-    },
-    "editorSetting": {
-        "tabIndent": "insertSpaces",
-        "tabSize": 4
-    },
-    "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
+  "description": "FitLog WeChat mini program",
+  "appid": "wx371390f8ed0c6037",
+  "projectname": "fitlog-miniprogram",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": false,
+    "newFeature": true,
+    "ignoreDevUnusedFiles": false,
+    "ignoreUploadUnusedFiles": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "compileType": "miniprogram",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "libVersion": "latest",
+  "condition": {},
+  "packOptions": {
+    "ignore": [
+      { "type": "folder", "value": "fitlog-backend" },
+      { "type": "folder", "value": "docs" },
+      { "type": "folder", "value": "scripts" },
+      { "type": "folder", "value": "output" },
+      { "type": "file", "value": "开发文档.md" },
+      { "type": "file", "value": "README.md" }
+    ],
+    "include": []
+  },
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 4
+  }
 }

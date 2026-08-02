@@ -5,6 +5,30 @@ const path = require('path')
 global.Page = function (cfg) { global.__lastPage = cfg }
 global.getApp = () => ({ globalData: { theme: 'light' } })
 global.wx = {
+  cloud: {
+    callFunction: ({ name, data }) => {
+      if (name === 'ensureUser') return Promise.resolve({ result: { ok: true, profile: {}, created: false } })
+      if (name !== 'saveWorkout') return Promise.reject(new Error('unexpected cloud function: ' + name))
+      const workoutId = 'w_tx'
+      const workout = {
+        _id: workoutId,
+        date: new Date(),
+        dateStr: data.dateStr,
+        title: data.title || '',
+        planId: data.planId || '',
+        exercises: data.session.map((s) => ({ exerciseId: s.exerciseId, name: s.name, nameEn: s.nameEn, setCount: s.sets.length })),
+        setTotal: data.session.reduce((sum, s) => sum + s.sets.length, 0),
+        createdAt: new Date()
+      }
+      MOCK_DB.workouts = [workout]
+      MOCK_DB.sets = data.session.reduce((all, s) => all.concat(s.sets.map((st, i) => ({
+        sessionId: workoutId, exerciseId: s.exerciseId, exerciseName: s.name, setIndex: i + 1,
+        reps: st.reps === '' ? null : Number(st.reps), weight: st.weight === '' ? null : Number(st.weight),
+        restSec: st.rest === '' ? null : Number(st.rest), completed: !!st.completed, createdAt: new Date()
+      }))), [])
+      return Promise.resolve({ result: { ok: true, result: { workoutId, setTotal: workout.setTotal } } })
+    }
+  },
   navigateTo: () => {},
   navigateBack: () => {},
   showToast: () => {},
@@ -13,7 +37,7 @@ global.wx = {
 }
 
 const ROOT = path.resolve(__dirname, '..')
-function abs(p) { return path.resolve(ROOT, p) }
+function abs(p) { return path.resolve(ROOT, 'miniprogram', p) }
 
 // mock exerciseData（仅 getById）
 const mockEx = {
@@ -32,7 +56,29 @@ function override(p, exp) {
 let MOCK_DB = {}
 const mockCloud = {
   C: { PLANS: 'plans', WORKOUTS: 'workouts', SETS: 'sets' },
+  callFunction(name, data) {
+    if (name === 'savePlan') {
+      MOCK_DB.plans = MOCK_DB.plans || []
+      const id = data.id || ('new_plans_' + MOCK_DB.plans.length)
+      const record = Object.assign({ _id: id }, data)
+      delete record.id
+      const index = MOCK_DB.plans.findIndex((item) => item._id === id)
+      if (index >= 0) MOCK_DB.plans[index] = record
+      else MOCK_DB.plans.push(record)
+      return Promise.resolve({ ok: true, id: id })
+    }
+    if (name === 'saveWorkout') {
+      MOCK_DB.workouts = MOCK_DB.workouts || []
+      MOCK_DB.sets = MOCK_DB.sets || []
+      const workoutId = 'new_workout_' + MOCK_DB.workouts.length
+      MOCK_DB.workouts.push({ _id: workoutId, dateStr: data.dateStr, title: data.title, planId: data.planId, exercises: data.session.map((item) => ({ name: item.name, setCount: item.sets.length })), setTotal: data.session.reduce((sum, item) => sum + item.sets.length, 0) })
+      data.session.forEach((item) => item.sets.forEach((set, index) => MOCK_DB.sets.push({ sessionId: workoutId, exerciseName: item.name, weight: Number(set.weight) || 0, reps: Number(set.reps) || 0, setIndex: index + 1 })))
+      return Promise.resolve({ ok: true, result: { workoutId: workoutId } })
+    }
+    return Promise.reject(new Error('unexpected cloud function: ' + name))
+  },
   db: () => ({
+    serverDate: () => new Date(),
     collection(name) {
       const col = {
         get() { return Promise.resolve({ data: MOCK_DB[name] || [] }) },

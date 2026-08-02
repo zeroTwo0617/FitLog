@@ -1,0 +1,55 @@
+const cloud = require('../../utils/cloud.js')
+const hd = require('../../utils/historyData.js')
+const workoutData = require('../../utils/workoutData.js')
+const page = require('../../utils/page.js')
+const workoutRepo = require('../../utils/repositories/workout.js')
+
+page({
+  data: {
+    id: '',
+    workout: null,
+    groups: [],
+    loading: true
+  },
+
+  onLoad(options) {
+    this.setData({ theme: getApp().globalData.theme || 'dark' })
+    const id = options && options.id
+    if (!id) {
+      wx.showToast({ title: '缺少记录ID', icon: 'none' })
+      return
+    }
+    this.setData({ id })
+    this.load(id)
+  },
+
+  load(id) {
+    this.setData({ loading: true })
+    Promise.all([
+      workoutRepo.get(id),
+      workoutRepo.sets(id).then((data) => ({ data: data }))
+    ])
+      .then(([wRes, sRes]) => {
+        const workout = (wRes && wRes.data) || null
+        const sets = (sRes && sRes.data) || []
+        const groups = hd.buildGroups(workout, sets).map(g => ({
+          exerciseId: g.exerciseId,
+          name: g.name,
+          nameEn: g.nameEn,
+          setCount: g.setCount,
+          sets: g.sets.map(s => ({
+            setIndex: s.setIndex,
+            repsText: (s.reps == null || s.reps === '') ? '—' : String(s.reps),
+            weightText: (s.weight == null) ? '—' : (s.weight === 0 ? '自重' : (s.weight + ' kg')),
+            restText: (s.restSec == null || s.restSec === '') ? '—' : (s.restSec + 's')
+          }))
+        }))
+        this.setData({ workout: workout && Object.assign({}, workout, { dateStr: workoutData.dateKey(workout) }), groups, loading: false })
+      })
+      .catch((err) => {
+        this.setData({ loading: false })
+        wx.showToast({ title: '加载失败', icon: 'none' })
+        console.error('加载训练详情失败', err)
+      })
+  }
+})

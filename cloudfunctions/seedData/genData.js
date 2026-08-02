@@ -39,6 +39,7 @@ const TEMPLATES = {
 // 第 0~7 周；每周按 周一/周三/周五 训练
 function genSeed(opts) {
   const now = opts.now ? new Date(opts.now) : new Date()
+  const chartDemo = !!opts.chartDemo
   const weeks = opts.weeks || 8
   const workouts = []
   const sets = []
@@ -73,11 +74,11 @@ function genSeed(opts) {
       })
     }
 
-    dayIdx.forEach((offset, di) => {
+    (chartDemo ? [0, 1, 2, 3, 4, 5] : dayIdx).forEach((offset, di) => {
       const d = new Date(thisMonday)
       d.setDate(thisMonday.getDate() - w * 7 + offset)
       if (d.getTime() > todayStart.getTime()) return // 未来日期跳过
-      const title = dayNames[di]
+      const title = dayNames[chartDemo ? di % dayNames.length : di]
       const tpl = TEMPLATES[title]
       const exSummaries = []
       let setTotal = 0

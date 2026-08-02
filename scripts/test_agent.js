@@ -1,5 +1,5 @@
 const assert = require('assert')
-const agent = require('../utils/agent.js')
+const agent = require('../miniprogram/utils/agent.js')
 
 const context = {
   recentWorkouts: [{ date: '2026-08-01' }],

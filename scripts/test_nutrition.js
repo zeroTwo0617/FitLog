@@ -1,5 +1,5 @@
 const assert = require('assert')
-const nutrition = require('../utils/nutrition.js')
+const nutrition = require('../miniprogram/utils/nutrition.js')
 const schemas = require('../cloudfunctions/agent/schemas.js')
 
 const records = [

@@ -1,0 +1,61 @@
+// 云数据库访问封装。必须在 app.js 中 wx.cloud.init 之后使用。
+const config = require('./config.js')
+
+// 惰性获取数据库实例（避免未初始化时提前 require 报错）
+function db() {
+  if (!wx.cloud || !wx.cloud.database) {
+    throw new Error('云环境未初始化，请确认 app.js 已调用 wx.cloud.init')
+  }
+  return wx.cloud.database()
+}
+
+function isReady() {
+  return !!(wx.cloud && wx.cloud.database)
+}
+
+function collection(name) {
+  return db().collection(name)
+}
+
+function callFunction(name, data) {
+  if (!wx.cloud || typeof wx.cloud.callFunction !== 'function') {
+    return Promise.reject(new Error('云环境未初始化'))
+  }
+  return wx.cloud.callFunction({ name: name, data: data || {} }).then((res) => {
+    const result = res && res.result ? res.result : res
+    if (result && result.ok === false) {
+      const error = new Error(result.error && result.error.message || result.message || '云操作失败')
+      error.code = result.error && result.error.code || result.code || 'CLOUD_OPERATION_FAILED'
+      throw error
+    }
+    return result
+  })
+}
+
+// 分页读取集合，避免页面使用固定 limit 后在数据增长时静默截断。
+function getAll(name, batchSize) {
+  const size = batchSize || 100
+  const database = db()
+  const read = (skip, acc) => {
+    const query = database.collection(name)
+    const pageQuery = typeof query.skip === 'function'
+      ? query.skip(skip).limit(size)
+      : query.limit(size)
+    return pageQuery.get()
+    .then((res) => {
+      const rows = (res && res.data) || []
+      const next = acc.concat(rows)
+      return rows.length < size ? next : read(skip + rows.length, next)
+    })
+  }
+  return read(0, [])
+}
+
+module.exports = {
+  db,
+  isReady,
+  collection,
+  callFunction,
+  getAll,
+  C: config.COLLECTIONS // 集合名快捷引用
+}

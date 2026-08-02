@@ -4,7 +4,7 @@ const path = require('path')
 const assert = require('assert')
 
 // ===== 1) 纯函数单测（无需 wx）=====
-const hd = require(path.join(__dirname, '..', 'utils', 'historyData.js'))
+const hd = require(path.join(__dirname, '..', 'miniprogram', 'utils', 'historyData.js'))
 
 const wA = { _id: 'a', date: '2026-07-10T10:00:00Z', exercises: [{ exerciseId: 'e1', name: '动作一', nameEn: 'x', setCount: 2 }] }
 const wB = { _id: 'b', date: '2026-07-12T10:00:00Z', exercises: [{ exerciseId: 'e2', name: '动作二', nameEn: 'y', setCount: 1 }] }
@@ -87,7 +87,7 @@ function makeInstance(opts) {
 }
 
 // 2a) history 列表
-require(path.join(__dirname, '..', 'pages', 'history', 'history.js'))
+require(path.join(__dirname, '..', 'miniprogram', 'pages', 'history', 'history.js'))
 let inst = makeInstance(pageOpts)
 inst.onShow()
 setTimeout(() => {
@@ -97,7 +97,7 @@ setTimeout(() => {
   console.log('✅ history 列表读取 + 整理通过')
 
   // 2b) history-detail 详情
-  require(path.join(__dirname, '..', 'pages', 'history-detail', 'history-detail.js'))
+  require(path.join(__dirname, '..', 'miniprogram', 'pages', 'history-detail', 'history-detail.js'))
   const inst2 = makeInstance(pageOpts)
   inst2.onLoad({ id: 'w1' })
   setTimeout(() => {

@@ -30,7 +30,37 @@ function makeCollection(name) {
   }
 }
 global.wx = {
-  cloud: { database: () => ({ collection: makeCollection }) },
+  cloud: {
+    database: () => ({ collection: makeCollection }),
+    callFunction: ({ name, data }) => {
+      if (name === 'ensureUser') return Promise.resolve({ result: { ok: true, profile: {}, created: false } })
+      if (name !== 'saveWorkout') return Promise.reject(new Error('unexpected cloud function: ' + name))
+      const workoutId = 'w_' + writes.workouts.length
+      const workout = {
+        _id: workoutId,
+        date: new Date(),
+        dateStr: data.dateStr,
+        title: data.title || '',
+        planId: data.planId || '',
+        exercises: data.session.map((s) => ({ exerciseId: s.exerciseId, name: s.name, nameEn: s.nameEn, setCount: s.sets.length })),
+        setTotal: data.session.reduce((sum, s) => sum + s.sets.length, 0),
+        createdAt: new Date()
+      }
+      writes.workouts.push(workout)
+      data.session.forEach((s) => s.sets.forEach((st, i) => writes.sets.push({
+        sessionId: workoutId,
+        exerciseId: s.exerciseId,
+        exerciseName: s.name,
+        setIndex: i + 1,
+        reps: st.reps === '' ? null : Number(st.reps),
+        weight: st.weight === '' ? null : Number(st.weight),
+        restSec: st.rest === '' ? null : Number(st.rest),
+        completed: !!st.completed,
+        createdAt: new Date()
+      })))
+      return Promise.resolve({ result: { ok: true, result: { workoutId, setTotal: workout.setTotal } } })
+    }
+  },
   login: (o) => o.success({ code: 'test_code' }),
   getStorageSync: () => false,
   setStorageSync: () => {},
@@ -40,7 +70,7 @@ global.wx = {
 }
 
 // 3) 加载页面模块（会执行 Page(options)）
-require(path.join(__dirname, '..', 'pages', 'record', 'record.js'))
+require(path.join(__dirname, '..', 'miniprogram', 'pages', 'record', 'record.js'))
 
 // 4) 构造实例并模拟 setData
 const inst = Object.assign({}, pageOpts)

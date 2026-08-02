@@ -16,6 +16,7 @@
 - `project.private.config.json` 只放微信开发者工具的本地设置，模板见 `project.private.config.json.example`；该文件已被 `.gitignore` 忽略。
 - 云环境 ID 配置在 `utils/config.js` 的 `CLOUD_ENV`，它不是密钥。
 - 训练 Agent 在云函数配置完成后调用大模型；模型不可用时保留本地规则训练建议作为降级。
+- 文档索引见 [docs/README.md](./docs/README.md)，数据库索引和集合权限需要在对应 CloudBase 环境中确认。
 - 后续若接入 LLM，密钥应放在 CloudBase 云函数环境变量或服务端密钥管理中，不能放进 `project.private.config.json`、小程序 JS、`utils/config.js` 或提交到 Git。
 
 ## Agent 云函数
@@ -25,6 +26,11 @@
 4. 图片通过按用户隔离的临时路径上传；`analyzeMeal` 会在识别完成后删除原始图片，只把用户确认后的结构化营养结果写入 `nutritionLogs`。
 
 如果页面提示模型不可用，优先查看提示中的错误码。`MODEL_CONFIG_MISSING` 表示环境变量没有注入到云函数实例；`.env.example` 只是模板，`project.private.config.json` 也不会注入云函数环境变量。部署后的页面会显示一行脱敏配置诊断，不会显示 API Key。
+
+## 数据写入云函数
+- `cloudfunctions/saveWorkout`：以事务方式写入一条 `workouts` 和全部 `sets`。
+- `cloudfunctions/ensureUser`：按当前用户 openid 幂等创建用户档案。
+- 修改这两个目录后，需要在微信开发者工具中重新部署对应云函数。
 
 ## Git 工作流
 - 分支：`main` / `dev` / `feature/<功能>`

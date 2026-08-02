@@ -1,0 +1,129 @@
+.record { padding-bottom: calc(180rpx + env(safe-area-inset-bottom)); }
+.record-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; margin-bottom: 22rpx; }
+.eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
+.record-mode { flex: none; margin-top: 26rpx; padding: 8rpx 14rpx; border: 1rpx solid var(--primary); border-radius: 999rpx; color: var(--primary); font-size: 20rpx; }
+.record-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10rpx; margin-bottom: 22rpx; }
+.record-summary view { padding: 18rpx 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); }
+.record-summary text { display: block; }
+.record-summary text:first-child { color: var(--text); font-size: 32rpx; font-weight: 800; }
+.record-summary text:last-child { margin-top: 7rpx; color: var(--text-dim); font-size: 20rpx; }
+/* 容量卡 Volt 高亮：训练中实时反馈 */
+.record-summary .sum-hl { border-color: rgba(198, 242, 78, 0.3); background: var(--primary-soft); }
+.record-summary .sum-hl text:first-child { color: var(--primary); }
+.plan-bar { margin-bottom: 18rpx; }
+.plan-active { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; padding: 14rpx 16rpx; border-left: 5rpx solid var(--primary); background: var(--primary-soft); }
+.plan-on-label, .plan-on-name { display: block; }
+.plan-on-label { color: var(--primary); font-size: 19rpx; font-weight: 700; }
+.plan-on-name { margin-top: 4rpx; color: var(--text); font-size: 25rpx; font-weight: 650; }
+.plan-on-clear { flex: none; color: var(--text-dim); font-size: 21rpx; }
+.session { display: flex; flex-direction: column; gap: 16rpx; }
+.exercise-card { padding: 20rpx 16rpx 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-card); }
+.exercise-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12rpx; }
+.exercise-index { display: inline-block; margin-right: 10rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; vertical-align: 3rpx; }
+.exercise-name { color: var(--text); font-size: 32rpx; font-weight: 700; }
+.exercise-remove { color: var(--danger); font-size: 21rpx; }
+.exercise-target { margin: 9rpx 0; color: var(--primary); font-size: 20rpx; }
+.set-row { display: grid; grid-template-columns: 0.5fr 1fr 1fr 1fr 0.62fr 0.4fr; align-items: center; gap: 8rpx; padding: 8rpx 0; }
+.set-row text { min-width: 0; color: var(--text-dim); font-size: 20rpx; text-align: center; }
+.set-head { border-bottom: 1rpx solid var(--hairline); }
+.set-head text { font-size: 18rpx; }
+.set-no { color: var(--text) !important; font-weight: 800; }
+.set-input { width: 100%; height: 80rpx; border: 1rpx solid var(--border); border-radius: 12rpx; background: var(--surface-2); color: var(--text); font-size: 26rpx; font-weight: 700; line-height: 80rpx; text-align: center; }
+/* 已完成组：Volt 描边高亮，训练中一眼分辨进度 */
+.set-done .set-input { border-color: rgba(198, 242, 78, 0.45); background: var(--primary-soft); color: var(--primary); }
+.set-check { display: flex; align-items: center; justify-content: center; width: 100%; height: 80rpx; border: 1rpx solid var(--border); border-radius: 12rpx; background: var(--surface-2); color: transparent; font-size: 28rpx; font-weight: 800; }
+.set-check.ok { border-color: var(--primary); background: var(--primary); color: #12160a; }
+.set-remove { color: var(--danger) !important; font-size: 29rpx !important; }
+.add-set { width: 100%; margin-top: 10rpx; padding: 14rpx; border: 1rpx dashed var(--border); border-radius: 6rpx; color: var(--primary); font-size: 22rpx; }
+.record-empty { padding: 56rpx 28rpx 32rpx; }
+
+/* 底部固定操作区：左手加动作、右手保存，拇指热区各就各位 */
+.rec-bottom {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 90;
+  display: flex;
+  gap: 14rpx;
+  padding: 18rpx 24rpx calc(24rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(transparent, var(--bg) 35%);
+}
+.rec-btn-ghost {
+  display: flex; flex: 1; align-items: center; justify-content: center;
+  height: 100rpx; border: 1rpx solid var(--border); border-radius: 18rpx;
+  background: var(--surface-2); color: var(--text); font-size: 26rpx; font-weight: 700;
+}
+.rec-btn-save {
+  display: flex; flex: 1.6; align-items: center; justify-content: center;
+  height: 100rpx; border-radius: 18rpx;
+  background: var(--primary); color: var(--on-primary); font-size: 28rpx; font-weight: 800;
+  box-shadow: 0 8rpx 24rpx rgba(198, 242, 78, 0.25);
+}
+.rec-btn-save[disabled] { opacity: 0.5; }
+.rec-btn-ghost:active, .rec-btn-save:active { opacity: 0.82; }
+
+/* 组间休息计时卡：圆环排水 + 剩余秒 + ±15s/跳过 */
+.rest-card {
+  position: fixed;
+  right: 24rpx;
+  bottom: calc(150rpx + env(safe-area-inset-bottom));
+  left: 24rpx;
+  z-index: 85;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 22rpx;
+  border: 1rpx solid rgba(198, 242, 78, 0.3);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.45);
+  animation: fadeUp 0.2s ease-out both;
+}
+.rest-done { border-color: var(--primary); }
+.rest-ring {
+  display: flex; align-items: center; justify-content: center;
+  width: 96rpx; height: 96rpx; flex: none; border-radius: 50%;
+  transition: background 0.3s linear;
+}
+.rest-done .rest-ring { background: var(--primary) !important; animation: restPulse 0.8s ease-in-out 2; }
+@keyframes restPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(198, 242, 78, 0.5); } 50% { box-shadow: 0 0 0 14rpx rgba(198, 242, 78, 0); } }
+.rest-ring-inner {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 78rpx; height: 78rpx; border-radius: 50%; background: var(--surface);
+}
+.rest-time { color: var(--text); font-size: 30rpx; font-weight: 800; line-height: 1; }
+.rest-unit { margin-top: 4rpx; color: var(--text-dim); font-size: 16rpx; }
+.rest-copy { flex: 1; min-width: 0; }
+.rest-kicker { display: block; color: var(--primary); font-size: 18rpx; font-weight: 800; letter-spacing: 2rpx; }
+.rest-done .rest-kicker { color: var(--accent); }
+.rest-name { display: block; margin-top: 6rpx; overflow: hidden; color: var(--text); font-size: 25rpx; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.rest-hint { display: block; margin-top: 5rpx; color: var(--text-dim); font-size: 18rpx; }
+.rest-actions { display: flex; flex-direction: column; gap: 8rpx; flex: none; }
+.rest-adjust {
+  min-width: 96rpx; padding: 10rpx 0; border: 1rpx solid var(--border); border-radius: 12rpx;
+  background: var(--surface-2); color: var(--text); font-size: 22rpx; font-weight: 700; text-align: center;
+}
+.rest-skip {
+  min-width: 96rpx; padding: 10rpx 0; border-radius: 12rpx;
+  background: var(--primary); color: var(--on-primary); font-size: 22rpx; font-weight: 800; text-align: center;
+}
+.rest-ok { min-width: 160rpx; }
+.rest-adjust:active, .rest-skip:active { opacity: 0.8; }
+
+.picker-mask, .plan-picker-mask { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; justify-content: flex-end; background: var(--mask); }
+.sheet, .plan-sheet { display: flex; flex-direction: column; max-height: 84vh; padding: 8rpx 24rpx 24rpx; border-radius: 16rpx 16rpx 0 0; background: var(--sheet-bg); }
+.sheet-handle { width: 68rpx; height: 7rpx; margin: 8rpx auto 18rpx; border-radius: 999rpx; background: var(--surface-3); }
+.sheet-title-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16rpx; }
+.sheet-title { display: block; color: var(--text); font-size: 30rpx; font-weight: 750; }
+.sheet-count { color: var(--text-dim); font-size: 20rpx; }
+.cats { flex: none; margin: 14rpx 0 12rpx; white-space: nowrap; }
+.pick-list, .plan-pick-list { flex: 1; max-height: 55vh; }
+.pick-item, .plan-pick-item { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; padding: 17rpx 4rpx; border-bottom: 1rpx solid var(--hairline); }
+.pick-item:active, .plan-pick-item:active { background: var(--surface-2); }
+.pick-name, .pp-name { display: block; color: var(--text); font-size: 26rpx; }
+.pick-meta, .pp-meta { display: block; margin-top: 5rpx; color: var(--text-dim); font-size: 20rpx; }
+.pick-add { color: var(--primary); font-size: 30rpx; }
+.plan-sheet > .sheet-title { margin: 0 0 12rpx 4rpx; }
+.plan-empty { padding: 56rpx 16rpx; color: var(--text-dim); font-size: 23rpx; text-align: center; }
+.pp-cancel { margin-top: 16rpx; padding: 18rpx; border: 1rpx solid var(--border); border-radius: var(--radius-sm); color: var(--text-dim); font-size: 25rpx; }

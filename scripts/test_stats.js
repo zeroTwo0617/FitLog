@@ -1,7 +1,7 @@
 // 功能 #6 自测：statsData 纯函数 + mock 云验证 stats 页聚合 / body 页保存
 const path = require('path')
 const abs = (p) => path.resolve(__dirname, p)
-const sd = require(abs('../utils/statsData.js'))
+const sd = require(abs('../miniprogram/utils/statsData.js'))
 
 let pass = 0, fail = 0
 function ok(cond, msg) {
@@ -34,6 +34,37 @@ ok(agg.totalVolume === 10 * 60 + 8 * 100 + 12 * 62, 'aggregate 总容量 = 600+8
 ok(agg.trainedDates.length === 2, '打卡日 = 2 天')
 ok(agg.maxByExercise[0].name === '深蹲' && agg.maxByExercise[0].max === 100, '最大重量 Top1 = 深蹲 100kg')
 ok(agg.maxByExercise[1].name === '卧推' && agg.maxByExercise[1].max === 62, '最大重量 Top2 = 卧推 62kg')
+
+const legacyWorkouts = [{ _id: 'legacy', dateStr: fmt(dateB), exercises: [{ exerciseId: 'deadlift', name: '传统硬拉' }] }]
+const legacySets = [{ sessionId: 'legacy', exerciseId: 'deadlift', reps: 5, weight: 100 }]
+const legacyAgg = sd.aggregate(legacyWorkouts, legacySets)
+ok(legacyAgg.maxByExercise[0].name === '传统硬拉', '缺少 sets.exerciseName 时从 workout 动作摘要还原名称')
+ok(sd.oneRMTrend(legacyWorkouts, legacySets, '传统硬拉', 14).some((point) => point.value != null), '缺少 sets.exerciseName 时仍可生成 1RM 数据点')
+
+const dateOnlyWorkouts = [{ _id: 'date-only', date: dateB, exercises: [{ exerciseId: 'barbell', name: '杠铃深蹲' }] }]
+const dateOnlySets = [{ sessionId: 'date-only', exerciseId: 'barbell', reps: 5, weight: 80 }]
+ok(sd.aggregate(dateOnlyWorkouts, dateOnlySets).maxByExercise[0].name === '杠铃深蹲', '旧 workout 只有 date 字段时仍能参与统计')
+
+const workoutWithoutCompletedSet = [{ _id: 'saved-only', dateStr: fmt(dateA), exercises: [{ exerciseId: 'saved', name: '硬拉' }] }]
+const savedOnlyAgg = sd.aggregate(workoutWithoutCompletedSet, [{ sessionId: 'saved-only', exerciseId: 'saved', reps: 5, weight: 100, completed: false }])
+ok(savedOnlyAgg.trainedDates.length === 1 && savedOnlyAgg.trainedDates[0] === fmt(dateA), '只有未完成组时仍按 workout 记录训练日')
+ok(savedOnlyAgg.totalVolume === 0, '未完成组不计入训练容量')
+
+const oldWorkout = { _id: 'old', dateStr: fmt((() => { const d = new Date(now); d.setDate(now.getDate() - 30); return d })()), exercises: [{ exerciseId: 'deadlift', name: '传统硬拉' }] }
+const recentWorkout = { _id: 'recent', dateStr: fmt(now), exercises: [{ exerciseId: 'press', name: '杠铃推举' }] }
+const anchoredByExercise = sd.oneRMTrend(
+  [oldWorkout, recentWorkout],
+  [{ sessionId: 'old', exerciseId: 'deadlift', exerciseName: '传统硬拉', reps: 5, weight: 100 }, { sessionId: 'recent', exerciseId: 'press', exerciseName: '杠铃推举', reps: 5, weight: 50 }],
+  '传统硬拉',
+  14
+)
+ok(anchoredByExercise[anchoredByExercise.length - 1].value != null, '1RM 窗口按当前动作最近训练日锚定')
+
+const manyExercises = sd.aggregate(
+  [{ _id: 'many', dateStr: fmt(dateB) }],
+  ['传统硬拉', '杠铃深蹲', '杠铃卧推', '杠铃划船', '杠铃弯举', '杠铃推举'].map((name, i) => ({ sessionId: 'many', exerciseId: 'e' + i, exerciseName: name, reps: 5, weight: 100 - i }))
+)
+ok(manyExercises.allByExercise.length === 6, '1RM 动作列表保留 Top 5 之外的动作')
 
 const trend = sd.volumeTrend(agg, 14)
 ok(trend.length === 14, 'volumeTrend 返回 14 天')
@@ -107,6 +138,7 @@ const MOCK_DB = {
 function makeCollection(name) {
   const store = MOCK_DB[name] || (MOCK_DB[name] = [])
   const obj = {
+    skip() { return obj },
     limit() { return obj },
     get() { return Promise.resolve({ data: store.slice() }) },
     add({ data }) { const _id = name + '_' + store.length; store.push(Object.assign({ _id }, data)); return Promise.resolve({ _id }) },
@@ -116,7 +148,18 @@ function makeCollection(name) {
   return obj
 }
 global.wx = {
-  cloud: { database: () => ({ collection: makeCollection }) },
+  cloud: {
+    database: () => ({ serverDate: () => new Date(), collection: makeCollection }),
+    callFunction: ({ name, data }) => {
+      if (name === 'ensureUser') return Promise.resolve({ result: { ok: true, profile: {}, created: false } })
+      if (name === 'saveBodyMetric') {
+        const bodyStore = MOCK_DB.bodyMetrics || (MOCK_DB.bodyMetrics = [])
+        bodyStore.push(Object.assign({ _id: 'body_' + bodyStore.length }, data))
+        return Promise.resolve({ result: { ok: true, id: 'body_' + (bodyStore.length - 1) } })
+      }
+      return Promise.reject(new Error('unexpected cloud function: ' + name))
+    }
+  },
   login: (o) => o.success && o.success({ code: 'test_code' }),
   getStorageSync: () => null,
   setStorageSync: () => {},
@@ -127,14 +170,14 @@ global.__lastPage = null
 global.Page = (cfg) => { global.__lastPage = cfg }
 global.getApp = () => ({ globalData: { theme: 'light' } })
 
-require(abs('../pages/stats/stats.js'))
+require(abs('../miniprogram/pages/stats/stats.js'))
 const statsInst = Object.assign({}, global.__lastPage)
 statsInst.setData = function (obj) { Object.assign(this.data, obj) }
 
 // ============ 3) mock 云：body 页保存 ============
 MOCK_DB.bodyMetrics = []
 global.__lastPage = null
-require(abs('../pages/body/body.js'))
+require(abs('../miniprogram/pages/body/body.js'))
 const bodyInst = Object.assign({}, global.__lastPage)
 bodyInst.setData = function (obj) { Object.assign(this.data, obj) }
 
@@ -146,7 +189,7 @@ bodyInst.setData = function (obj) { Object.assign(this.data, obj) }
   ok(statsInst.data.totalVolume === 2144, 'stats 页：totalVolume=2144')
   ok(statsInst.data.trend.length === 14, 'stats 页：趋势 14 天')
   ok(statsInst.data.maxByExercise.length === 2, 'stats 页：Top 最大重量 2 项')
-  ok(statsInst.data.calendar.length >= 28, 'stats 页：日历已生成')
+  ok(statsInst.data.monthCheckins === 2, 'stats 页：本月训练日与 workouts 日期一致')
   ok(statsInst.data.hasData === true, 'stats 页：hasData=true')
 
   // body 保存（含身高）
