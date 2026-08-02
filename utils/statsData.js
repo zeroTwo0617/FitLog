@@ -76,9 +76,10 @@ function aggregate(workouts, sets) {
   return { totalWorkouts, totalVolume, byDate, maxByExercise, trainedDates }
 }
 
-// 近 n 天训练量趋势（用于柱状图）。返回 [{dateStr, day, volume, heightPct, trained}]
-function volumeTrend(agg, n) {
-  const dates = lastNDates(n)
+// 近 n 天训练量趋势（用于折线/柱状图）。endDate 可指定窗口终点（锚定最近有数据的日期）
+// 返回 [{dateStr, day, volume, heightPct, trained}]
+function volumeTrend(agg, n, endDate) {
+  const dates = lastNDates(n, endDate)
   const map = {}
   ;(agg.byDate || []).forEach((d) => { map[d.dateStr] = d.volume })
   const trained = new Set(agg.trainedDates)
@@ -144,9 +145,10 @@ function estimate1RM(weight, reps) {
   return Math.round(w * (1 + r / 30) * 10) / 10
 }
 
-// 某动作近 n 天的估算 1RM 趋势。返回 [{dateStr, day, value}]，无数据日 value 为 null（折线图断点）
-function oneRMTrend(workouts, sets, exerciseName, n) {
-  const dates = lastNDates(n)
+// 某动作近 n 天的估算 1RM 趋势。endDate 可指定窗口终点
+// 返回 [{dateStr, day, value}]，无数据日 value 为 null（折线图断点）
+function oneRMTrend(workouts, sets, exerciseName, n, endDate) {
+  const dates = lastNDates(n, endDate)
   const wMap = {}
   ;(workouts || []).forEach((w) => {
     if (w && w._id) wMap[w._id] = w.dateStr

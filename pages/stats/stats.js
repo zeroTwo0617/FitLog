@@ -13,6 +13,7 @@ Page({
     trend: [],
     maxByExercise: [],
     calendar: [],
+    chartNote: '',
     ormExercises: [],   // Top 动作（可切换 1RM 趋势）
     ormActive: ''
   },
@@ -34,8 +35,16 @@ Page({
       this._raw = { workouts, sets }
       const agg = sd.aggregate(workouts, sets)
 
+      // 图表窗口锚点：最近 14 天没有数据时，自动锚定到「最近一次有数据的 14 天」，
+      // 避免很久没练的用户看到两张「暂无数据」空图
+      const latest = agg.trainedDates.length ? agg.trainedDates[agg.trainedDates.length - 1] : ''
+      const cutoff = sd.lastNDates(14)[0]
+      const chartEnd = (latest && latest < cutoff) ? latest : undefined
+      this._chartEnd = chartEnd
+      const chartNote = chartEnd ? '最近有数据的 14 天' : ''
+
       // 近 14 天训练量趋势
-      const trend = sd.volumeTrend(agg, 14)
+      const trend = sd.volumeTrend(agg, 14, chartEnd)
 
       // 本月打卡天数
       const now = new Date()
@@ -66,6 +75,7 @@ Page({
         trend: trend,
         maxByExercise: maxByExercise,
         calendar: calendar,
+        chartNote: chartNote,
         ormExercises: ormExercises,
         ormActive: ormActive
       }, () => this.drawCharts())
@@ -128,7 +138,7 @@ Page({
 
   drawOrmChart() {
     if (!this.data.ormActive || !this._raw) return
-    const series = sd.oneRMTrend(this._raw.workouts, this._raw.sets, this.data.ormActive, 14)
+    const series = sd.oneRMTrend(this._raw.workouts, this._raw.sets, this.data.ormActive, 14, this._chartEnd)
     const pts = series.map((s) => ({ label: s.day, value: s.value }))
     this.drawInto('ormChart', pts, 'kg')
   },

@@ -80,6 +80,14 @@ ok(agg2.maxByExercise[1].max === 62, 'completed:false 的组不计入最大重�
 const orm2 = sd.oneRMTrend(workouts, setsWithIncomplete, '卧推', 14)
 ok(orm2.filter((o) => o.value != null)[1].value === sd.estimate1RM(62, 12), 'completed:false 的组不计入 1RM 趋势')
 
+// ---- 图表窗口锚点（endDate）：窗口可锚定到任意日期（新增）----
+const anchored = sd.volumeTrend(agg, 14, fmt(dateB))
+ok(anchored.length === 14 && anchored[anchored.length - 1].dateStr === fmt(dateB), 'volumeTrend endDate 锚定窗口终点')
+ok(anchored[anchored.length - 1].trained === true, '锚点当天（dateB）标记 trained')
+const ormAnchored = sd.oneRMTrend(workouts, sets, '卧推', 14, fmt(dateB))
+ok(ormAnchored.length === 14 && ormAnchored[ormAnchored.length - 1].dateStr === fmt(dateB), 'oneRMTrend endDate 锚定窗口终点')
+ok(ormAnchored[ormAnchored.length - 1].value === sd.estimate1RM(62, 12), '锚点当天 1RM 值正确')
+
 // ---- 连续打卡周数（新增）----
 const today = fmt(now)
 const yesterday = fmt((() => { const d = new Date(now); d.setDate(now.getDate() - 1); return d })())
