@@ -102,7 +102,7 @@ button::after { border: none; }
   color: var(--text);
 }
 
-.tab-page { padding-bottom: calc(128rpx + env(safe-area-inset-bottom)); }
+.tab-page { padding-bottom: calc(168rpx + env(safe-area-inset-bottom)); }
 
 .head, .h-top { margin-bottom: 28rpx; }
 
