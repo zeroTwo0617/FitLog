@@ -4,7 +4,7 @@
   bottom: 0;
   left: 0;
   z-index: 999;
-  padding: 0 20rpx calc(16rpx + env(safe-area-inset-bottom));
+  padding: 0;
   pointer-events: none;
 }
 
@@ -12,17 +12,18 @@
   display: flex;
   min-height: 108rpx;
   padding: 10rpx 12rpx;
-  border: 1rpx solid var(--card-border);
-  border-radius: 28rpx;
-  background-color: rgba(24, 29, 25, 0.94);
-  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.4);
+  padding-bottom: calc(10rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid var(--card-border);
+  border-radius: 0;
+  background-color: rgba(24, 29, 25, 0.96);
+  box-shadow: 0 -10rpx 30rpx rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(14px);
   pointer-events: auto;
 }
 
 .theme-light.tabbar {
-  background-color: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 -6rpx 24rpx rgba(21, 42, 35, 0.08);
+  background-color: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 -6rpx 20rpx rgba(21, 42, 35, 0.06);
 }
 
 .tab {
