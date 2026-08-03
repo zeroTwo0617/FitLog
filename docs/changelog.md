@@ -79,6 +79,31 @@
 
 ---
 
+## 2026-08-03 · 云函数日期真实性与未来日期校验
+
+### 背景
+
+`saveWorkout`、`saveBodyMetric`、`saveNutritionLog`、`agent`（照片饮食识别）的 `dateStr` 只做正则格式校验，`2026-99-99` 这类非法日期会被接受。
+
+### 修复
+
+统一新增 `isDateStr` 校验（各云函数内联，云函数独立部署无法跨目录 require）：
+
+- 格式必须 `YYYY-MM-DD`。
+- 月份 1-12、日期在该月合法天数内；用 `new Date(y, m-1, d)` 归一化后反查年/月/日一致性，拦截 `2026-02-30`、非闰年 `2026-02-29` 等。
+- 业务规则：**不允许未来日期**（`dateStr > 今天` 拒绝），允许补录过去日期。
+- `createdAt` 保持云函数服务端时间，`dateStr` 为用户选择的业务日期。
+
+`saveWorkout` / `saveBodyMetric` / `saveNutritionLog` 失败返回 `INVALID_DATE`；`agent` 返回 `INVALID_DATE`。
+
+已用 16 个边界用例验证（非法月份/日期、闰年、今天/明天、过去日期等全部符合预期）。
+
+### 涉及文件
+
+`cloudfunctions/{saveWorkout,saveBodyMetric,saveNutritionLog,agent}/index.js`。
+
+---
+
 ## 2026-08-03 · 图表数据修复与加载提速
 
 ### 背景
