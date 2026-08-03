@@ -56,6 +56,29 @@
 
 ---
 
+## 2026-08-03 · 云函数更新/删除「假成功」修复
+
+### 背景
+
+`savePlan`、`saveNutritionLog`、`deletePlan`、`deleteNutritionLog` 四个云函数在执行更新/删除后**不检查实际影响条数**：当 ID 不存在或不属于当前用户时（`where` 带 `_openid` 过滤后匹配 0 条），仍返回 `ok: true`，前端表现为「假成功」。
+
+### 修复
+
+微信云函数端 `update` 返回 `{ stats: { updated: N } }`、`remove` 返回 `{ stats: { removed: N } }`。修复后：
+
+- `savePlan` / `saveNutritionLog`：`updated === 0` 时返回 `{ ok: false, code: 'NOT_FOUND', message: '…不存在或无权修改' }`。
+- `deletePlan` / `deleteNutritionLog`：`removed === 0` 时返回 `{ ok: false, code: 'NOT_FOUND', message: '…不存在或无权删除' }`。
+
+前端经 `utils/cloud.js` 的 `callFunction` 检测 `ok === false` 抛错，`.catch` 正常处理，不崩。
+
+**未修改**（语义正确）：`updateUserActive`（自己的 lastActiveAt，无用户时无需报错）、`agent` 会话更新（先查到 `current` 才更新，必然存在）、`seedData` 清旧 seed（remove 0 是正常场景）。
+
+### 涉及文件
+
+`cloudfunctions/{savePlan,saveNutritionLog,deletePlan,deleteNutritionLog}/index.js`。
+
+---
+
 ## 2026-08-03 · 图表数据修复与加载提速
 
 ### 背景
