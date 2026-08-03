@@ -104,6 +104,26 @@
 
 ---
 
+## 2026-08-03 · saveNutritionLog 字段白名单化
+
+### 背景
+
+`saveNutritionLog` 的 `normalize` 用 `Object.assign({}, event, ...)` 会把客户端附带的**未知字段**透传写入数据库（如 `_id`、`createdAt`、`mealLabel` 派生字段、任意附加字段）。手动录入/编辑走此云函数，有污染数据和越权写入风险。
+
+### 修复
+
+`normalize` 改为只构造白名单字段，与 `agent/schemas.js` 的 `validateMeal` 对齐：`dateStr`、`mealType`、`foods`、`calories`、`protein`、`carbs`、`fat`、`source`、`confidence`、`note`。`foods` 子项同样白名单化（name/portion/calories/protein/carbs/fat/confidence）。
+
+验证：带 `_id`、`_openid`、`createdAt`、`mealLabel` 等恶意字段输入，输出仅含 10 个白名单字段。
+
+**其他云函数已确认安全**：`savePlan`/`saveBodyMetric`/`saveWorkout` 均显式构造字段；agent 的 `validateMeal` 本就白名单化。
+
+### 涉及文件
+
+`cloudfunctions/saveNutritionLog/index.js`。
+
+---
+
 ## 2026-08-03 · 图表数据修复与加载提速
 
 ### 背景
