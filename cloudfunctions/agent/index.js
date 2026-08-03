@@ -99,25 +99,48 @@ async function sessionOf(sessionId, openid) {
 }
 
 async function saveSession(sessionId, openid, mode, query, reply, context) {
-  const current = await sessionOf(sessionId, openid)
-  const previous = current && Array.isArray(current.messages) ? current.messages : []
-  const messages = previous.concat([
-    { role: 'user', content: String(query).slice(0, 1200) },
-    { role: 'assistant', content: String(reply).slice(0, 3000) }
-  ]).slice(-40)
-  const data = {
-    _openid: openid,
-    mode,
-    messages,
-    context: cleanContext(context),
-    updatedAt: new Date()
+  const appendMessages = (messages) => {
+    const previous = Array.isArray(messages) ? messages : []
+    return previous.concat([
+      { role: 'user', content: String(query).slice(0, 1200) },
+      { role: 'assistant', content: String(reply).slice(0, 3000) }
+    ]).slice(-40)
   }
-  if (current) {
-    await db.collection(COLLECTIONS.SESSIONS).doc(current._id).update({ data })
-    return current._id
+  const now = new Date()
+  // 会话已存在：用事务读-追加-写，避免两个并发请求各自基于旧 messages 覆盖对方。
+  if (sessionId) {
+    const current = await sessionOf(sessionId, openid)
+    if (current) {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const done = await db.runTransaction(async (transaction) => {
+            const latest = await transaction.collection(COLLECTIONS.SESSIONS).doc(sessionId).get()
+            const row = latest && latest.data
+            if (!row || row._openid !== openid) return false
+            const messages = appendMessages(row.messages)
+            await transaction.collection(COLLECTIONS.SESSIONS).doc(sessionId).update({ data: { messages, context: cleanContext(context), updatedAt: new Date() } })
+            return true
+          })
+          if (done) return sessionId
+        } catch (error) {
+          // 写冲突（并发更新同一会话）时重试
+          if (attempt >= 2) throw error
+        }
+      }
+      throw new Error('会话并发更新多次冲突')
+    }
   }
+  // 会话不存在：创建（首次创建无并发覆盖问题）
   const created = await db.collection(COLLECTIONS.SESSIONS).add({
-    data: Object.assign({}, data, { title: mode === 'diet' ? '饮食助手会话' : '训练助手会话', createdAt: new Date() })
+    data: {
+      _openid: openid,
+      mode,
+      title: mode === 'diet' ? '饮食助手会话' : '训练助手会话',
+      messages: appendMessages([]),
+      context: cleanContext(context),
+      createdAt: now,
+      updatedAt: now
+    }
   })
   return created._id
 }
