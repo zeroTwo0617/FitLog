@@ -21,12 +21,33 @@ function isDateStr(value) {
   return date.getTime() <= today.getTime()
 }
 
+// 只允许写入白名单字段，不透传客户端附带的未知字段（含 _id/createdAt 等）
 function normalize(event) {
-  if (!isDateStr(event.dateStr)) return null
-  if (TYPES.indexOf(event.mealType) < 0) return null
-  const values = { calories: number(event.calories, 10000), protein: number(event.protein, 2000), carbs: number(event.carbs, 3000), fat: number(event.fat, 1000) }
+  const src = event || {}
+  if (!isDateStr(src.dateStr)) return null
+  if (TYPES.indexOf(src.mealType) < 0) return null
+  const values = { calories: number(src.calories, 10000), protein: number(src.protein, 2000), carbs: number(src.carbs, 3000), fat: number(src.fat, 1000) }
   if (Object.keys(values).some((key) => values[key] == null)) return null
-  return Object.assign({}, event, values, { dateStr: String(event.dateStr), mealType: event.mealType, note: String(event.note || '').slice(0, 240), source: ['manual', 'photo', 'agent'].indexOf(event.source) >= 0 ? event.source : 'manual' })
+  return {
+    dateStr: String(src.dateStr),
+    mealType: src.mealType,
+    foods: Array.isArray(src.foods) ? src.foods.slice(0, 12).map((item) => ({
+      name: String(item && item.name || '').slice(0, 80),
+      portion: String(item && item.portion || '').slice(0, 80),
+      calories: number(item && item.calories, 10000) || 0,
+      protein: number(item && item.protein, 2000) || 0,
+      carbs: number(item && item.carbs, 3000) || 0,
+      fat: number(item && item.fat, 1000) || 0,
+      confidence: Math.min(1, Math.max(0, Number(item && item.confidence) || 0))
+    })) : [],
+    calories: values.calories,
+    protein: values.protein,
+    carbs: values.carbs,
+    fat: values.fat,
+    source: ['manual', 'photo', 'agent'].indexOf(src.source) >= 0 ? src.source : 'manual',
+    confidence: Math.min(1, Math.max(0, Number(src.confidence) || 0)),
+    note: String(src.note || '').slice(0, 240)
+  }
 }
 exports.main = async function (event) {
   const openid = cloud.getWXContext().OPENID
