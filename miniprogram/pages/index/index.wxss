@@ -7,8 +7,8 @@
 .avatar-mark {
   display: flex; align-items: center; justify-content: center;
   width: 72rpx; height: 72rpx; border-radius: 22rpx;
-  background: linear-gradient(135deg, var(--primary), #9fd42f);
-  color: #12160a; font-size: 24rpx; font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: var(--on-primary); font-size: 24rpx; font-weight: 800;
 }
 
 /* Hero：Volt 渐变大卡，「开始训练」第一视觉层级 */
@@ -24,6 +24,10 @@
   background: linear-gradient(128deg, #d9ff6b 0%, #b4ec45 45%, #7fcb2e 100%);
   color: #12160a;
   box-shadow: 0 16rpx 40rpx rgba(198, 242, 78, 0.22);
+}
+.theme-light .start-panel {
+  background: linear-gradient(128deg, #d8f58a 0%, #b6e55a 45%, #8bc93e 100%);
+  box-shadow: 0 10rpx 28rpx rgba(63, 107, 15, 0.12);
 }
 .start-panel::after {
   position: absolute; top: -120rpx; right: -90rpx;
@@ -46,9 +50,10 @@
   align-self: flex-start;
   min-width: 240rpx; margin-top: 28rpx; padding: 18rpx 28rpx;
   border-radius: 999rpx;
-  background: #12160a; color: var(--primary);
+  background: var(--text); color: var(--bg);
   font-size: 27rpx; font-weight: 800;
 }
+.theme-light .start-button { background: var(--text); color: #ffffff; }
 .start-button text { margin-left: 12rpx; font-size: 28rpx; }
 .start-button:active { opacity: 0.85; }
 
@@ -60,9 +65,9 @@
 .week-days { display: flex; justify-content: space-between; margin-top: 18rpx; }
 .wd { display: flex; flex-direction: column; align-items: center; gap: 8rpx; }
 .wd-cell { display: flex; align-items: center; justify-content: center; width: 56rpx; height: 56rpx; border: 1rpx solid var(--border); border-radius: 16rpx; background: var(--surface-2); color: var(--text-dim); font-size: 24rpx; font-weight: 700; }
-.wd.done .wd-cell { border-color: var(--primary); background: var(--primary); color: #12160a; font-weight: 800; }
+.wd.done .wd-cell { border-color: var(--primary); background: var(--primary); color: var(--on-primary); font-weight: 800; }
 .wd.today .wd-cell { border: 2rpx solid var(--primary); background: var(--primary-soft); color: var(--primary); }
-.wd.done.today .wd-cell { background: var(--primary); color: #12160a; }
+.wd.done.today .wd-cell { background: var(--primary); color: var(--on-primary); }
 .wd-label { color: var(--text-dim); font-size: 18rpx; }
 .wd.today .wd-label { color: var(--primary); font-weight: 700; }
 

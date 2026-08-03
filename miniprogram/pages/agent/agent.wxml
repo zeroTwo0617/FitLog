@@ -27,9 +27,9 @@
         </picker>
       </view>
       <view class="meal-actions">
-        <button class="meal-action meal-action-primary" bindtap="chooseMealImage" loading="{{mealAnalyzing}}" disabled="{{mealAnalyzing}}"><image src="/assets/icons/sparkles-active.svg" mode="aspectFit"></image><text>拍照估算</text></button>
+        <button class="meal-action meal-action-primary" bindtap="chooseMealImage" loading="{{mealAnalyzing}}" disabled="{{mealAnalyzing}}"><image src="/assets/icons/sparkles-active{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit"></image><text>拍照估算</text></button>
         <button class="meal-action" bindtap="createManualMeal" disabled="{{mealAnalyzing}}"><text class="meal-action-symbol">＋</text><text>手动记录</text></button>
-        <button class="meal-action" bindtap="openNutrition"><image src="/assets/icons/calendar-days-active.svg" mode="aspectFit"></image><text>管理饮食</text></button>
+        <button class="meal-action" bindtap="openNutrition"><image src="/assets/icons/calendar-days-active{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit"></image><text>管理饮食</text></button>
       </view>
     </view>
   </block>

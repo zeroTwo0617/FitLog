@@ -18,7 +18,7 @@
 .volume-y-labels { display: flex; flex-direction: column; justify-content: space-between; width: 46rpx; height: 151px; color: var(--text-dim); font-size: 20rpx; line-height: 1; text-align: right; }
 .volume-plot { min-width: 0; flex: 1; }
 .volume-bars { position: relative; display: flex; align-items: flex-end; height: 151px; border-bottom: 1rpx solid var(--card-border); }
-.volume-grid-line { position: absolute; left: 0; right: 0; height: 1rpx; background: rgba(126, 138, 129, 0.16); }
+.volume-grid-line { position: absolute; left: 0; right: 0; height: 1rpx; background: var(--border); opacity: 0.7; }
 .grid-top { top: 0; }
 .grid-mid-top { top: 33.33%; }
 .grid-mid-bottom { top: 66.66%; }
@@ -36,7 +36,7 @@
 .max-row { display: flex; align-items: center; gap: 10rpx; }
 .max-name { width: 150rpx; overflow: hidden; color: var(--text); font-size: 21rpx; text-overflow: ellipsis; white-space: nowrap; }
 .max-track { flex: 1; height: 12rpx; overflow: hidden; border-radius: 999rpx; background: var(--surface-2); }
-.max-bar { height: 100%; border-radius: 999rpx; background: linear-gradient(90deg, #9fd42f, var(--primary)); }
+.max-bar { height: 100%; border-radius: 999rpx; background: linear-gradient(90deg, var(--primary), var(--primary-strong)); }
 .max-value { width: 88rpx; color: var(--primary); font-size: 19rpx; font-weight: 700; text-align: right; }
 .stats-link { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-top: 4rpx; padding: 20rpx 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--surface); }
 .stats-link text { display: block; }

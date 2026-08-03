@@ -13,6 +13,12 @@
   border-radius: 20rpx;
   overflow: hidden;
 }
+.theme-light .stage {
+  background:
+    radial-gradient(140rpx 140rpx at 50% 38%, rgba(110,168,255,0.18), transparent 70%),
+    #f0f3ec;
+  border-color: #dfe4d7;
+}
 
 /* 基础小人：头 / 躯干 / 双臂 / 双腿，全部绝对定位 */
 .fig {

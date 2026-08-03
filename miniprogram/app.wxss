@@ -50,33 +50,33 @@ page {
 
 /* 浅色变体：同一设计语言的日间表达 */
 .theme-light {
-  --bg: #f5f6f1;
+  --bg: #f6f7f2;
   --surface: #ffffff;
-  --surface-2: #eef1e9;
-  --surface-3: #e2e7da;
-  --overlay: #f2f4ec;
+  --surface-2: #eef1ea;
+  --surface-3: #e3e8dc;
+  --overlay: #f2f4ed;
   --card-bg: #ffffff;
-  --card-border: #e0e5d8;
-  --border: #e0e5d8;
+  --card-border: #dfe4d7;
+  --border: #dfe4d7;
   --hairline: #ebefe4;
-  --text: #171d14;
-  --text-dim: #75806f;
-  --primary: #4d7c0f;
-  --primary-strong: #3f660b;
-  --primary-soft: rgba(77, 124, 15, 0.1);
+  --text: #1a2119;
+  --text-dim: #6a7568;
+  --primary: #3f6b0f;
+  --primary-strong: #2f5408;
+  --primary-soft: rgba(63, 107, 15, 0.1);
   --on-primary: #ffffff;
-  --accent: #ea580c;
-  --accent-soft: rgba(234, 88, 12, 0.1);
-  --teal: #0d9488;
-  --success: #4d7c0f;
-  --warn: #d97706;
+  --accent: #c2410c;
+  --accent-soft: rgba(194, 65, 12, 0.1);
+  --teal: #0f766e;
+  --success: #3f6b0f;
+  --warn: #b45309;
   --danger: #dc5b5b;
   --mask: rgba(16, 24, 21, 0.46);
   --sheet-bg: #ffffff;
-  --placeholder: #a3ad9c;
-  --inset: #f2f4ec;
+  --placeholder: #9aa58f;
+  --inset: #f2f4ed;
   --shadow-card: 0 6rpx 20rpx rgba(34, 55, 47, 0.05);
-  --shadow-btn: 0 6rpx 14rpx rgba(77, 124, 15, 0.18);
+  --shadow-btn: 0 6rpx 14rpx rgba(63, 107, 15, 0.18);
   background: var(--bg);
   background-image: none;
 }
@@ -97,7 +97,7 @@ button::after { border: none; }
 .page {
   min-height: 100vh;
   padding: 16rpx 36rpx;
-  background: transparent;
+  background: var(--bg);
   color: var(--text);
 }
 

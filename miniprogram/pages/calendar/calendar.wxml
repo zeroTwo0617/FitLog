@@ -11,7 +11,7 @@
       <text class="streak-sub">本月已打卡 {{monthWorkoutCount}} 次 · 累计 {{trainedDays}} 个训练日</text>
     </view>
     <view class="streak-flame">
-      <image src="/assets/icons/flame.svg" mode="aspectFit" />
+      <image src="/assets/icons/flame{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" />
     </view>
   </view>
 

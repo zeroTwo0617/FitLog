@@ -42,9 +42,9 @@
 .calendar-cell { position: relative; display: flex; align-items: center; justify-content: center; width: 14.28%; height: 84rpx; }
 .calendar-day { display: flex; align-items: center; justify-content: center; width: 68rpx; height: 68rpx; border-radius: 16rpx; background: var(--surface-2); color: var(--text-dim); font-size: 22rpx; }
 .calendar-day.blank { background: transparent; }
-.calendar-cell.trained .calendar-day { background: var(--primary); color: #12160a; font-weight: 800; }
+.calendar-cell.trained .calendar-day { background: var(--primary); color: var(--on-primary); font-weight: 800; }
 .calendar-cell.today .calendar-day { border: 2rpx solid var(--primary); background: var(--primary-soft); color: var(--primary); font-weight: 700; }
-.calendar-cell.trained.today .calendar-day { background: var(--primary); color: #12160a; }
+.calendar-cell.trained.today .calendar-day { background: var(--primary); color: var(--on-primary); }
 .calendar-cell.selected .calendar-day { box-shadow: 0 0 0 5rpx var(--primary-soft); }
 .calendar-count { position: absolute; top: 2rpx; right: calc(50% - 38rpx); min-width: 24rpx; height: 24rpx; padding: 0 4rpx; border-radius: 999rpx; background: var(--accent); color: #fff; font-size: 16rpx; line-height: 24rpx; text-align: center; }
 .calorie-dot { position: absolute; bottom: 6rpx; width: 8rpx; height: 8rpx; border-radius: 50%; background: var(--primary); }

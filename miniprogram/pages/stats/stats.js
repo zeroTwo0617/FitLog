@@ -144,12 +144,12 @@ page({
   chartColors() {
     const dark = this.data.theme !== 'light'
     return {
-      color: dark ? '#c6f24e' : '#4d7c0f',
-      areaTop: dark ? 'rgba(198,242,78,0.26)' : 'rgba(77,124,15,0.16)',
-      areaBottom: dark ? 'rgba(198,242,78,0)' : 'rgba(77,124,15,0)',
+      color: dark ? '#c6f24e' : '#3f6b0f',
+      areaTop: dark ? 'rgba(198,242,78,0.26)' : 'rgba(63,107,15,0.16)',
+      areaBottom: dark ? 'rgba(198,242,78,0)' : 'rgba(63,107,15,0)',
       dotRing: dark ? '#151915' : '#ffffff',
-      dimColor: dark ? '#7e8a81' : '#9aa693',
-      gridColor: dark ? 'rgba(126,138,129,0.18)' : 'rgba(154,166,147,0.24)'
+      dimColor: dark ? '#7e8a81' : '#6a7568',
+      gridColor: dark ? 'rgba(126,138,129,0.18)' : 'rgba(106,117,104,0.22)'
     }
   },
 

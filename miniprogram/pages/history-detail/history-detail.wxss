@@ -13,6 +13,6 @@
 .g-count { color: var(--text-dim); font-size: 24rpx; }
 
 .set-row { display: flex; align-items: center; padding: 12rpx 0; font-size: 28rpx; }
-.set-row:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+.set-row:nth-child(even) { background: var(--surface-2); }
 .c-no { width: 64rpx; text-align: center; color: var(--primary); font-size: 24rpx; flex: none; }
 .c-reps, .c-weight, .c-rest { flex: 1; text-align: center; color: var(--text); }

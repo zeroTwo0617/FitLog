@@ -184,6 +184,9 @@
   color: #12160a;
   font-weight: 600;
 }
+.theme-light .message.user .bubble {
+  background: linear-gradient(135deg, #d8f58a, #9fd44f);
+}
 
 .typing {
   display: flex;
@@ -315,7 +318,7 @@
   background: var(--surface);
   border: 1rpx solid var(--border);
   border-radius: 18rpx;
-  box-shadow: 0 12rpx 30rpx rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-card);
 }
 
 .agent-input { flex: 1 1 auto; min-width: 0; height: 84rpx; box-sizing: border-box; line-height: 84rpx; padding: 0 20rpx; border: 1rpx solid var(--border); border-radius: 14rpx; background: var(--surface-2); color: var(--text); font-size: 24rpx; }

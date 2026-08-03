@@ -6,10 +6,8 @@ const KEY = 'fitlog_theme'
 // 顶栏（原生 navigationBar）跟随主题的颜色配置
 const NAV = {
   dark:  { frontColor: '#ffffff', backgroundColor: '#0a0c0b' },
-  light: { frontColor: '#000000', backgroundColor: '#f5f6f1' }
+  light: { frontColor: '#000000', backgroundColor: '#f6f7f2' }
 }
-
-let syncedNavTheme = ''
 
 function getTheme() {
   const s = wx.getStorageSync(KEY)
@@ -17,11 +15,10 @@ function getTheme() {
 }
 
 // 同步原生顶栏颜色（frontColor 仅支持 #ffffff / #000000）
+// 每次 onShow 都强制设置，避免缓存跳过导致导航栏停留在旧主题（页面首次渲染用 app.json 配置）。
 function syncNavBar(t) {
   const cfg = NAV[t] || NAV.dark
   if (!wx.setNavigationBarColor) return
-  if (syncedNavTheme === t) return
-  syncedNavTheme = t
   wx.setNavigationBarColor({
     frontColor: cfg.frontColor,
     backgroundColor: cfg.backgroundColor,
@@ -38,6 +35,9 @@ function setTheme(t) {
   const pages = getCurrentPages()
   const current = pages[pages.length - 1]
   if (current && typeof current.setData === 'function') current.setData({ theme: t })
+  // 同步自定义底部导航（tab 栏是独立组件，不随页面 setData 刷新）
+  const tabBar = current && typeof current.getTabBar === 'function' && current.getTabBar()
+  if (tabBar && typeof tabBar.setData === 'function') tabBar.setData({ theme: t })
   // 立即同步当前可见页的顶栏颜色
   syncNavBar(t)
 }

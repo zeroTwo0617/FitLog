@@ -59,19 +59,19 @@
     </view>
     <view class="quick-grid">
       <view class="quick-cell" bindtap="goPlans">
-        <view class="quick-ic qi-volt"><image src="/assets/icons/quick-plan.svg" mode="aspectFit" /></view>
+        <view class="quick-ic qi-volt"><image src="/assets/icons/quick-plan{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view>
         <view class="quick-copy"><text>训练计划</text><text>整理常练动作</text></view>
       </view>
       <view class="quick-cell" bindtap="goHistory">
-        <view class="quick-ic qi-orange"><image src="/assets/icons/quick-history.svg" mode="aspectFit" /></view>
+        <view class="quick-ic qi-orange"><image src="/assets/icons/quick-history{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view>
         <view class="quick-copy"><text>训练历史</text><text>回看每次训练</text></view>
       </view>
       <view class="quick-cell" bindtap="goStats">
-        <view class="quick-ic qi-teal"><image src="/assets/icons/quick-stats.svg" mode="aspectFit" /></view>
+        <view class="quick-ic qi-teal"><image src="/assets/icons/quick-stats{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view>
         <view class="quick-copy"><text>数据统计</text><text>趋势与 PR</text></view>
       </view>
       <view class="quick-cell" bindtap="goBody">
-        <view class="quick-ic qi-plain"><image src="/assets/icons/quick-body.svg" mode="aspectFit" /></view>
+        <view class="quick-ic qi-plain"><image src="/assets/icons/quick-body{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view>
         <view class="quick-copy"><text>身体数据</text><text>体重与围度</text></view>
       </view>
     </view>

@@ -3,6 +3,7 @@
 .eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
 .date-picker { flex: none; margin-top: 24rpx; padding: 12rpx 14rpx; border: 1rpx solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 20rpx; }
 .daily-card { padding: 24rpx; border-radius: var(--radius-lg); background: linear-gradient(128deg, #d9ff6b 0%, #b4ec45 45%, #7fcb2e 100%); color: #12160a; box-shadow: 0 12rpx 30rpx rgba(198, 242, 78, 0.18); }
+.theme-light .daily-card { background: linear-gradient(128deg, #d8f58a 0%, #b6e55a 45%, #8bc93e 100%); box-shadow: 0 8rpx 24rpx rgba(63, 107, 15, 0.1); }
 .daily-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12rpx; }
 .daily-kicker { display: block; color: rgba(18, 22, 10, 0.6); font-size: 18rpx; font-weight: 750; letter-spacing: 2rpx; }
 .daily-calories { display: block; margin-top: 8rpx; font-size: 46rpx; font-weight: 800; }

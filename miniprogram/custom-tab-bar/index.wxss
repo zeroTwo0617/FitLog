@@ -12,7 +12,7 @@
   display: flex;
   height: 148rpx;
   padding: 10rpx 12rpx 16rpx;
-  border: 1rpx solid var(--card-border);
+  border: 1rpx solid #272f29;
   border-radius: 48rpx;
   background-color: #181d19;
   box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.4);
@@ -21,6 +21,7 @@
 }
 
 .theme-light.tabbar {
+  border-color: #dfe4d7;
   background-color: #ffffff;
   box-shadow: 0 -6rpx 24rpx rgba(21, 42, 35, 0.08);
 }
@@ -35,11 +36,19 @@
   gap: 5rpx;
   min-width: 0;
   border-radius: 24rpx;
-  color: var(--text-dim);
+  color: #7e8a81;
+}
+
+.theme-light .tab {
+  color: #6a7568;
 }
 
 .tab.active {
-  color: var(--primary);
+  color: #c6f24e;
+}
+
+.theme-light .tab.active {
+  color: #3f6b0f;
 }
 
 .tab-icon {
@@ -64,8 +73,11 @@
 }
 
 .tab.active .tab-label {
-  color: var(--primary);
+  color: #c6f24e;
   font-weight: 750;
+}
+.theme-light .tab.active .tab-label {
+  color: #3f6b0f;
 }
 
 /* 选中态下方 Volt 小圆点 */
@@ -78,4 +90,5 @@
   content: '';
 }
 
-.tab.active::after { background: var(--primary); }
+.tab.active::after { background: #c6f24e; }
+.theme-light .tab.active::after { background: #3f6b0f; }
