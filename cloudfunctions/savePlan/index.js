@@ -33,7 +33,9 @@ exports.main = async function (event) {
   const data = Object.assign({}, normalized, { updatedAt: now })
   try {
     if (event.id) {
-      await db.collection('plans').where({ _id: String(event.id), _openid: openid }).update({ data: data })
+      const res = await db.collection('plans').where({ _id: String(event.id), _openid: openid }).update({ data: data })
+      const updated = res && res.stats && res.stats.updated
+      if (!updated) return fail('NOT_FOUND', '训练计划不存在或无权修改')
       return { ok: true, id: String(event.id), created: false }
     }
     const result = await db.collection('plans').add({ data: Object.assign({}, data, { _openid: openid, createdAt: now }) })
