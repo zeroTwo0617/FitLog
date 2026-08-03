@@ -15,6 +15,22 @@ const COLLECTIONS = {
 function ok(data) { return Object.assign({ ok: true }, data || {}) }
 function fail(code, message) { return { ok: false, code, message: message || '请求失败' } }
 
+// 真实日期校验：格式 YYYY-MM-DD、月份/日期合法（含闰年归一化拦截）、不允许未来日期
+function isDateStr(value) {
+  const str = String(value || '')
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false
+  const parts = str.split('-').map(Number)
+  const y = parts[0]
+  const m = parts[1]
+  const d = parts[2]
+  if (m < 1 || m > 12 || d < 1 || d > 31) return false
+  const date = new Date(y, m - 1, d)
+  if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) return false
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return date.getTime() <= today.getTime()
+}
+
 function diagnostics() {
   return ok({
     provider: 'openai-compatible',
@@ -136,7 +152,7 @@ async function analyzeMeal(event, context) {
   if (!openid) return fail('AUTH_REQUIRED', '请先登录微信云开发')
   if (!fileID.startsWith('cloud://')) return fail('INVALID_FILE', '食物图片文件无效')
   if (fileID.indexOf(`/diet/${openid}/`) < 0) return fail('FORBIDDEN_FILE', '不能读取其他用户的图片')
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return fail('INVALID_DATE', '饮食日期无效')
+  if (!isDateStr(dateStr)) return fail('INVALID_DATE', '饮食日期无效或晚于今天')
   let downloaded
   try {
     downloaded = await cloud.downloadFile({ fileID })

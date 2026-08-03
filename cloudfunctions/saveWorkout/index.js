@@ -10,6 +10,22 @@ function fail(code, message) {
   return { ok: false, code, message }
 }
 
+// 真实日期校验：格式 YYYY-MM-DD、月份/日期合法（含闰年归一化拦截）、不允许未来日期
+function isDateStr(value) {
+  const str = String(value || '')
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false
+  const parts = str.split('-').map(Number)
+  const y = parts[0]
+  const m = parts[1]
+  const d = parts[2]
+  if (m < 1 || m > 12 || d < 1 || d > 31) return false
+  const date = new Date(y, m - 1, d)
+  if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) return false
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return date.getTime() <= today.getTime()
+}
+
 function numberOrNull(value, min, max, integer) {
   if (value === '' || value == null) return null
   const number = Number(value)
@@ -61,7 +77,7 @@ exports.main = async function (event) {
   if (!openid) return fail('AUTH_REQUIRED', '请先登录微信云开发')
 
   const dateStr = String(event && event.dateStr || '')
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return fail('INVALID_DATE', '训练日期格式无效')
+  if (!isDateStr(dateStr)) return fail('INVALID_DATE', '训练日期无效或晚于今天')
   const normalized = normalizeSession(event && event.session)
   if (!normalized) return fail('INVALID_SESSION', '训练动作或组数据无效')
 
