@@ -150,6 +150,30 @@
 
 ---
 
+## 2026-08-03 · 身体数据每天一条 Upsert
+
+### 背景
+
+`saveBodyMetric` 每次 `add` 新记录，同一天可写多条；`bodyRepo.latest()` 和 body 页列表只按 `dateStr` 排序，同日多条时「最新记录」不稳定。
+
+### 修复
+
+采用「每天一条 + Upsert」：
+
+- `saveBodyMetric` 改为事务内按 `{ dateStr, _openid }` 查当天记录：存在则 `update` 覆盖（返回 `created: false`），不存在则 `add`（返回 `created: true`）。事务保证并发保存同一天时不会产生两条。
+- body 页 `load()` 对存量重复数据按日期去重（保留 `updatedAt`/`createdAt` 最新一条），列表与趋势图展示稳定。
+
+### 验证
+
+- 同日多条（早/中/晚）去重后只保留最晚一条；无 `updatedAt` 的旧数据用 `createdAt` 兜底。
+- `node --check` 语法正确，`test_stats.js` 50 项通过。
+
+### 涉及文件
+
+`cloudfunctions/saveBodyMetric/index.js`、`miniprogram/pages/body/body.js`。
+
+---
+
 ## 2026-08-03 · 图表数据修复与加载提速
 
 ### 背景
