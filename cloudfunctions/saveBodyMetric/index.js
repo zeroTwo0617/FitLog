@@ -33,10 +33,28 @@ exports.main = async function (event) {
   if (Object.keys(RANGES).some((key) => data[key] === undefined)) return fail('INVALID_BODY_METRIC', '身体数据超出合理范围')
   if (!Object.keys(RANGES).some((key) => data[key] != null)) return fail('INVALID_BODY_METRIC', '至少填写一项身体数据')
   data.note = String(event.note || '').slice(0, 240)
-  data.createdAt = new Date()
   try {
-    const result = await db.collection('bodyMetrics').add({ data: Object.assign({}, data, { _openid: openid }) })
-    return { ok: true, id: result._id }
+    // 每天一条：同一天重复保存覆盖当天记录，事务保证并发下不会产生两条同日记录。
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const result = await db.runTransaction(async (transaction) => {
+          const existing = await transaction.collection('bodyMetrics').where({ dateStr: data.dateStr, _openid: openid }).get()
+          const row = existing && existing.data && existing.data[0]
+          const now = new Date()
+          if (row) {
+            await transaction.collection('bodyMetrics').doc(row._id).update({ data: Object.assign({}, data, { updatedAt: now }) })
+            return { id: row._id, created: false }
+          }
+          const added = await transaction.collection('bodyMetrics').add({ data: Object.assign({}, data, { _openid: openid, createdAt: now }) })
+          return { id: added._id, created: true }
+        })
+        return { ok: true, id: result.id, created: result.created }
+      } catch (error) {
+        // 写冲突（并发保存同一天）时重试
+        if (attempt >= 2) throw error
+      }
+    }
+    throw new Error('身体数据并发保存多次冲突')
   } catch (error) {
     console.error('saveBodyMetric failed', error)
     return fail('SAVE_BODY_FAILED', '身体数据保存失败')

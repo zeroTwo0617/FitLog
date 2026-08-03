@@ -37,7 +37,17 @@ page({
   load() {
     bodyRepo.listAll()
       .then((records) => {
-        const sorted = records.slice().sort((a, b) => (a.dateStr < b.dateStr ? 1 : -1)).map((r) => {
+        // 每天一条：同一天保留最新（updatedAt/createdAt 靠后）的一条，兼容存量重复数据
+        const byDate = {}
+        ;(records || []).forEach((r) => {
+          const key = r.dateStr || ''
+          const prev = byDate[key]
+          const prevTime = prev && (new Date(prev.updatedAt || prev.createdAt || 0).getTime())
+          const curTime = new Date(r.updatedAt || r.createdAt || 0).getTime()
+          if (!prev || curTime >= prevTime) byDate[key] = r
+        })
+        const deduped = Object.keys(byDate).map((k) => byDate[k])
+        const sorted = deduped.slice().sort((a, b) => (a.dateStr < b.dateStr ? 1 : -1)).map((r) => {
           // 由身高+体重派生 BMI（仅当两项齐全时）
           let bmi = ''
           if (r.weight && r.height) {
@@ -46,7 +56,7 @@ page({
           }
           return Object.assign({}, r, { bmi: bmi })
         }) // 倒序，最新在前
-        const trend = sd.bodyTrend(records, 'weight')
+        const trend = sd.bodyTrend(deduped, 'weight')
         this.setData({
           records: sorted,
           trend: trend,
