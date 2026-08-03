@@ -187,7 +187,7 @@ bodyInst.setData = function (obj) { Object.assign(this.data, obj) }
 
   ok(statsInst.data.totalWorkouts === 2, 'stats 页：totalWorkouts=2')
   ok(statsInst.data.totalVolume === 2144, 'stats 页：totalVolume=2144')
-  ok(statsInst.data.trend.length === 14, 'stats 页：趋势 14 天')
+  ok(statsInst.data.trend.length === 7, 'stats 页：趋势 7 天')
   ok(statsInst.data.maxByExercise.length === 2, 'stats 页：Top 最大重量 2 项')
   ok(statsInst.data.monthCheckins === 2, 'stats 页：本月训练日与 workouts 日期一致')
   ok(statsInst.data.hasData === true, 'stats 页：hasData=true')

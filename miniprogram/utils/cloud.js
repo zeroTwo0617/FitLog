@@ -33,24 +33,32 @@ function callFunction(name, data) {
 }
 
 // 分页读取集合，避免页面使用固定 limit 后在数据增长时静默截断。
-// 注意：小程序端 SDK 单次 get() 有 20 条上限，size 需设为安全值，
-// 判断用「是否满页」来决定是否继续翻页，否则读不全或死循环。
+// 注意：小程序端 SDK 单次 get() 有 20 条上限，size 需设为安全值。
+// 分页策略：第一页串行判断是否还有更多；后续每批最多 PARALLEL_BATCH 页并行，
+// 批内出现不满页即到底。相比逐页串行，大数据量下往返次数显著减少。
+const PARALLEL_BATCH = 5
 function getAll(name, batchSize) {
   const size = batchSize > 0 && batchSize <= 20 ? batchSize : 20
   const database = db()
-  const read = (skip, acc) => {
-    const query = database.collection(name)
-    const pageQuery = typeof query.skip === 'function'
-      ? query.skip(skip).limit(size)
-      : query.limit(size)
-    return pageQuery.get()
-    .then((res) => {
-      const rows = (res && res.data) || []
-      const next = acc.concat(rows)
-      return rows.length < size ? next : read(skip + rows.length, next)
+  const col = database.collection(name)
+  const page = (skip) => {
+    const q = typeof col.skip === 'function' ? col.skip(skip).limit(size) : col.limit(size)
+    return q.get().then((res) => (res && res.data) || [])
+  }
+  const fetchBatch = (startSkip, acc) => {
+    const pending = []
+    for (let i = 0; i < PARALLEL_BATCH; i++) pending.push(page(startSkip + i * size))
+    return Promise.all(pending).then((pages) => {
+      let combined = acc
+      let reachedEnd = false
+      pages.forEach((rows) => {
+        combined = combined.concat(rows)
+        if (rows.length < size) reachedEnd = true
+      })
+      return reachedEnd ? combined : fetchBatch(startSkip + PARALLEL_BATCH * size, combined)
     })
   }
-  return read(0, [])
+  return page(0).then((first) => (first.length < size ? first : fetchBatch(size, first)))
 }
 
 module.exports = {
