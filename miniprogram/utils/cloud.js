@@ -33,8 +33,10 @@ function callFunction(name, data) {
 }
 
 // 分页读取集合，避免页面使用固定 limit 后在数据增长时静默截断。
+// 注意：小程序端 SDK 单次 get() 有 20 条上限，size 需设为安全值，
+// 判断用「是否满页」来决定是否继续翻页，否则读不全或死循环。
 function getAll(name, batchSize) {
-  const size = batchSize || 100
+  const size = batchSize > 0 && batchSize <= 20 ? batchSize : 20
   const database = db()
   const read = (skip, acc) => {
     const query = database.collection(name)

@@ -23,11 +23,12 @@
 .grid-mid-top { top: 33.33%; }
 .grid-mid-bottom { top: 66.66%; }
 .grid-bottom { bottom: 0; }
-.volume-column { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: center; width: 7.14%; height: 100%; }
-.volume-bar { width: 20rpx; min-height: 0; border-radius: 5rpx 5rpx 0 0; background: var(--surface-2); }
-.volume-bar-on { min-height: 6rpx; background: var(--primary); box-shadow: 0 0 10rpx rgba(198, 242, 78, 0.2); }
+.volume-column { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: center; flex: 1; min-width: 0; height: 100%; }
+.volume-bar { width: 60%; min-height: 0; border-radius: 5rpx 5rpx 0 0; background: var(--surface-2); }
+.volume-bar-on { min-height: 0; background: var(--primary); box-shadow: 0 0 10rpx rgba(198, 242, 78, 0.2); }
+.volume-value-bubble { position: absolute; bottom: calc(100% + 4rpx); left: 50%; transform: translateX(-50%); z-index: 5; padding: 2rpx 8rpx; border-radius: 6rpx; background: var(--surface); border: 1rpx solid var(--card-border); color: var(--primary); font-size: 18rpx; font-weight: 700; white-space: nowrap; box-shadow: var(--shadow-card); }
 .volume-labels { display: flex; height: 27px; }
-.volume-label-cell { width: 7.14%; color: var(--text-dim); font-size: 20rpx; text-align: center; }
+.volume-label-cell { flex: 1; min-width: 0; color: var(--text-dim); font-size: 20rpx; text-align: center; }
 .volume-label-cell text { display: block; padding-top: 7px; }
 .orm-chips { margin-bottom: 14rpx; white-space: nowrap; }
 .chart-hint { display: block; margin: -4rpx 0 10rpx; color: var(--text-dim); font-size: 19rpx; }

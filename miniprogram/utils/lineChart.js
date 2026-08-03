@@ -34,8 +34,9 @@ function drawLineChart(canvas, opts) {
     ctx.fillStyle = dimColor
     ctx.font = '9px sans-serif'
     ctx.textAlign = 'center'
+    // 7 天窗口内标签全标；窗口更大时最多均分抽 7 个，避免拥挤
     const indexes = []
-    const count = Math.min(6, pts.length)
+    const count = Math.min(7, pts.length)
     for (let i = 0; i < count; i++) indexes.push(Math.round(i * (pts.length - 1) / Math.max(1, count - 1)))
     indexes.forEach((index) => ctx.fillText(String(pts[index].label), x(index), H - 7))
   }

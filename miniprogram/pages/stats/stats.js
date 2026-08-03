@@ -4,6 +4,13 @@ const lc = require('../../utils/lineChart.js')
 const page = require('../../utils/page.js')
 const workoutRepo = require('../../utils/repositories/workout.js')
 
+// 横轴标签：dateStr（如 2026-08-01）→ 月/日（8/1），跨月日期在横轴上也能分清
+function dayLabel(dateStr) {
+  if (!dateStr) return ''
+  const parts = String(dateStr).split('-')
+  return parts.length === 3 ? Number(parts[1]) + '/' + Number(parts[2]) : String(parts[2] || '')
+}
+
 page({
   data: {
     theme: 'dark',
@@ -17,7 +24,8 @@ page({
     maxByExercise: [],
     ormExercises: [],   // Top 动作（可切换 1RM 趋势）
     ormActive: '',
-    ormHint: ''
+    ormHint: '',
+    activeVolume: null   // 当前选中的训练量柱子 {index, dateStr, dayLabel, volume}
   },
 
   getAll(collectionName, batchSize) {
@@ -54,10 +62,10 @@ page({
       this._raw = { workouts, sets }
       const agg = sd.aggregate(workouts, sets)
 
-      // 近 14 天训练量：固定当前日期窗口和 14 个等宽日期槽位
-      const labelIndexes = new Set([0, 3, 5, 8, 10, 13])
-      const trend = sd.volumeTrend(agg, 14).map((item, index) => Object.assign({}, item, {
-        showLabel: labelIndexes.has(index)
+      // 近 7 天训练量：固定当前日期窗口和 7 个等宽日期槽位
+      const trend = sd.volumeTrend(agg, 7).map((item, index) => Object.assign({}, item, {
+        showLabel: true,
+        dayLabel: dayLabel(item.dateStr)
       }))
       const maxVolume = trend.reduce((max, item) => Math.max(max, Number(item.volume) || 0), 0)
       // Keep a real zero axis when no completed set has volume.
@@ -83,15 +91,24 @@ page({
         heightPct: maxW > 0 ? Math.round((e.max / maxW) * 100) : 0
       }))
 
-      // 1RM 趋势可切换全部有重量记录的动作；最大重量榜仍只展示 Top 5
-      const ormExercises = (agg.allByExercise || agg.maxByExercise || []).slice()
+      // 1RM 趋势只展示三个标准指标（卧推/硬拉/深蹲），按最大重量降序让重项在前。
+      // 硬拉只取「传统硬拉」，排除罗马尼亚硬拉等辅助变体。
+      const STANDARD_LIFTS = [
+        { key: '卧推', exclude: [] },
+        { key: '深蹲', exclude: [] },
+        { key: '硬拉', exclude: ['罗马尼亚', '单腿', '直腿', '相扑'] }
+      ]
+      const ormExercises = (agg.allByExercise || []).slice()
+        .filter((e) => STANDARD_LIFTS.some((lift) =>
+          (e.name || '').indexOf(lift.key) >= 0 && !lift.exclude.some((ex) => (e.name || '').indexOf(ex) >= 0)))
+        .sort((a, b) => b.max - a.max)
       const ormActive = this.data.ormActive && ormExercises.some((e) => e.name === this.data.ormActive)
         ? this.data.ormActive
         : (ormExercises.length ? ormExercises[0].name : '')
       const legacyOrmHint = ormExercises.length === 1
         ? '当前只有 1 个动作有有效重量记录'
         : ''
-      const ormSeries = ormActive ? sd.oneRMTrend(workouts, sets, ormActive, 14) : []
+      const ormSeries = ormActive ? sd.oneRMTrend(workouts, sets, ormActive, 7) : []
       const ormPointCount = ormSeries.filter((item) => item.value != null).length
       const ormHint = ormPointCount === 1
         ? '当前只有 1 个已完成有效点，暂时无法形成趋势'
@@ -173,9 +190,9 @@ page({
 
   drawOrmChart() {
     if (!this.data.ormActive || !this._raw) return
-    // 每个动作使用自己的最近训练日作为窗口终点，避免被其他动作的新记录挤出 14 天窗口
-    const series = sd.oneRMTrend(this._raw.workouts, this._raw.sets, this.data.ormActive, 14)
-    const pts = series.map((s) => ({ label: s.day, value: s.value }))
+    // 每个动作使用自己的最近训练日作为窗口终点，避免被其他动作的新记录挤出 7 天窗口
+    const series = sd.oneRMTrend(this._raw.workouts, this._raw.sets, this.data.ormActive, 7)
+    const pts = series.map((s) => ({ label: dayLabel(s.dateStr), value: s.value }))
     // 切换动作时也要等本轮渲染完成再查 canvas 节点，避免拿不到 node/尺寸导致空白
     if (wx.nextTick) wx.nextTick(() => this.drawInto('ormChart', pts, 'kg'))
     else setTimeout(() => this.drawInto('ormChart', pts, 'kg'), 100)
@@ -185,6 +202,18 @@ page({
     const name = e.currentTarget.dataset.name
     if (!name || name === this.data.ormActive) return
     this.setData({ ormActive: name }, () => this.drawOrmChart())
+  },
+
+  // 点击训练量柱子：显示/收起当日容量数字
+  onVolumeTap(e) {
+    const index = Number(e.currentTarget.dataset.index)
+    const item = (this.data.trend || [])[index]
+    if (!item) return
+    const cur = this.data.activeVolume
+    const next = cur && cur.index === index
+      ? null
+      : { index, dateStr: item.dateStr, dayLabel: item.dayLabel, volume: Number(item.volume) || 0 }
+    this.setData({ activeVolume: next })
   },
 
   goBody() {
