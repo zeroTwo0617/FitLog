@@ -17,7 +17,7 @@
       <view class="focus-meta"><text>{{todayText}}</text><text>{{weekDone}} / 7 天已完成</text></view>
       <button class="primary-button" bindtap="goRecord"><text>开始训练</text><text class="button-symbol">→</text></button>
     </view>
-    <view class="progress-ring"><view class="progress-inner"><text class="progress-value">{{weekDone}}</text><text>/7</text><text class="progress-caption">本周完成</text></view></view>
+    <view class="progress-ring" style="{{progressStyle}}"><view class="progress-inner"><text class="progress-value">{{weekDone}}</text><text>/7</text><text class="progress-caption">本周完成</text></view></view>
   </view>
 
   <view class="metric-strip">

@@ -93,6 +93,12 @@ function buildEnergySummary(body, workouts) {
   }
 }
 
+function buildProgressStyle(done) {
+  const completed = Math.min(7, Math.max(0, Number(done) || 0))
+  const angle = Math.round((completed / 7) * 36000) / 100
+  return `background: conic-gradient(var(--primary) 0deg ${angle}deg, var(--hairline) ${angle}deg 360deg);`
+}
+
 function buildFallback() {
   return {
     stats: [
@@ -102,6 +108,7 @@ function buildFallback() {
     ],
     weekDays: [],
     weekDone: 0,
+    progressStyle: buildProgressStyle(0),
     todayNutrition: { calories: 0, protein: 0, carbs: 0, fat: 0, mealCount: 0 },
     todayNutritionText: '还没有饮食记录',
     todayNutritionMeta: '点击记录，热量会按宏量营养素自动换算',
@@ -184,6 +191,8 @@ page({
       const heroNote = latestDate
         ? `最近一次训练在 ${latestDate}，继续把节奏接上。`
         : '把训练记录、计划和进展放在一个地方。'
+      const weekDays = buildWeekDays(workouts)
+      const weekDone = weekDays.filter((d) => d.trained).length
       this.setData({
         loading: false,
         heroNote,
@@ -191,8 +200,9 @@ page({
         todayNutritionText,
         todayNutritionMeta,
         energySummary: buildEnergySummary(latestBody, workouts),
-        weekDays: buildWeekDays(workouts),
-        weekDone: buildWeekDays(workouts).filter((d) => d.trained).length,
+        weekDays: weekDays,
+        weekDone: weekDone,
+        progressStyle: buildProgressStyle(weekDone),
         stats: [
           {
             label: '训练记录',
