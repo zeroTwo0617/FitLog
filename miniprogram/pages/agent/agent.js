@@ -28,6 +28,8 @@ function modelErrorText(error) {
   if (code && code.indexOf('MODEL_REQUEST_FAILED_404') === 0) return '模型地址或模型名称不存在，请检查云函数配置。'
   if (code === 'MODEL_TIMEOUT') return '模型响应超时，请稍后重试。'
   if (code === 'MODEL_INVALID_JSON') return '模型返回内容暂时无法整理，请重试。'
+  if (code === 'INVALID_DATE') return '饮食日期无效，请重新打开教练页后重试。'
+  if (code === 'INVALID_MEAL' || code === 'INVALID_NUTRITION') return '饮食识别数据无效，请重新上传图片。'
   if (code === 'INVALID_FILE' || code === 'FILE_DOWNLOAD_FAILED' || code === 'MEAL_ANALYZE_FAILED') return '图片分析失败，请换一张清晰图片重试。'
   return `训练助手暂时不可用。${errorText(error)}`
 }
@@ -94,7 +96,7 @@ function mealMessage(meal) {
     return `${item.name}${portion}`
   }).join('、')
   const summary = `图片估算：${foods || '未识别到明确食物'}\n约 ${meal.calories} kcal · 蛋白质 ${meal.protein}g · 碳水 ${meal.carbs}g · 脂肪 ${meal.fat}g`
-  return `${summary}\n${meal.note || '热量为估算值，仅供饮食记录参考。'}\n请以实际份量为准，确认后再到饮食记录中保存。`
+  return `${summary}\n${meal.note || '热量为估算值，仅供饮食记录参考。'}\n请以实际份量为准，确认后点击下方按钮添加到饮食记录。`
 }
 
 page({
@@ -109,6 +111,7 @@ page({
     loadingContext: true,
     error: '',
     planDraft: null,
+    savingMeal: false,
     agentOnline: false,
     availabilityStatus: 'checking',
     availabilityText: '检查服务中'
@@ -243,13 +246,13 @@ page({
   },
 
   clearSession() {
-    if (this.data.sending || this.data.uploading) return
+    if (this.data.sending || this.data.uploading || this.data.savingMeal) return
     wx.removeStorageSync(agentApi.sessionKey('training'))
     this.setData({ messages: DEFAULT_MESSAGES, sessionId: '', planDraft: null, error: '' })
   },
 
   chooseImage() {
-    if (!this.data.agentOnline || this.data.sending || this.data.uploading) return
+    if (!this.data.agentOnline || this.data.sending || this.data.uploading || this.data.savingMeal) return
     this.setData({ uploading: true, error: '' })
     let fileID = ''
     chooseImage()
@@ -269,7 +272,7 @@ page({
         if (!meal) throw new Error('图片识别结果无效')
         const next = this.data.messages.concat([
           { role: 'user', content: '[上传图片]' },
-          { role: 'assistant', content: mealMessage(meal) }
+          { role: 'assistant', content: mealMessage(meal), meal: meal, mealSaved: false }
         ])
         this.setData({ messages: next, uploading: false, error: '' })
       })
@@ -281,6 +284,21 @@ page({
         if (fileID && wx.cloud && wx.cloud.deleteFile) wx.cloud.deleteFile({ fileList: [fileID] }).catch(() => {})
         this.setData({ uploading: false, error: modelErrorText(error) })
       })
+  },
+
+  saveMeal(e) {
+    const index = Number(e.currentTarget.dataset.index)
+    const message = this.data.messages[index]
+    if (!message || !message.meal || message.mealSaved || this.data.savingMeal) return
+    this.setData({ savingMeal: true, error: '' })
+    agentApi.saveMeal(message.meal).then(() => {
+      if (this._destroyed) return
+      this.setData({ [`messages[${index}].mealSaved`]: true, savingMeal: false })
+      wx.showToast({ title: '已添加到饮食记录', icon: 'success' })
+    }).catch((error) => {
+      if (this._destroyed) return
+      this.setData({ savingMeal: false, error: modelErrorText(error) })
+    })
   },
 
   saveDraft() {
