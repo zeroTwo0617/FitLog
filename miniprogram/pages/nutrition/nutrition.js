@@ -138,7 +138,19 @@ page({
       wx.showToast({ title: '请至少填写一项营养数据', icon: 'none' })
       return
     }
-    const result = nutrition.normalizeMeal(Object.assign({}, editor, { dateStr: this.data.date, source: 'manual' }))
+    const normalized = nutrition.normalizeMeal(Object.assign({}, editor, { dateStr: this.data.date, source: 'manual' }))
+    const result = {
+      dateStr: normalized.dateStr,
+      mealType: normalized.mealType,
+      foods: normalized.foods,
+      calories: normalized.calories,
+      protein: normalized.protein,
+      carbs: normalized.carbs,
+      fat: normalized.fat,
+      source: normalized.source,
+      confidence: normalized.confidence,
+      note: normalized.note
+    }
     const id = this.data.editingId
     this.setData({ saving: true, error: '' })
     auth.ensureUser().then(() => {
