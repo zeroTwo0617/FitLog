@@ -20,4 +20,7 @@ function listSetsAll() {
 }
 function save(payload) { return cloud.callFunction('saveWorkout', payload) }
 
-module.exports = { listAll, listRecent, count, get, sets, listSetsAll, save }
+// 一次取某天全部训练 + 全部组明细（云函数聚合，避免逐条查 sets 的 N+1）
+function dayDetail(dateStr) { return cloud.callFunction('getDayDetail', { dateStr: dateStr }) }
+
+module.exports = { listAll, listRecent, count, get, sets, listSetsAll, save, dayDetail }

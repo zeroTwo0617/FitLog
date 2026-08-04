@@ -177,10 +177,13 @@ page({
 
     if (workouts.length === 0) return
 
-    Promise.all(workouts.map((workout, index) =>
-      workoutRepo.sets(workout._id).then((data) => ({ data: data }))
-        .then((res) => {
-          const sets = (res && res.data) || []
+    // 一次取当天全部训练 + 组明细（云函数聚合，替代逐条查 sets 的 N+1）
+    workoutRepo.dayDetail(ds)
+      .then((res) => {
+        const detailWorkouts = (res && res.workouts) || []
+        const detailSets = (res && res.sets) || []
+        const selectedWorkouts = detailWorkouts.map((workout, index) => {
+          const sets = detailSets.filter((s) => s.sessionId === workout._id)
           const groups = hd.buildGroups(workout, sets).map((group) => ({
             exerciseId: group.exerciseId,
             name: group.name,
@@ -202,15 +205,15 @@ page({
             groups
           }
         })
-    )).then((selectedWorkouts) => {
-      if (this.data.selectedDate !== ds) return
-      this.setData({ selectedWorkouts, detailLoading: false })
-    }).catch((err) => {
-      if (this.data.selectedDate !== ds) return
-      this.setData({ detailLoading: false })
-      wx.showToast({ title: '当天详情加载失败', icon: 'none' })
-      console.error('加载当天训练详情失败', err)
-    })
+        if (this.data.selectedDate !== ds) return
+        this.setData({ selectedWorkouts, detailLoading: false })
+      })
+      .catch((err) => {
+        if (this.data.selectedDate !== ds) return
+        this.setData({ detailLoading: false })
+        wx.showToast({ title: '当天详情加载失败', icon: 'none' })
+        console.error('加载当天训练详情失败', err)
+      })
   },
 
   openNutrition(e) {
