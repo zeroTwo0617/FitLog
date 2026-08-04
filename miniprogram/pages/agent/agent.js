@@ -37,15 +37,28 @@ function configReady(diagnostic) {
   return !!(config && config.apiKeyConfigured && config.baseURLConfigured && config.modelConfigured)
 }
 
+function imageSelectionCancelled() {
+  const error = new Error('图片选择已取消')
+  error.code = 'USER_CANCELLED'
+  return error
+}
+
 function chooseImage() {
   return new Promise((resolve, reject) => {
     const done = (result) => {
       const file = result && result.tempFiles && result.tempFiles[0]
       const path = file && (file.tempFilePath || file.path)
       if (path) resolve(path)
-      else reject(new Error('没有选择图片'))
+      else reject(imageSelectionCancelled())
     }
-    const fail = (error) => reject(error || new Error('图片选择已取消'))
+    const fail = (error) => {
+      const message = error && (error.errMsg || error.message || '')
+      if (/cancel|取消/i.test(message)) {
+        reject(imageSelectionCancelled())
+        return
+      }
+      reject(error || new Error('图片选择失败'))
+    }
     if (wx.chooseMedia) {
       wx.chooseMedia({ count: 1, mediaType: ['image'], sourceType: ['album', 'camera'], success: done, fail: fail })
     } else {
@@ -261,6 +274,10 @@ page({
         this.setData({ messages: next, uploading: false, error: '' })
       })
       .catch((error) => {
+        if (error && error.code === 'USER_CANCELLED') {
+          this.setData({ uploading: false, error: '' })
+          return
+        }
         if (fileID && wx.cloud && wx.cloud.deleteFile) wx.cloud.deleteFile({ fileList: [fileID] }).catch(() => {})
         this.setData({ uploading: false, error: modelErrorText(error) })
       })
