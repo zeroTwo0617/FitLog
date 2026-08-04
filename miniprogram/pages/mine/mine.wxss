@@ -5,10 +5,6 @@
 .profile-copy .eyebrow { margin-bottom: 4rpx; font-size: 16rpx; }
 .profile-name { display: block; overflow: hidden; color: var(--text); font-size: 31rpx; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
 .profile-tagline { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 19rpx; line-height: 1.35; }
-.sync-status { display: flex; align-items: center; gap: 6rpx; margin-top: 6rpx; color: var(--text-dim); font-size: 17rpx; }
-.status-dot { display: inline-block; width: 8rpx; height: 8rpx; border-radius: 50%; background: var(--warn); }
-.pstatus-ok .status-dot { background: var(--success); }
-.pstatus-error .status-dot { background: var(--danger); }
 .profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); margin: 14rpx 0 32rpx; border-top: 1rpx solid var(--border); border-bottom: 1rpx solid var(--border); }
 .profile-stats view { padding: 15rpx 6rpx; text-align: center; }
 .profile-stats view + view { border-left: 1rpx solid var(--hairline); }

@@ -1,5 +1,5 @@
 <view class="page tab-page mine-page theme-{{theme ? theme : 'light'}}">
-  <view class="profile-intro"><view class="avatar">FL</view><view class="profile-copy"><text class="eyebrow">TRAINING WITH PURPOSE</text><text class="profile-name">{{displayName}}</text><text class="profile-tagline">保持节奏，比追求完美更重要。</text><view class="sync-status pstatus-{{cloud.status}}"><view class="status-dot"></view><text>{{cloud.text}}</text></view></view></view>
+  <view class="profile-intro"><view class="avatar">FL</view><view class="profile-copy"><text class="eyebrow">TRAINING WITH PURPOSE</text><text class="profile-name">{{displayName}}</text><text class="profile-tagline">保持节奏，比追求完美更重要。</text></view></view>
 
   <view class="profile-stats"><view><text>{{workoutCount}}</text><text>训练记录</text></view><view><text>{{planCount}}</text><text>训练计划</text></view><view><text>{{bodySummary.weight}}</text><text>当前体重</text></view></view>
 

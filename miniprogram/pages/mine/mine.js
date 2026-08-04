@@ -1,5 +1,4 @@
 const auth = require('../../utils/auth.js')
-const cloud = require('../../utils/cloud.js')
 const nutrition = require('../../utils/nutrition.js')
 const workoutData = require('../../utils/workoutData.js')
 const page = require('../../utils/page.js')
@@ -12,7 +11,6 @@ const systemRepo = require('../../utils/repositories/system.js')
 page({
   data: {
     theme: 'light',
-    cloud: { status: 'pending', text: '正在同步...' },
     profile: null,
     displayName: 'FitLog 用户',
     workoutCount: 0,
@@ -37,7 +35,6 @@ page({
   },
 
   refresh() {
-    this.setData({ 'cloud.status': 'pending', 'cloud.text': '正在同步...' })
     Promise.all([
       auth.ensureUser(),
       workoutRepo.count(),
@@ -68,8 +65,6 @@ page({
       this.setData({
         profile: profile,
         displayName: profile.nickName || 'FitLog 用户',
-        'cloud.status': 'ok',
-        'cloud.text': '云端同步正常',
         workoutCount: (workoutCnt && workoutCnt.total) || 0,
         planCount: (planCnt && planCnt.total) || 0,
         weekDone: weekDone,
@@ -85,10 +80,7 @@ page({
           : '今日暂无饮食记录'
       })
     }).catch((err) => {
-      this.setData({
-        'cloud.status': 'error',
-        'cloud.text': '云端同步失败：' + ((err && err.errMsg) || '未知错误')
-      })
+      console.error('加载个人数据失败', err)
     })
   },
 
