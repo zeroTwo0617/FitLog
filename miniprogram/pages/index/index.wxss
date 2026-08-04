@@ -25,10 +25,7 @@
 .metric-strip { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 14rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--card-bg); }
 .metric { min-width: 0; padding: 17rpx 8rpx 15rpx; text-align: center; }
 .metric + .metric { border-left: 1rpx solid var(--hairline); }
-.metric-icon { display: block; height: 22rpx; margin-bottom: 5rpx; font-size: 20rpx; line-height: 1; }
-.metric-icon.lime { color: var(--primary-strong); }
-.metric-icon.orange { color: var(--accent); }
-.metric-icon.rust { color: var(--danger); }
+.metric-icon { display: block; width: 26rpx; height: 26rpx; margin: 0 auto 5rpx; }
 .metric-label { display: block; color: var(--text-dim); font-size: 18rpx; }
 .metric-value { display: block; margin-top: 7rpx; color: var(--text); font-size: 30rpx; font-weight: 900; line-height: 1; }
 .metric-note { display: block; margin-top: 6rpx; overflow: hidden; color: var(--text-dim); font-size: 16rpx; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
@@ -40,7 +37,8 @@
 .action-list { border-top: 1rpx solid var(--border); }
 .action-row { display: flex; align-items: center; gap: 13rpx; width: 100%; padding: 14rpx 0; border-bottom: 1rpx solid var(--hairline); text-align: left; }
 .action-row:active { opacity: .64; }
-.row-icon { display: flex; align-items: center; justify-content: center; width: 48rpx; height: 48rpx; flex: 0 0 auto; border-radius: 10rpx; font-size: 23rpx; font-weight: 900; }
+.row-icon { display: flex; align-items: center; justify-content: center; width: 48rpx; height: 48rpx; flex: 0 0 auto; border-radius: 10rpx; }
+.row-icon-image { width: 28rpx; height: 28rpx; }
 .lime-icon { background: var(--primary-soft); color: var(--primary-strong); }
 .orange-icon { background: var(--accent-soft); color: var(--accent); }
 .rust-icon { background: #fbe9e3; color: var(--danger); }

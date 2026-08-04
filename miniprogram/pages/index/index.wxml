@@ -21,22 +21,22 @@
   </view>
 
   <view class="metric-strip">
-    <view class="metric" wx:for="{{stats}}" wx:key="label"><text class="metric-icon {{index === 0 ? 'lime' : (index === 1 ? 'orange' : 'rust')}}">{{index === 0 ? '◆' : (index === 1 ? '□' : '↗')}}</text><text class="metric-label">{{item.label}}</text><text class="metric-value">{{item.value}}</text><text class="metric-note">{{item.note}}</text></view>
+    <view class="metric" wx:for="{{stats}}" wx:key="label"><image class="metric-icon" mode="aspectFit" src="/assets/icons/{{index === 0 ? 'dumbbell' : (index === 1 ? 'clipboard-list' : 'chart-column-increasing')}}{{theme === 'light' ? '-light' : ''}}.svg" /><text class="metric-label">{{item.label}}</text><text class="metric-value">{{item.value}}</text><text class="metric-note">{{item.note}}</text></view>
   </view>
 
   <view class="metric-strip energy-strip" bindtap="goBody">
-    <view class="metric energy-metric"><text class="metric-icon lime">◌</text><text class="metric-label">基础代谢</text><text class="metric-value">{{energySummary.bmr}}</text><text class="metric-note">kcal · 估算</text></view>
-    <view class="metric energy-metric"><text class="metric-icon orange">▲</text><text class="metric-label">运动消耗</text><text class="metric-value">{{energySummary.exercise}}</text><text class="metric-note">kcal · 今日</text></view>
-    <view class="metric energy-metric"><text class="metric-icon rust">+</text><text class="metric-label">总消耗</text><text class="metric-value">{{energySummary.total}}</text><text class="metric-note">kcal · 查看身体数据</text></view>
+    <view class="metric energy-metric"><image class="metric-icon" mode="aspectFit" src="/assets/icons/flame{{theme === 'light' ? '-light' : ''}}.svg" /><text class="metric-label">基础代谢</text><text class="metric-value">{{energySummary.bmr}}</text><text class="metric-note">kcal · 估算</text></view>
+    <view class="metric energy-metric"><image class="metric-icon" mode="aspectFit" src="/assets/icons/activity{{theme === 'light' ? '-light' : ''}}.svg" /><text class="metric-label">运动消耗</text><text class="metric-value">{{energySummary.exercise}}</text><text class="metric-note">kcal · 今日</text></view>
+    <view class="metric energy-metric"><image class="metric-icon" mode="aspectFit" src="/assets/icons/zap{{theme === 'light' ? '-light' : ''}}.svg" /><text class="metric-label">总消耗</text><text class="metric-value">{{energySummary.total}}</text><text class="metric-note">kcal · 查看身体数据</text></view>
   </view>
   <text class="energy-note">{{energySummary.note}}</text>
 
   <view class="next-section">
     <view class="section-heading"><text class="section-title">接下来</text><text class="section-meta">快速进入</text></view>
     <view class="action-list">
-      <view class="action-row" bindtap="goPlans"><view class="row-icon lime-icon">□</view><view class="row-copy"><text class="row-title">训练计划</text><text class="row-sub">整理常练动作与下一次安排</text></view><text class="row-arrow">›</text></view>
-      <view class="action-row" bindtap="goNutrition"><view class="row-icon orange-icon">◉</view><view class="row-copy"><text class="row-title">今日饮食</text><text class="row-sub">{{todayNutritionText}} · {{todayNutritionMeta}}</text></view><text class="row-arrow">›</text></view>
-      <view class="action-row" bindtap="goHistory"><view class="row-icon plain-icon">↗</view><view class="row-copy"><text class="row-title">训练历史</text><text class="row-sub">回看每次训练，找到自己的进步</text></view><text class="row-arrow">›</text></view>
+      <view class="action-row" bindtap="goPlans"><view class="row-icon lime-icon"><image class="row-icon-image" mode="aspectFit" src="/assets/icons/clipboard-list{{theme === 'light' ? '-light' : ''}}.svg" /></view><view class="row-copy"><text class="row-title">训练计划</text><text class="row-sub">整理常练动作与下一次安排</text></view><text class="row-arrow">›</text></view>
+      <view class="action-row" bindtap="goNutrition"><view class="row-icon orange-icon"><image class="row-icon-image" mode="aspectFit" src="/assets/icons/utensils{{theme === 'light' ? '-light' : ''}}.svg" /></view><view class="row-copy"><text class="row-title">今日饮食</text><text class="row-sub">{{todayNutritionText}} · {{todayNutritionMeta}}</text></view><text class="row-arrow">›</text></view>
+      <view class="action-row" bindtap="goHistory"><view class="row-icon plain-icon"><image class="row-icon-image" mode="aspectFit" src="/assets/icons/history{{theme === 'light' ? '-light' : ''}}.svg" /></view><view class="row-copy"><text class="row-title">训练历史</text><text class="row-sub">回看每次训练，找到自己的进步</text></view><text class="row-arrow">›</text></view>
     </view>
   </view>
 
