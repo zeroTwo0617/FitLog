@@ -6,7 +6,6 @@ const workoutRepo = require('../../utils/repositories/workout.js')
 const planRepo = require('../../utils/repositories/plan.js')
 const bodyRepo = require('../../utils/repositories/body.js')
 const nutritionRepo = require('../../utils/repositories/nutrition.js')
-const systemRepo = require('../../utils/repositories/system.js')
 
 page({
   data: {
@@ -106,50 +105,6 @@ page({
 
   goAgent() {
     wx.switchTab({ url: '/pages/agent/agent' })
-  },
-
-  // ===== 导出全部数据（JSON） =====
-  // 云函数 exportData 按 _openid 聚合四集合 → 写临时文件 → 分享文件，剪贴板兜底
-  exportData() {
-    wx.showLoading({ title: '正在打包数据…', mask: true })
-    systemRepo.exportData()
-      .then((res) => {
-        wx.hideLoading()
-        const payload = res
-        if (!payload || !payload.summary) {
-          wx.showToast({ title: '导出失败', icon: 'none' })
-          return
-        }
-        const json = JSON.stringify(payload, null, 2)
-        const fs = wx.getFileSystemManager()
-        const filePath = `${wx.env.USER_DATA_PATH}/fitlog-export-${Date.now()}.json`
-        const clipboardFallback = () => {
-          wx.setClipboardData({
-            data: json,
-            success: () => wx.showToast({ title: '已复制 JSON 到剪贴板', icon: 'none' }),
-            fail: () => wx.showToast({ title: '导出失败', icon: 'none' })
-          })
-        }
-        fs.writeFile({
-          filePath: filePath,
-          data: json,
-          encoding: 'utf8',
-          success: () => {
-            wx.shareFileMessage({
-              filePath: filePath,
-              fileName: 'FitLog训练数据.json',
-              success: () => {},
-              fail: clipboardFallback
-            })
-          },
-          fail: clipboardFallback
-        })
-      })
-      .catch((err) => {
-        wx.hideLoading()
-        wx.showToast({ title: '导出失败', icon: 'none' })
-        console.error('导出失败', err)
-      })
   },
 
 })

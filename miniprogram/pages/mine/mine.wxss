@@ -13,9 +13,9 @@
 .profile-stats text:last-child { margin-top: 5rpx; color: var(--text-dim); font-size: 17rpx; }
 .settings-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 11rpx; }
 .tools-head { margin-top: 30rpx; }
-.settings-list { border-top: 1rpx solid var(--border); }
-.setting-row { display: flex; align-items: center; gap: 13rpx; padding: 14rpx 0; border-bottom: 1rpx solid var(--hairline); }
-.setting-row:active { opacity: .62; }
+.settings-list { display: flex; flex-direction: column; gap: 12rpx; }
+.setting-row { display: flex; align-items: center; gap: 13rpx; min-height: 82rpx; box-sizing: border-box; padding: 15rpx 18rpx; border: 1rpx solid var(--hairline); border-radius: 999rpx; background: var(--surface); }
+.setting-row:active { opacity: .72; transform: scale(.99); }
 .setting-icon { display: flex; align-items: center; justify-content: center; width: 48rpx; height: 48rpx; flex: 0 0 auto; border-radius: 10rpx; }
 .setting-icon image { width: 27rpx; height: 27rpx; }
 .lime-icon { background: var(--primary-soft); }

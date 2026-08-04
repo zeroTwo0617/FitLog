@@ -14,7 +14,6 @@
   <view class="settings-head tools-head"><text class="section-title">数据工具</text><text class="section-meta">持续回看和整理</text></view>
   <view class="settings-list">
     <view class="setting-row" bindtap="goStats"><view class="setting-icon teal-icon"><image src="/assets/icons/quick-stats-light.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">数据统计</text><text class="setting-sub">趋势、训练次数与个人记录</text></view><text class="row-arrow">›</text></view>
-    <view class="setting-row" bindtap="exportData"><view class="setting-icon lime-icon"><image src="/assets/icons/export-light.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">导出数据</text><text class="setting-sub">保存一份可分享的训练档案</text></view><text class="row-arrow">›</text></view>
   </view>
   <text class="mine-foot">FITLOG · 让进步可见</text>
 </view>
