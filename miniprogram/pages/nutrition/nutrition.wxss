@@ -1,4 +1,4 @@
-.nutrition-page { padding-top: 24rpx; padding-bottom: 48rpx; }
+.nutrition-page { padding-top: 24rpx; padding-bottom: calc(156rpx + env(safe-area-inset-bottom)); }
 .nutrition-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; margin-bottom: 22rpx; }
 .eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
 .date-picker { flex: none; margin-top: 24rpx; padding: 12rpx 14rpx; border: 1rpx solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 20rpx; }
@@ -28,7 +28,6 @@
 .meal-calories text:first-child { color: var(--text); font-size: 25rpx; font-weight: 750; }
 .meal-calories text:last-child { margin-top: 2rpx; color: var(--text-dim); font-size: 17rpx; }
 .meal-arrow { flex: none; color: var(--text-dim); font-size: 24rpx; }
-.empty-add { margin-top: 24rpx; }
 .error-note { margin-top: 18rpx; padding: 14rpx; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent); font-size: 20rpx; }
 
 .editor-mask { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; justify-content: flex-end; background: var(--mask); }
@@ -53,3 +52,4 @@
 .editor-actions { display: flex; gap: 10rpx; margin-top: 16rpx; }
 .editor-actions .btn-primary { flex: 1; }
 .delete-button { width: 130rpx; padding: 18rpx 0; border: 1rpx solid var(--danger); border-radius: var(--radius-sm); color: var(--danger); font-size: 24rpx; }
+.nutrition-add { position: fixed; right: 32rpx; bottom: calc(24rpx + env(safe-area-inset-bottom)); left: 32rpx; z-index: 90; width: auto; }

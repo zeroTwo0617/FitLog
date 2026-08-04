@@ -1,4 +1,4 @@
-.plans-page { padding-top: 24rpx; }
+.plans-page { padding-top: 24rpx; padding-bottom: calc(156rpx + env(safe-area-inset-bottom)); }
 .loading-banner { margin-bottom: 16rpx; padding: 14rpx 18rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-dim); font-size: 21rpx; text-align: center; }
 .plans-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; margin-bottom: 22rpx; }
 .eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
@@ -16,4 +16,4 @@
 .chip-row { display: flex; flex-wrap: wrap; gap: 8rpx; margin-top: 15rpx; }
 .chip-row .tag { margin: 0; }
 .plan-item-desc { display: block; margin-top: 12rpx; overflow: hidden; color: var(--text-dim); font-size: 20rpx; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }
-.create-plan { margin-top: 24rpx; }
+.create-plan { position: fixed; right: 32rpx; bottom: calc(24rpx + env(safe-area-inset-bottom)); left: 32rpx; z-index: 90; width: auto; margin: 0; }
