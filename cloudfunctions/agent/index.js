@@ -203,6 +203,24 @@ async function analyzeMeal(event, context) {
   }
 }
 
+async function analyzeTextMeal(event, context) {
+  const openid = openidOf(context)
+  const query = String(event.query || '').trim()
+  const dateStr = String(event.dateStr || '')
+  const mealType = String(event.mealType || 'other')
+  if (!openid) return fail('AUTH_REQUIRED', '请先登录微信云开发')
+  if (!query || query.length > 1200) return fail('INVALID_QUERY', '饮食描述不能为空且不能超过 1200 字')
+  if (!isDateStr(dateStr)) return fail('INVALID_DATE', '饮食日期无效或晚于今天')
+  try {
+    const raw = await llm.complete(prompts.textMealMessages(dateStr, mealType, query), {})
+    const parsed = llm.parseJson(raw)
+    const result = schemas.validateMeal(Object.assign({}, parsed, { dateStr, mealType, source: 'agent' }), true)
+    return ok({ meal: result })
+  } catch (error) {
+    return fail(error.code || 'MEAL_TEXT_ANALYZE_FAILED', error.message || '文字饮食分析失败')
+  }
+}
+
 async function prepareUpload(context) {
   const openid = openidOf(context)
   if (!openid) return fail('AUTH_REQUIRED', '请先登录微信云开发')
@@ -250,6 +268,7 @@ exports.main = async (event, context) => {
       case 'diagnose': return diagnostics()
       case 'prepareUpload': return await prepareUpload(context)
       case 'analyzeMeal': return await analyzeMeal(event, context)
+      case 'analyzeTextMeal': return await analyzeTextMeal(event, context)
       case 'saveMeal': return await saveMeal(event, context)
       case 'saveDietPlan': return await saveDietPlan(event, context)
       default: return fail('BAD_ACTION', '不支持的 Agent 操作')

@@ -17,7 +17,7 @@ function mealMessages(dateStr, mealType) {
   return [
     {
       role: 'system',
-      content: '你是食物营养估算助手。分析图片中的食物，只返回 JSON：{"foods":[{"name":"","portion":"","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0}],"totalCalories":0,"totalProtein":0,"totalCarbs":0,"totalFat":0,"note":"热量为估算值，仅供饮食记录参考。"}。看不清时降低 confidence，不要编造医疗结论。'
+      content: '你是食物营养估算助手。分析图片中的食物，只返回 JSON：{"foods":[{"name":"","portion":"","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0}],"totalCalories":0,"totalProtein":0,"totalCarbs":0,"totalFat":0,"note":"热量为估算值，仅供饮食记录参考。"}。看不清时降低 confidence，不要编造医疗结论，不要输出 Markdown 或额外说明。'
     },
     {
       role: 'user',
@@ -26,4 +26,17 @@ function mealMessages(dateStr, mealType) {
   ]
 }
 
-module.exports = { chatMessages, mealMessages }
+function textMealMessages(dateStr, mealType, query) {
+  return [
+    {
+      role: 'system',
+      content: '你是饮食记录营养估算助手。根据用户的文字描述识别食物和份量，估算热量、蛋白质、碳水和脂肪。只返回 JSON：{"foods":[{"name":"","portion":"","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0}],"totalCalories":0,"totalProtein":0,"totalCarbs":0,"totalFat":0,"note":"热量为估算值，仅供饮食记录参考。"}。用户没有给出精确份量时，可以使用常见份量进行估算，并降低 confidence。所有数值都是估算值，不要输出 Markdown、解释文字或医疗结论。'
+    },
+    {
+      role: 'user',
+      content: `记录日期：${dateStr}；餐次：${mealType}。请根据这段饮食描述估算营养：${String(query || '').slice(0, 1200)}`
+    }
+  ]
+}
+
+module.exports = { chatMessages, mealMessages, textMealMessages }

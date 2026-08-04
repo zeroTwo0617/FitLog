@@ -4,13 +4,13 @@ const page = require('../../utils/page.js')
 
 const DEFAULT_MESSAGES = [{
   role: 'assistant',
-  content: '告诉我你的训练目标、每周可训练几天，以及有没有需要避开的动作。'
+  content: '告诉我你的训练目标，也可以直接说“我吃了两个鸡蛋，记录一下热量”。我会先估算，再问你是否保存。'
 }]
 
 function todayString() {
-  const date = new Date()
+  const date = new Date(Date.now() + 8 * 60 * 60 * 1000)
   const pad = (value) => (value < 10 ? '0' + value : String(value))
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`
 }
 
 function errorText(error) {
@@ -29,7 +29,8 @@ function modelErrorText(error) {
   if (code === 'MODEL_TIMEOUT') return '模型响应超时，请稍后重试。'
   if (code === 'MODEL_INVALID_JSON') return '模型返回内容暂时无法整理，请重试。'
   if (code === 'INVALID_DATE') return '饮食日期无效，请重新打开教练页后重试。'
-  if (code === 'INVALID_MEAL' || code === 'INVALID_NUTRITION') return '饮食识别数据无效，请重新上传图片。'
+  if (code === 'INVALID_MEAL' || code === 'INVALID_NUTRITION') return '饮食识别数据无效，请重新描述或上传图片。'
+  if (code === 'INVALID_QUERY' || code === 'MEAL_TEXT_ANALYZE_FAILED') return '文字饮食分析失败，请换一种描述后重试。'
   if (code === 'INVALID_FILE' || code === 'FILE_DOWNLOAD_FAILED' || code === 'MEAL_ANALYZE_FAILED') return '图片分析失败，请换一张清晰图片重试。'
   return `训练助手暂时不可用。${errorText(error)}`
 }
@@ -95,8 +96,29 @@ function mealMessage(meal) {
     const portion = item.portion ? `（${item.portion}）` : ''
     return `${item.name}${portion}`
   }).join('、')
-  const summary = `图片估算：${foods || '未识别到明确食物'}\n约 ${meal.calories} kcal · 蛋白质 ${meal.protein}g · 碳水 ${meal.carbs}g · 脂肪 ${meal.fat}g`
+  const summary = `${meal.source === 'agent' ? '文字估算' : '图片估算'}：${foods || '未识别到明确食物'}\n约 ${meal.calories} kcal · 蛋白质 ${meal.protein}g · 碳水 ${meal.carbs}g · 脂肪 ${meal.fat}g`
   return `${summary}\n${meal.note || '热量为估算值，仅供饮食记录参考。'}\n请以实际份量为准，是否保存到饮食记录？请回复“保存”或“不保存”。`
+}
+
+function mealTypeOf(query) {
+  const value = String(query || '')
+  if (/(早餐|早饭|早上|早晨)/.test(value)) return 'breakfast'
+  if (/(午餐|午饭|中餐|中午)/.test(value)) return 'lunch'
+  if (/(晚餐|晚饭|晚上|夜宵)/.test(value)) return 'dinner'
+  if (/(加餐|零食|下午茶)/.test(value)) return 'snack'
+  return 'other'
+}
+
+function isTextMealQuery(query) {
+  const value = String(query || '').trim()
+  if (!value) return false
+  const trainingOnly = /(训练|锻炼|健身|动作|组数|次数|计划|怎么练|增肌训练|减脂训练)/.test(value)
+  const mealAction = /(吃了|吃过|吃的|喝了|喝过|喝的|摄入)/.test(value)
+    || /(饮食记录|添加到饮食|记录.*(早餐|早饭|午餐|午饭|中餐|晚餐|晚饭|加餐|下午茶|夜宵|饮食|食物|热量|卡路里|营养))/.test(value)
+  const mealSlot = /(早餐|早饭|午餐|午饭|中餐|晚餐|晚饭|加餐|下午茶|夜宵)/.test(value)
+  const nutrition = /(热量|卡路里|营养|蛋白质|碳水|脂肪)/.test(value)
+  if (trainingOnly && !/(吃|喝|摄入|饮食|餐|食物|热量|卡路里)/.test(value)) return false
+  return mealAction || (mealSlot && (nutrition || /记录|吃|喝|食物/.test(value)))
 }
 
 function mealSaveDecision(query) {
@@ -120,6 +142,7 @@ page({
     planDraft: null,
     savingMeal: false,
     pendingMeal: null,
+    pendingMealQuery: '',
     agentOnline: false,
     availabilityStatus: 'checking',
     availabilityText: '检查服务中'
@@ -225,9 +248,20 @@ page({
     const assistantIndex = messages.length - 1
     const token = ++this._requestToken
     this.setData({ messages, input: '', sending: true, error: '', planDraft: null })
-    agentApi.chat('training', query, this.data.context || {}, this.data.sessionId).then((result) => {
+    const textMeal = isTextMealQuery(query)
+    const request = textMeal
+      ? agentApi.analyzeTextMeal(query, todayString(), mealTypeOf(query))
+      : agentApi.chat('training', query, this.data.context || {}, this.data.sessionId)
+    request.then((result) => {
       if (this._destroyed || token !== this._requestToken) return
       const next = this.data.messages.slice()
+      if (textMeal) {
+        const meal = result && result.meal
+        if (!meal) throw new Error('文字饮食识别结果无效')
+        next[assistantIndex] = { role: 'assistant', content: mealMessage(meal) }
+        this.setData({ messages: next, sending: false, planDraft: null, pendingMeal: meal, pendingMealQuery: query })
+        return
+      }
       next[assistantIndex] = { role: 'assistant', content: result.message || '这次没有生成有效回复，请重试。' }
       this.setData({
         messages: next,
@@ -263,7 +297,7 @@ page({
     const assistantIndex = messages.length - 1
     this.setData({ messages, input: '', error: '', savingMeal: shouldSave })
     if (!shouldSave) {
-      this.setData({ pendingMeal: null })
+      this.setData({ pendingMeal: null, pendingMealQuery: '' })
       return
     }
     agentApi.saveMeal(meal).then(() => {
@@ -271,6 +305,7 @@ page({
       this.setData({
         [`messages[${assistantIndex}].content`]: '已添加到饮食记录。',
         pendingMeal: null,
+        pendingMealQuery: '',
         savingMeal: false
       })
     }).catch((error) => {
@@ -285,6 +320,14 @@ page({
 
   retry() {
     if (this.data.sending || this.data.uploading || !this.data.agentOnline) return
+    const pendingMealQuery = this.data.pendingMealQuery
+    if (pendingMealQuery) {
+      const messages = this.data.messages.slice()
+      if (messages[messages.length - 1] && messages[messages.length - 1].role === 'assistant') messages.pop()
+      if (messages[messages.length - 1] && messages[messages.length - 1].role === 'user') messages.pop()
+      this.setData({ messages, input: pendingMealQuery, pendingMeal: null, pendingMealQuery: '' }, () => this.send())
+      return
+    }
     const messages = this.data.messages.slice()
     let lastQuery = ''
     for (let i = messages.length - 1; i >= 0; i--) {
@@ -299,7 +342,7 @@ page({
   clearSession() {
     if (this.data.sending || this.data.uploading || this.data.savingMeal) return
     wx.removeStorageSync(agentApi.sessionKey('training'))
-    this.setData({ messages: DEFAULT_MESSAGES, sessionId: '', planDraft: null, pendingMeal: null, error: '' })
+    this.setData({ messages: DEFAULT_MESSAGES, sessionId: '', planDraft: null, pendingMeal: null, pendingMealQuery: '', error: '' })
   },
 
   chooseImage() {
@@ -325,7 +368,7 @@ page({
           { role: 'user', content: '[上传图片]' },
           { role: 'assistant', content: mealMessage(meal) }
         ])
-        this.setData({ messages: next, uploading: false, error: '', pendingMeal: meal })
+        this.setData({ messages: next, uploading: false, error: '', pendingMeal: meal, pendingMealQuery: '' })
       })
       .catch((error) => {
         if (error && error.code === 'USER_CANCELLED') {

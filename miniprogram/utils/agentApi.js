@@ -52,6 +52,10 @@ function analyzeMeal(fileID, dateStr, mealType) {
   return call({ action: 'analyzeMeal', fileID, dateStr, mealType }, 35000)
 }
 
+function analyzeTextMeal(query, dateStr, mealType) {
+  return call({ action: 'analyzeTextMeal', query, dateStr, mealType }, 35000)
+}
+
 function prepareUpload() {
   return call({ action: 'prepareUpload' })
 }
@@ -68,4 +72,4 @@ function diagnose() {
   return call({ action: 'diagnose' })
 }
 
-module.exports = { SESSION_KEYS, sessionKey, call, chat, diagnose, prepareUpload, analyzeMeal, saveMeal, saveDietPlan }
+module.exports = { SESSION_KEYS, sessionKey, call, chat, diagnose, prepareUpload, analyzeMeal, analyzeTextMeal, saveMeal, saveDietPlan }
