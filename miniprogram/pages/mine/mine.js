@@ -149,52 +149,6 @@ page({
       })
   },
 
-  // ===== 载入测试数据（开发期工具，发布前移除） =====
-  // 用当前用户真实 openid 调 seedData 云函数，灌入 8 周测试数据，小程序内立即可见
-  loadSeed() {
-    wx.showModal({
-      title: '载入测试数据',
-      content: '将灌入 8 周训练记录、3 个计划和身体数据（会先清掉旧的测试数据），用于功能验收。继续？',
-      confirmText: '载入',
-      success: (res) => {
-        if (!res.confirm) return
-        wx.showLoading({ title: '正在载入…', mask: true })
-        systemRepo.seedData('chart')
-          .then((r) => {
-            wx.hideLoading()
-            const result = r
-            if (result && result.ok) {
-              const s = result.summary
-              this.refresh()
-              wx.showModal({
-                title: '载入完成',
-                content: `训练 ${s.workouts} 次 · 组 ${s.sets} 条 · 计划 ${s.plans} 个 · 身体 ${s.bodyMetrics} 条`,
-                showCancel: false
-              })
-            } else {
-              const reason = (result && result.error) || '云函数未返回有效结果'
-              console.error('载入测试数据失败', reason)
-              wx.showModal({
-                title: '载入失败',
-                content: '原因：' + reason + '\n\n请确认：① seedData 已重新部署；② 集合 workouts/sets/plans/bodyMetrics 已在云开发控制台创建。',
-                showCancel: false
-              })
-            }
-          })
-          .catch((err) => {
-            wx.hideLoading()
-            const reason = (err && (err.errMsg || err.message)) || '网络/云函数调用失败'
-            console.error('载入测试数据失败', err)
-            wx.showModal({
-              title: '载入失败',
-              content: '原因：' + reason + '\n\n请确认 seedData 云函数已部署到当前云环境。',
-              showCancel: false
-            })
-          })
-      }
-    })
-  },
-
   toggleTheme() {
     theme.toggle()
   }

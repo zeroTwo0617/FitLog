@@ -4,6 +4,24 @@
 
 ---
 
+## 2026-08-03 · 移除 seedData 云函数
+
+### 背景
+
+`seedData` 云函数按 `OPENID`（或控制台降级 `seed-test-openid`）灌入 8 周测试数据，含删除本 openid 下 `isSeed:true` 数据的能力，存在越权与生产环境数据污染风险。作为发布前安全收敛，整个删除。
+
+### 删除内容
+
+- `cloudfunctions/seedData/`（index.js、genData.js、config.json、package.json）
+- `scripts/test_seed.js`
+- 前端入口：`mine.js` 的 `loadSeed()`、`mine.wxml` 的「载入测试数据」菜单行
+- `repositories/system.js` 的 `seedData()`（保留 `exportData()`）
+- 文档引用：`data-access.md`、`v1-release-plan.md`、`开发文档.md` 中相关条目
+
+`sparkles` 图标保留（仍被「教练」tab 使用）。
+
+---
+
 ## 2026-08-03 · 浅色主题配色完善
 
 ### 背景
@@ -71,7 +89,7 @@
 
 前端经 `utils/cloud.js` 的 `callFunction` 检测 `ok === false` 抛错，`.catch` 正常处理，不崩。
 
-**未修改**（语义正确）：`updateUserActive`（自己的 lastActiveAt，无用户时无需报错）、`agent` 会话更新（先查到 `current` 才更新，必然存在）、`seedData` 清旧 seed（remove 0 是正常场景）。
+**未修改**（语义正确）：`updateUserActive`（自己的 lastActiveAt，无用户时无需报错）、`agent` 会话更新（先查到 `current` 才更新，必然存在）。
 
 ### 涉及文件
 
