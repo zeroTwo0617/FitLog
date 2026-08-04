@@ -1,4 +1,4 @@
-.home { padding-top: 28rpx; }
+.home { padding-top: 28rpx; padding-bottom: calc(236rpx + env(safe-area-inset-bottom)); }
 .loading-banner { margin-bottom: 16rpx; padding: 12rpx 14rpx; border-bottom: 1rpx solid var(--hairline); color: var(--text-dim); font-size: 20rpx; text-align: center; }
 .home-header { margin-bottom: 24rpx; }
 .brand-mark { display: block; color: var(--text); font-size: 22rpx; font-weight: 900; letter-spacing: 4rpx; }
@@ -48,3 +48,9 @@
 .row-title { overflow: hidden; color: var(--text); font-size: 24rpx; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
 .row-sub { overflow: hidden; margin-top: 5rpx; color: var(--text-dim); font-size: 18rpx; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
 .row-arrow { flex: 0 0 auto; color: var(--text-dim); font-size: 35rpx; font-weight: 300; line-height: 1; }
+.quick-actions { position: fixed; right: 32rpx; bottom: calc(112rpx + env(safe-area-inset-bottom) + 16rpx); left: 32rpx; z-index: 998; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12rpx; padding: 10rpx; border: 1rpx solid var(--card-border); border-radius: 18rpx; background: rgba(248, 249, 246, .96); box-shadow: 0 8rpx 24rpx rgba(28, 35, 27, .12); }
+.quick-action { display: flex; align-items: center; justify-content: center; gap: 9rpx; min-height: 70rpx; padding: 0 14rpx; border-radius: 10rpx; color: var(--text); font-size: 22rpx; font-weight: 900; }
+.quick-action image { width: 28rpx; height: 28rpx; }
+.quick-action-plan { background: var(--primary); color: var(--on-primary); }
+.quick-action-diet { border: 1rpx solid var(--border); background: var(--card-bg); }
+.quick-action:active { opacity: .72; transform: scale(.98); }

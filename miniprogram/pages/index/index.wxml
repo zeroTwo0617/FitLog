@@ -32,12 +32,15 @@
   <text class="energy-note">{{energySummary.note}}</text>
 
   <view class="next-section">
-    <view class="section-heading"><text class="section-title">接下来</text><text class="section-meta">快速进入</text></view>
+    <view class="section-heading"><text class="section-title">更多记录</text><text class="section-meta">回看训练</text></view>
     <view class="action-list">
-      <view class="action-row" bindtap="goPlans"><view class="row-icon lime-icon"><image class="row-icon-image" mode="aspectFit" src="/assets/icons/clipboard-list{{theme === 'light' ? '-light' : ''}}.svg" /></view><view class="row-copy"><text class="row-title">训练计划</text><text class="row-sub">整理常练动作与下一次安排</text></view><text class="row-arrow">›</text></view>
-      <view class="action-row" bindtap="goNutrition"><view class="row-icon orange-icon"><image class="row-icon-image" mode="aspectFit" src="/assets/icons/utensils{{theme === 'light' ? '-light' : ''}}.svg" /></view><view class="row-copy"><text class="row-title">今日饮食</text><text class="row-sub">{{todayNutritionText}} · {{todayNutritionMeta}}</text></view><text class="row-arrow">›</text></view>
       <view class="action-row" bindtap="goHistory"><view class="row-icon plain-icon"><image class="row-icon-image" mode="aspectFit" src="/assets/icons/history{{theme === 'light' ? '-light' : ''}}.svg" /></view><view class="row-copy"><text class="row-title">训练历史</text><text class="row-sub">回看每次训练，找到自己的进步</text></view><text class="row-arrow">›</text></view>
     </view>
+  </view>
+
+  <view class="quick-actions">
+    <button class="quick-action quick-action-plan" bindtap="goPlans"><image mode="aspectFit" src="/assets/icons/clipboard-list{{theme === 'light' ? '-light' : ''}}.svg" /><text>训练计划</text></button>
+    <button class="quick-action quick-action-diet" bindtap="goNutrition"><image mode="aspectFit" src="/assets/icons/utensils{{theme === 'light' ? '-light' : ''}}.svg" /><text>饮食</text></button>
   </view>
 
 </view>
