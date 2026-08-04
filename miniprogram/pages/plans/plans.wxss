@@ -2,7 +2,6 @@
 .loading-banner { margin-bottom: 16rpx; padding: 14rpx 18rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-dim); font-size: 21rpx; text-align: center; }
 .plans-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; margin-bottom: 22rpx; }
 .eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
-.header-add { display: flex; align-items: center; justify-content: center; width: 64rpx; height: 64rpx; margin-top: 24rpx; border: 1rpx solid var(--primary); border-radius: var(--radius-sm); color: var(--primary); font-size: 34rpx; }
 .plans-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10rpx; margin-bottom: 24rpx; }
 .plans-summary view { padding: 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); }
 .plans-summary text { display: block; }
