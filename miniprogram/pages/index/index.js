@@ -102,7 +102,6 @@ function buildFallback() {
     ],
     weekDays: [],
     weekDone: 0,
-    recentPlans: [],
     todayNutrition: { calories: 0, protein: 0, carbs: 0, fat: 0, mealCount: 0 },
     todayNutritionText: '还没有饮食记录',
     todayNutritionMeta: '点击记录，热量会按宏量营养素自动换算',
@@ -154,10 +153,9 @@ page({
       workoutRepo.count(),
       planRepo.count(),
       workoutRepo.listRecent(30).then((data) => ({ data: data })),
-      planRepo.list(3).then((data) => ({ data: data })),
       nutritionRepo.listByDate(nutrition.today()).then((data) => ({ data: data })).catch(() => ({ data: [] })),
       bodyRepo.latest().then((data) => ({ data: data })).catch(() => ({ data: [] }))
-    ]).then(([workoutCountRes, planCountRes, workoutListRes, plansRes, nutritionRes, bodyRes]) => {
+    ]).then(([workoutCountRes, planCountRes, workoutListRes, nutritionRes, bodyRes]) => {
       const workouts = (workoutListRes && workoutListRes.data) || []
       const latestBody = bodyRes && bodyRes.data && bodyRes.data[0]
       const todayNutrition = nutrition.aggregateByDate((nutritionRes && nutritionRes.data) || [])[nutrition.today()] || {
@@ -167,15 +165,6 @@ page({
         fat: 0,
         mealCount: 0
       }
-      const plans = ((plansRes && plansRes.data) || []).map((item) => {
-        const items = Array.isArray(item.items) ? item.items : []
-        return {
-          _id: item._id,
-          name: item.name || '未命名计划',
-          count: items.length,
-          preview: items.slice(0, 2).map((it) => it.exerciseName).join(' / ') || '先去补充动作'
-        }
-      })
       const sevenDaysAgo = new Date()
       sevenDaysAgo.setHours(0, 0, 0, 0)
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6)
@@ -202,7 +191,6 @@ page({
         todayNutritionText,
         todayNutritionMeta,
         energySummary: buildEnergySummary(latestBody, workouts),
-        recentPlans: plans,
         weekDays: buildWeekDays(workouts),
         weekDone: buildWeekDays(workouts).filter((d) => d.trained).length,
         stats: [
@@ -214,7 +202,7 @@ page({
           {
             label: '训练计划',
             value: String((planCountRes && planCountRes.total) || 0),
-            note: plans.length > 0 ? '常用模板已就位' : '先建一个模板'
+            note: (planCountRes && planCountRes.total) > 0 ? '常用模板已就位' : '先建一个模板'
           },
           {
             label: '近7天',
@@ -260,9 +248,4 @@ page({
     wx.switchTab({ url: '/pages/agent/agent' })
   },
 
-  openPlan(e) {
-    const id = e.currentTarget.dataset.id
-    if (!id) return
-    wx.navigateTo({ url: `/pages/plan-detail/plan-detail?id=${id}` })
-  }
 })

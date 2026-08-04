@@ -37,18 +37,15 @@
 .next-section { margin-top: 32rpx; }
 .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 12rpx; margin-bottom: 13rpx; }
 .action-list { border-top: 1rpx solid var(--border); }
-.action-row, .plan-row { display: flex; align-items: center; gap: 13rpx; width: 100%; padding: 14rpx 0; border-bottom: 1rpx solid var(--hairline); text-align: left; }
-.action-row:active, .plan-row:active { opacity: .64; }
+.action-row { display: flex; align-items: center; gap: 13rpx; width: 100%; padding: 14rpx 0; border-bottom: 1rpx solid var(--hairline); text-align: left; }
+.action-row:active { opacity: .64; }
 .row-icon { display: flex; align-items: center; justify-content: center; width: 48rpx; height: 48rpx; flex: 0 0 auto; border-radius: 10rpx; font-size: 23rpx; font-weight: 900; }
 .lime-icon { background: var(--primary-soft); color: var(--primary-strong); }
 .orange-icon { background: var(--accent-soft); color: var(--accent); }
 .rust-icon { background: #fbe9e3; color: var(--danger); }
 .plain-icon { background: var(--surface-2); color: var(--text-dim); }
 .row-copy { flex: 1; min-width: 0; }
-.row-title, .row-sub, .plan-name, .plan-preview { display: block; }
-.row-title, .plan-name { overflow: hidden; color: var(--text); font-size: 24rpx; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
-.row-sub, .plan-preview { overflow: hidden; margin-top: 5rpx; color: var(--text-dim); font-size: 18rpx; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.row-title, .row-sub { display: block; }
+.row-title { overflow: hidden; color: var(--text); font-size: 24rpx; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
+.row-sub { overflow: hidden; margin-top: 5rpx; color: var(--text-dim); font-size: 18rpx; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
 .row-arrow { flex: 0 0 auto; color: var(--text-dim); font-size: 35rpx; font-weight: 300; line-height: 1; }
-.plan-list { border-top: 1rpx solid var(--border); }
-.plan-count { flex: 0 0 auto; color: var(--primary-strong); font-size: 22rpx; font-weight: 900; }
-.plan-count text { color: var(--text-dim); font-size: 17rpx; font-weight: 500; }

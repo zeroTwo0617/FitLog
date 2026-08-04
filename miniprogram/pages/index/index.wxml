@@ -41,8 +41,4 @@
     </view>
   </view>
 
-  <view class="section" wx:if="{{recentPlans.length > 0}}">
-    <view class="section-head"><text class="section-title">最近计划</text><text class="section-meta">{{recentPlans.length}} 个</text></view>
-    <view class="plan-list"><view class="plan-row" wx:for="{{recentPlans}}" wx:key="_id" bindtap="openPlan" data-id="{{item._id}}"><view class="row-copy"><text class="plan-name">{{item.name}}</text><text class="plan-preview">{{item.preview}}</text></view><text class="plan-count">{{item.count}}<text> 动作</text></text><text class="row-arrow">›</text></view></view>
-  </view>
 </view>
