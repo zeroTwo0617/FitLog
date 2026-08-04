@@ -29,8 +29,6 @@
 .message-label { margin: 0 0 6rpx 8rpx; color: var(--primary-strong); font-size: 17rpx; font-weight: 900; letter-spacing: 2rpx; }
 .bubble { max-width: 88%; padding: 17rpx 18rpx; border: 1rpx solid var(--border); border-radius: 12rpx 12rpx 12rpx 3rpx; background: var(--card-bg); color: var(--text); font-size: 24rpx; line-height: 1.65; white-space: pre-wrap; }
 .message.user .bubble { border-color: var(--text); border-radius: 12rpx 12rpx 3rpx 12rpx; background: var(--text); color: var(--surface); }
-.meal-save-btn { align-self: flex-start; margin-top: 10rpx; padding: 11rpx 14rpx; border: 1rpx solid var(--primary); border-radius: 9rpx; background: var(--primary-soft); color: var(--primary-strong); font-size: 20rpx; font-weight: 850; }
-.meal-save-btn[disabled] { opacity: .55; }
 .typing { display: flex; align-items: center; gap: 9rpx; padding: 4rpx 0 20rpx; color: var(--text-dim); font-size: 20rpx; }
 .typing-dot { width: 11rpx; height: 11rpx; border-radius: 50%; background: var(--primary-strong); animation: pulse .9s ease-in-out infinite alternate; }
 @keyframes pulse { from { opacity: .35; } to { opacity: 1; } }

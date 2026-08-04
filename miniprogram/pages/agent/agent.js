@@ -96,7 +96,14 @@ function mealMessage(meal) {
     return `${item.name}${portion}`
   }).join('、')
   const summary = `图片估算：${foods || '未识别到明确食物'}\n约 ${meal.calories} kcal · 蛋白质 ${meal.protein}g · 碳水 ${meal.carbs}g · 脂肪 ${meal.fat}g`
-  return `${summary}\n${meal.note || '热量为估算值，仅供饮食记录参考。'}\n请以实际份量为准，确认后点击下方按钮添加到饮食记录。`
+  return `${summary}\n${meal.note || '热量为估算值，仅供饮食记录参考。'}\n请以实际份量为准，是否保存到饮食记录？请回复“保存”或“不保存”。`
+}
+
+function mealSaveDecision(query) {
+  const value = String(query || '').trim().replace(/[。！!？?，,、\s]/g, '')
+  if (/^(不保存|不添加|不要保存|不要添加|否|不用|取消|算了|跳过)/.test(value)) return false
+  if (/^(保存|添加|确认|确定|好|好的|是|可以|记下|记账)/.test(value)) return true
+  return null
 }
 
 page({
@@ -112,6 +119,7 @@ page({
     error: '',
     planDraft: null,
     savingMeal: false,
+    pendingMeal: null,
     agentOnline: false,
     availabilityStatus: 'checking',
     availabilityText: '检查服务中'
@@ -190,13 +198,26 @@ page({
   onInput(e) { this.setData({ input: e.detail.value }) },
 
   usePrompt(e) {
-    if (!this.data.agentOnline || this.data.sending || this.data.uploading) return
+    if (!this.data.agentOnline || this.data.sending || this.data.uploading || this.data.savingMeal) return
     this.setData({ input: e.currentTarget.dataset.query || '' })
   },
 
   send() {
     const query = (this.data.input || '').trim()
-    if (!query || this.data.sending || this.data.uploading || !this.data.agentOnline) return
+    if (!query || this.data.sending || this.data.uploading || this.data.savingMeal || !this.data.agentOnline) return
+    if (this.data.pendingMeal) {
+      const decision = mealSaveDecision(query)
+      if (decision !== null) {
+        this.confirmMeal(query, decision)
+        return
+      }
+      const messages = this.data.messages.concat([
+        { role: 'user', content: query },
+        { role: 'assistant', content: '请回复“保存”或“不保存”，我再处理这份饮食记录。' }
+      ])
+      this.setData({ messages, input: '', error: '' })
+      return
+    }
     const messages = this.data.messages.concat([
       { role: 'user', content: query },
       { role: 'assistant', content: '' }
@@ -232,6 +253,36 @@ page({
     this.setData({ messages, sending: false, error: '已停止本次请求。' })
   },
 
+  confirmMeal(query, shouldSave) {
+    const meal = this.data.pendingMeal
+    if (!meal || this.data.savingMeal) return
+    const messages = this.data.messages.concat([
+      { role: 'user', content: query },
+      { role: 'assistant', content: shouldSave ? '正在添加到饮食记录...' : '好的，这次不保存这份饮食记录。' }
+    ])
+    const assistantIndex = messages.length - 1
+    this.setData({ messages, input: '', error: '', savingMeal: shouldSave })
+    if (!shouldSave) {
+      this.setData({ pendingMeal: null })
+      return
+    }
+    agentApi.saveMeal(meal).then(() => {
+      if (this._destroyed) return
+      this.setData({
+        [`messages[${assistantIndex}].content`]: '已添加到饮食记录。',
+        pendingMeal: null,
+        savingMeal: false
+      })
+    }).catch((error) => {
+      if (this._destroyed) return
+      this.setData({
+        [`messages[${assistantIndex}].content`]: '添加失败，请回复“保存”重试，或回复“不保存”放弃。',
+        savingMeal: false,
+        error: modelErrorText(error)
+      })
+    })
+  },
+
   retry() {
     if (this.data.sending || this.data.uploading || !this.data.agentOnline) return
     const messages = this.data.messages.slice()
@@ -248,11 +299,11 @@ page({
   clearSession() {
     if (this.data.sending || this.data.uploading || this.data.savingMeal) return
     wx.removeStorageSync(agentApi.sessionKey('training'))
-    this.setData({ messages: DEFAULT_MESSAGES, sessionId: '', planDraft: null, error: '' })
+    this.setData({ messages: DEFAULT_MESSAGES, sessionId: '', planDraft: null, pendingMeal: null, error: '' })
   },
 
   chooseImage() {
-    if (!this.data.agentOnline || this.data.sending || this.data.uploading || this.data.savingMeal) return
+    if (!this.data.agentOnline || this.data.sending || this.data.uploading || this.data.savingMeal || this.data.pendingMeal) return
     this.setData({ uploading: true, error: '' })
     let fileID = ''
     chooseImage()
@@ -272,9 +323,9 @@ page({
         if (!meal) throw new Error('图片识别结果无效')
         const next = this.data.messages.concat([
           { role: 'user', content: '[上传图片]' },
-          { role: 'assistant', content: mealMessage(meal), meal: meal, mealSaved: false }
+          { role: 'assistant', content: mealMessage(meal) }
         ])
-        this.setData({ messages: next, uploading: false, error: '' })
+        this.setData({ messages: next, uploading: false, error: '', pendingMeal: meal })
       })
       .catch((error) => {
         if (error && error.code === 'USER_CANCELLED') {
@@ -284,21 +335,6 @@ page({
         if (fileID && wx.cloud && wx.cloud.deleteFile) wx.cloud.deleteFile({ fileList: [fileID] }).catch(() => {})
         this.setData({ uploading: false, error: modelErrorText(error) })
       })
-  },
-
-  saveMeal(e) {
-    const index = Number(e.currentTarget.dataset.index)
-    const message = this.data.messages[index]
-    if (!message || !message.meal || message.mealSaved || this.data.savingMeal) return
-    this.setData({ savingMeal: true, error: '' })
-    agentApi.saveMeal(message.meal).then(() => {
-      if (this._destroyed) return
-      this.setData({ [`messages[${index}].mealSaved`]: true, savingMeal: false })
-      wx.showToast({ title: '已添加到饮食记录', icon: 'success' })
-    }).catch((error) => {
-      if (this._destroyed) return
-      this.setData({ savingMeal: false, error: modelErrorText(error) })
-    })
   },
 
   saveDraft() {
