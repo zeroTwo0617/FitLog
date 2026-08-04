@@ -35,7 +35,6 @@
     <view class="section-heading"><text class="section-title">接下来</text><text class="section-meta">快速进入</text></view>
     <view class="action-list">
       <view class="action-row" bindtap="goPlans"><view class="row-icon lime-icon">□</view><view class="row-copy"><text class="row-title">训练计划</text><text class="row-sub">整理常练动作与下一次安排</text></view><text class="row-arrow">›</text></view>
-      <view class="action-row" bindtap="goAgent"><view class="row-icon rust-icon">✦</view><view class="row-copy"><text class="row-title">训练助手</text><text class="row-sub">让线上教练结合你的训练记录给建议</text></view><text class="row-arrow">›</text></view>
       <view class="action-row" bindtap="goNutrition"><view class="row-icon orange-icon">◉</view><view class="row-copy"><text class="row-title">今日饮食</text><text class="row-sub">{{todayNutritionText}} · {{todayNutritionMeta}}</text></view><text class="row-arrow">›</text></view>
       <view class="action-row" bindtap="goHistory"><view class="row-icon plain-icon">↗</view><view class="row-copy"><text class="row-title">训练历史</text><text class="row-sub">回看每次训练，找到自己的进步</text></view><text class="row-arrow">›</text></view>
     </view>
