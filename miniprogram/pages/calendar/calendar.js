@@ -22,7 +22,6 @@ page({
     canPrev: true,
     canNext: false,
     trainedDays: 0,
-    workoutCount: 0,
     monthWorkoutCount: 0,
     weekStreak: 0,
     weekLabels: ['日', '一', '二', '三', '四', '五', '六'],
@@ -32,7 +31,6 @@ page({
     selectedExerciseCount: 0,
     selectedSetCount: 0,
     detailLoading: false,
-    monthCalories: 0,
     selectedNutrition: null,
     dailyTargetCalories: 0
   },
@@ -77,7 +75,6 @@ page({
         const { year, month } = fmtNow()
         this.setData({
           loading: false,
-          workoutCount: list.length,
           trainedDays: this._trained.length,
           weekStreak: sd.weekStreak(this._trained),
           selectedDate: '',
@@ -119,17 +116,13 @@ page({
     const canNext = !(year > now.year || (year === now.year && month >= now.month))
     const monthPrefix = `${year}-${month < 10 ? `0${month}` : month}-`
     const monthWorkoutCount = (this._workouts || []).filter((item) => workoutData.dateKey(item).indexOf(monthPrefix) === 0).length
-    const monthCalories = Object.keys(this._nutritionByDate || {})
-      .filter((date) => date.indexOf(monthPrefix) === 0)
-      .reduce((sum, date) => sum + (this._nutritionByDate[date].calories || 0), 0)
     this.setData({
       calendar: decorated,
       calYear: year,
       calMonth: month,
       canPrev: true,
       canNext,
-      monthWorkoutCount,
-      monthCalories
+      monthWorkoutCount
     })
   },
 

@@ -1,4 +1,4 @@
-<view class="page tab-page calendar-page theme-{{theme ? theme : 'dark'}}">
+<view class="page tab-page calendar-page theme-{{theme ? theme : 'light'}}">
   <view class="calendar-header">
     <view><text class="eyebrow">TRAINING LOG</text><text class="h-title">训练日历</text><text class="h-sub">选中日期，在当前页面查看训练和饮食记录</text></view>
     <view class="month-total"><text>{{monthWorkoutCount}}</text><text>本月训练</text></view>
@@ -13,12 +13,6 @@
     <view class="streak-flame">
       <image src="/assets/icons/flame{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" />
     </view>
-  </view>
-
-  <view class="calendar-summary">
-    <view><text>{{trainedDays}}</text><text>累计训练日</text></view>
-    <view><text>{{workoutCount}}</text><text>训练次数</text></view>
-    <view><text>{{monthCalories}}</text><text>本月 kcal</text></view>
   </view>
 
   <view class="loading" wx:if="{{loading}}">正在加载日历</view>

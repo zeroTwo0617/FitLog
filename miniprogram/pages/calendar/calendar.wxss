@@ -23,12 +23,6 @@
 .streak-flame { display: flex; align-items: center; justify-content: center; width: 96rpx; height: 96rpx; flex: none; border-radius: 26rpx; background: var(--primary-soft); }
 .streak-flame image { width: 52rpx; height: 52rpx; }
 
-.calendar-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10rpx; margin-bottom: 24rpx; }
-.calendar-summary view { padding: 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); }
-.calendar-summary text { display: block; }
-.calendar-summary text:first-child { color: var(--text); font-size: 31rpx; font-weight: 750; }
-.calendar-summary text:last-child { margin-top: 8rpx; color: var(--text-dim); font-size: 20rpx; }
-
 .calendar-board { padding: 20rpx 16rpx 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-card); }
 .calendar-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0 8rpx 20rpx; }
 .calendar-month { display: block; color: var(--text); font-size: 31rpx; font-weight: 750; }
