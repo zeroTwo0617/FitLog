@@ -5,6 +5,7 @@ const page = require('../../utils/page.js')
 const workoutRepo = require('../../utils/repositories/workout.js')
 const planRepo = require('../../utils/repositories/plan.js')
 const nutritionRepo = require('../../utils/repositories/nutrition.js')
+const bodyRepo = require('../../utils/repositories/body.js')
 
 function formatToday() {
   const now = new Date()
@@ -36,6 +37,62 @@ function buildWeekDays(workouts) {
   return days
 }
 
+function numberValue(value) {
+  const result = Number(value)
+  return Number.isFinite(result) ? result : 0
+}
+
+function formatKcal(value) {
+  return value == null ? '--' : String(Math.max(0, Math.round(value)))
+}
+
+function estimateBmr(body) {
+  const weight = numberValue(body && body.weight)
+  if (weight <= 0) return null
+  const bodyFat = numberValue(body && (body.bodyFat || body.fatPct))
+  if (bodyFat > 0 && bodyFat < 80) {
+    return 370 + (21.6 * weight * (1 - bodyFat / 100))
+  }
+  // 当前身体数据页至少收集体重，缺少年龄/性别时按体重给出保守估算。
+  return 22 * weight
+}
+
+function workoutSetCount(workout) {
+  if (numberValue(workout && workout.setTotal) > 0) return numberValue(workout.setTotal)
+  return (Array.isArray(workout && workout.exercises) ? workout.exercises : [])
+    .reduce((sum, item) => sum + (Array.isArray(item && item.sets) ? item.sets.length : 0), 0)
+}
+
+function estimateWorkoutCalories(workout, weight) {
+  const direct = numberValue(workout && (workout.calories || workout.calorieBurn || workout.exerciseCalories))
+  if (direct > 0) return direct
+  const duration = numberValue(workout && (workout.durationMinutes || workout.duration))
+  if (duration > 0 && weight > 0) {
+    // 力量训练按约 6 MET 估算；仅供记录参考，不作为医疗建议。
+    return 6 * 3.5 * weight / 200 * duration
+  }
+  const sets = workoutSetCount(workout)
+  return sets > 0 ? sets * 8 : (Array.isArray(workout && workout.exercises) ? workout.exercises.length * 24 : 0)
+}
+
+function buildEnergySummary(body, workouts) {
+  const weight = numberValue(body && body.weight)
+  const today = nutrition.today()
+  const exercise = (workouts || [])
+    .filter((item) => workoutData.dateKey(item) === today)
+    .reduce((sum, item) => sum + estimateWorkoutCalories(item, weight), 0)
+  const bmr = estimateBmr(body)
+  return {
+    bmr: formatKcal(bmr),
+    exercise: formatKcal(exercise),
+    total: formatKcal(bmr == null ? null : bmr + exercise),
+    note: bmr == null
+      ? '补充身体数据后，可估算基础代谢与今日训练消耗。'
+      : (body && (body.bodyFat || body.fatPct) ? '基础代谢 + 今日训练 · 估算值' : '按体重估算基础代谢 + 今日训练 · 估算值'),
+    bodyNote: body && body.weight ? `已读取 ${body.weight} kg 身体数据` : '暂无身体数据'
+  }
+}
+
 function buildFallback() {
   return {
     stats: [
@@ -49,6 +106,13 @@ function buildFallback() {
     todayNutrition: { calories: 0, protein: 0, carbs: 0, fat: 0, mealCount: 0 },
     todayNutritionText: '还没有饮食记录',
     todayNutritionMeta: '点击记录，热量会按宏量营养素自动换算',
+    energySummary: {
+      bmr: '--',
+      exercise: '0',
+      total: '--',
+      note: '补充身体数据后，可估算基础代谢与今日训练消耗。',
+      bodyNote: '暂无身体数据'
+    },
     heroNote: '把训练记录、计划和进展放在一个地方。'
   }
 }
@@ -91,9 +155,11 @@ page({
       planRepo.count(),
       workoutRepo.listRecent(30).then((data) => ({ data: data })),
       planRepo.list(3).then((data) => ({ data: data })),
-      nutritionRepo.listByDate(nutrition.today()).then((data) => ({ data: data })).catch(() => ({ data: [] }))
-    ]).then(([workoutCountRes, planCountRes, workoutListRes, plansRes, nutritionRes]) => {
+      nutritionRepo.listByDate(nutrition.today()).then((data) => ({ data: data })).catch(() => ({ data: [] })),
+      bodyRepo.latest().then((data) => ({ data: data })).catch(() => ({ data: [] }))
+    ]).then(([workoutCountRes, planCountRes, workoutListRes, plansRes, nutritionRes, bodyRes]) => {
       const workouts = (workoutListRes && workoutListRes.data) || []
+      const latestBody = bodyRes && bodyRes.data && bodyRes.data[0]
       const todayNutrition = nutrition.aggregateByDate((nutritionRes && nutritionRes.data) || [])[nutrition.today()] || {
         calories: 0,
         protein: 0,
@@ -135,6 +201,7 @@ page({
         todayNutrition,
         todayNutritionText,
         todayNutritionMeta,
+        energySummary: buildEnergySummary(latestBody, workouts),
         recentPlans: plans,
         weekDays: buildWeekDays(workouts),
         weekDone: buildWeekDays(workouts).filter((d) => d.trained).length,

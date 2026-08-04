@@ -1,11 +1,12 @@
 const auth = require('../../utils/auth.js')
 const cloud = require('../../utils/cloud.js')
-const theme = require('../../utils/theme.js')
+const nutrition = require('../../utils/nutrition.js')
 const workoutData = require('../../utils/workoutData.js')
 const page = require('../../utils/page.js')
 const workoutRepo = require('../../utils/repositories/workout.js')
 const planRepo = require('../../utils/repositories/plan.js')
 const bodyRepo = require('../../utils/repositories/body.js')
+const nutritionRepo = require('../../utils/repositories/nutrition.js')
 const systemRepo = require('../../utils/repositories/system.js')
 
 page({
@@ -23,7 +24,8 @@ page({
       weight: '--',
       bmi: '--',
       date: '暂无记录'
-    }
+    },
+    todayNutritionText: '今日暂无饮食记录'
   },
 
   onShow() {
@@ -41,10 +43,12 @@ page({
       workoutRepo.count(),
       planRepo.count(),
       bodyRepo.latest().then((data) => ({ data: data })).catch(() => ({ data: [] })),
-      workoutRepo.listRecent(30).then((data) => ({ data: data })).catch(() => ({ data: [] }))
-    ]).then(([u, workoutCnt, planCnt, bodyRes, workoutListRes]) => {
+      workoutRepo.listRecent(30).then((data) => ({ data: data })).catch(() => ({ data: [] })),
+      nutritionRepo.listByDate(nutrition.today()).then((data) => ({ data: data })).catch(() => ({ data: [] }))
+    ]).then(([u, workoutCnt, planCnt, bodyRes, workoutListRes, nutritionRes]) => {
       const profile = (u && u.profile) || {}
       const latestBody = bodyRes && bodyRes.data && bodyRes.data[0]
+      const todayNutrition = nutrition.aggregateByDate((nutritionRes && nutritionRes.data) || [])[nutrition.today()]
       const height = latestBody && Number(latestBody.height) > 0 ? Number(latestBody.height) / 100 : 0
       const bmi = latestBody && Number(latestBody.weight) > 0 && height > 0
         ? (Number(latestBody.weight) / (height * height)).toFixed(1)
@@ -75,7 +79,10 @@ page({
           weight: latestBody && latestBody.weight ? `${latestBody.weight} kg` : '--',
           bmi: bmi,
           date: latestBody && latestBody.dateStr ? latestBody.dateStr : '暂无记录'
-        }
+        },
+        todayNutritionText: todayNutrition && todayNutrition.mealCount
+          ? `今日摄入 · ${todayNutrition.calories} kcal`
+          : '今日暂无饮食记录'
       })
     }).catch((err) => {
       this.setData({
@@ -99,6 +106,10 @@ page({
 
   goBody() {
     wx.navigateTo({ url: '/pages/body/body' })
+  },
+
+  goNutrition() {
+    wx.navigateTo({ url: `/pages/nutrition/nutrition?date=${nutrition.today()}` })
   },
 
   goAgent() {
@@ -149,7 +160,4 @@ page({
       })
   },
 
-  toggleTheme() {
-    theme.toggle()
-  }
 })

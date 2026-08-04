@@ -1,58 +1,119 @@
-const localAgent = require('../../utils/agent.js')
+const agentContext = require('../../utils/agent.js')
 const agentApi = require('../../utils/agentApi.js')
 const page = require('../../utils/page.js')
 
+const DEFAULT_MESSAGES = [{
+  role: 'assistant',
+  content: '告诉我你的训练目标、每周可训练几天，以及有没有需要避开的动作。'
+}]
+
+function todayString() {
+  const date = new Date()
+  const pad = (value) => (value < 10 ? '0' + value : String(value))
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
 function errorText(error) {
-  if (!error) return '服务暂时不可用，请稍后重试'
-  const code = error.code ? `（${error.code}）` : ''
-  return `${code}${error.message || '服务暂时不可用，请稍后重试'}`
+  if (!error) return '服务暂时不可用，请稍后重试。'
+  return error.message || '服务暂时不可用，请稍后重试。'
 }
 
 function modelErrorText(error) {
   const code = error && error.code
-  const detail = errorText(error)
-  if (code && code.indexOf('CLOUD_FUNCTION_') === 0) return `Agent 云函数调用失败，请确认已部署到当前 CloudBase 环境。${detail}`
-  if (code === 'AUTH_REQUIRED') return `当前微信云开发身份未获取，请重新编译并确认小程序使用了正确的云环境。${detail}`
-  if (code === 'MODEL_CONFIG_MISSING') return `云函数没有读到完整模型配置，请检查 LLM_API_KEY、LLM_BASE_URL、LLM_MODEL。${detail}`
-  if (code === 'MODEL_CONFIG_INVALID') return `模型地址配置无效，请检查 LLM_BASE_URL。${detail}`
-  if (code && code.indexOf('MODEL_REQUEST_FAILED_401') === 0) return `模型鉴权失败，请检查 API Key 是否有效、余额或权限。${detail}`
-  if (code && code.indexOf('MODEL_REQUEST_FAILED_404') === 0) return `模型地址或模型名称不存在，请检查 LLM_BASE_URL 和 LLM_MODEL。${detail}`
-  if (code === 'MODEL_TIMEOUT') return `模型请求超时，请检查云函数网络和模型服务状态。${detail}`
-  if (code === 'MODEL_INVALID_JSON') return `模型已返回，但不是可保存的结构化 JSON。${detail}`
-  return `大模型暂时不可用，已使用本地训练建议。${detail}`
+  if (code && code.indexOf('CLOUD_FUNCTION_') === 0) return '训练助手云函数不可用，请确认已部署到当前 CloudBase 环境。'
+  if (code === 'AUTH_REQUIRED') return '当前微信云开发身份未获取，请重新编译后重试。'
+  if (code === 'MODEL_CONFIG_MISSING') return '训练助手暂时离线，请检查云函数中的模型环境变量。'
+  if (code === 'MODEL_CONFIG_INVALID') return '训练助手暂时离线，模型服务地址配置无效。'
+  if (code && code.indexOf('MODEL_REQUEST_FAILED_401') === 0) return '模型鉴权失败，请检查云函数中的 API Key。'
+  if (code && code.indexOf('MODEL_REQUEST_FAILED_404') === 0) return '模型地址或模型名称不存在，请检查云函数配置。'
+  if (code === 'MODEL_TIMEOUT') return '模型响应超时，请稍后重试。'
+  if (code === 'MODEL_INVALID_JSON') return '模型返回内容暂时无法整理，请重试。'
+  if (code === 'INVALID_FILE' || code === 'FILE_DOWNLOAD_FAILED' || code === 'MEAL_ANALYZE_FAILED') return '图片分析失败，请换一张清晰图片重试。'
+  return `训练助手暂时不可用。${errorText(error)}`
 }
 
-function configDiagnosticText(config) {
-  if (!config) return ''
-  const key = config.apiKeyConfigured ? '已读到' : '未读到'
-  const baseURL = config.baseURLConfigured ? (config.baseURLHost || '已配置') : '未读到'
-  const model = config.modelConfigured ? '已读到' : '未读到'
-  return `云函数配置诊断：API Key ${key}，Base URL ${baseURL}，模型 ${model}。`
+function configReady(diagnostic) {
+  const config = diagnostic && diagnostic.config
+  return !!(config && config.apiKeyConfigured && config.baseURLConfigured && config.modelConfigured)
+}
+
+function chooseImage() {
+  return new Promise((resolve, reject) => {
+    const done = (result) => {
+      const file = result && result.tempFiles && result.tempFiles[0]
+      const path = file && (file.tempFilePath || file.path)
+      if (path) resolve(path)
+      else reject(new Error('没有选择图片'))
+    }
+    const fail = (error) => reject(error || new Error('图片选择已取消'))
+    if (wx.chooseMedia) {
+      wx.chooseMedia({ count: 1, mediaType: ['image'], sourceType: ['album', 'camera'], success: done, fail: fail })
+    } else {
+      wx.chooseImage({ count: 1, sourceType: ['album', 'camera'], success: done, fail: fail })
+    }
+  })
+}
+
+function compressImage(path) {
+  return new Promise((resolve) => {
+    if (!wx.compressImage) {
+      resolve(path)
+      return
+    }
+    wx.compressImage({
+      src: path,
+      quality: 80,
+      success: (res) => resolve(res.tempFilePath || path),
+      fail: () => resolve(path)
+    })
+  })
+}
+
+function uploadFile(cloudPath, filePath) {
+  return new Promise((resolve, reject) => {
+    wx.cloud.uploadFile({ cloudPath, filePath, success: resolve, fail: reject })
+  })
+}
+
+function mealMessage(meal) {
+  const foods = (meal && meal.foods || []).map((item) => {
+    const portion = item.portion ? `（${item.portion}）` : ''
+    return `${item.name}${portion}`
+  }).join('、')
+  const summary = `图片估算：${foods || '未识别到明确食物'}\n约 ${meal.calories} kcal · 蛋白质 ${meal.protein}g · 碳水 ${meal.carbs}g · 脂肪 ${meal.fat}g`
+  return `${summary}\n${meal.note || '热量为估算值，仅供饮食记录参考。'}\n请以实际份量为准，确认后再到饮食记录中保存。`
 }
 
 page({
   data: {
     theme: 'light',
-    messages: localAgent.DEFAULT_MESSAGES,
+    messages: DEFAULT_MESSAGES,
     input: '',
     sending: false,
+    uploading: false,
     sessionId: '',
     context: null,
     loadingContext: true,
     error: '',
-    planDraft: null
+    planDraft: null,
+    agentOnline: false,
+    availabilityStatus: 'checking',
+    availabilityText: '检查服务中'
   },
 
   onLoad() {
     this._destroyed = false
     this._requestToken = 0
+    this._availabilityToken = 0
     this.setData({ theme: getApp().globalData.theme || 'dark' })
+    this.checkAvailability()
     this.loadSession()
   },
 
   onUnload() {
     this._destroyed = true
     this._requestToken += 1
+    this._availabilityToken += 1
   },
 
   onShow() {
@@ -60,32 +121,66 @@ page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 2 })
     }
+    if (!this.data.agentOnline && this.data.availabilityStatus === 'offline') this.checkAvailability()
+  },
+
+  checkAvailability() {
+    const token = ++this._availabilityToken
+    this.setData({ availabilityStatus: 'checking', availabilityText: '检查服务中' })
+    return agentApi.diagnose().then((diagnostic) => {
+      if (this._destroyed || token !== this._availabilityToken) return false
+      const online = configReady(diagnostic)
+      this.setData({
+        agentOnline: online,
+        availabilityStatus: online ? 'online' : 'offline',
+        availabilityText: online ? '在线' : '离线',
+        error: online ? '' : '训练助手暂时离线，请检查云函数模型配置后重试。'
+      })
+      return online
+    }).catch((error) => {
+      if (this._destroyed || token !== this._availabilityToken) return false
+      this.setData({
+        agentOnline: false,
+        availabilityStatus: 'offline',
+        availabilityText: '离线',
+        error: modelErrorText(error)
+      })
+      return false
+    })
   },
 
   loadSession() {
     const token = ++this._requestToken
-    const sessionId = wx.getStorageSync(agentApi.sessionKey('training')) || (localAgent.SESSION_KEY && wx.getStorageSync(localAgent.SESSION_KEY)) || ''
-    Promise.all([localAgent.buildContext(), localAgent.loadSession(sessionId)]).then(([context, session]) => {
+    const sessionId = wx.getStorageSync(agentApi.sessionKey('training')) || ''
+    Promise.all([
+      agentContext.buildContext().catch(() => ({})),
+      agentContext.loadSession(sessionId).catch(() => null)
+    ]).then(([context, session]) => {
       if (this._destroyed || token !== this._requestToken) return
-      const messages = session && localAgent.normalizeMessages(session.messages)
+      const messages = session && agentContext.normalizeMessages(session.messages)
       this.setData({
         context,
         loadingContext: false,
         sessionId: session && session._id ? session._id : sessionId,
-        messages: messages && messages.length ? messages : localAgent.DEFAULT_MESSAGES
+        messages: messages && messages.length ? messages : DEFAULT_MESSAGES
       })
     }).catch((error) => {
       if (this._destroyed || token !== this._requestToken) return
       console.error('加载教练数据失败', error)
-      this.setData({ loadingContext: false, context: {}, error: '云端数据暂时不可用，仍可继续输入。' })
+      this.setData({ loadingContext: false, context: {}, error: '训练数据暂时不可用，请稍后重试。' })
     })
   },
 
   onInput(e) { this.setData({ input: e.detail.value }) },
 
+  usePrompt(e) {
+    if (!this.data.agentOnline || this.data.sending || this.data.uploading) return
+    this.setData({ input: e.currentTarget.dataset.query || '' })
+  },
+
   send() {
     const query = (this.data.input || '').trim()
-    if (!query || this.data.sending) return
+    if (!query || this.data.sending || this.data.uploading || !this.data.agentOnline) return
     const messages = this.data.messages.concat([
       { role: 'user', content: query },
       { role: 'assistant', content: '' }
@@ -96,7 +191,7 @@ page({
     agentApi.chat('training', query, this.data.context || {}, this.data.sessionId).then((result) => {
       if (this._destroyed || token !== this._requestToken) return
       const next = this.data.messages.slice()
-      next[assistantIndex] = { role: 'assistant', content: result.message || '' }
+      next[assistantIndex] = { role: 'assistant', content: result.message || '这次没有生成有效回复，请重试。' }
       this.setData({
         messages: next,
         sending: false,
@@ -106,33 +201,27 @@ page({
       if (result.sessionId) wx.setStorageSync(agentApi.sessionKey('training'), result.sessionId)
     }).catch((error) => {
       if (this._destroyed || token !== this._requestToken) return
-      const fallback = localAgent.reply(query, this.data.context || {})
       const next = this.data.messages.slice()
-      next[assistantIndex] = { role: 'assistant', content: fallback.text }
-      const diagnosticMessage = modelErrorText(error)
-      this.setData({ messages: next, sending: false, planDraft: fallback.planDraft || null, error: diagnosticMessage })
-      agentApi.diagnose().then((diagnostic) => {
-        if (this._destroyed || token !== this._requestToken || !diagnostic || !diagnostic.config) return
-        this.setData({ error: `${diagnosticMessage} ${configDiagnosticText(diagnostic.config)}` })
-      }).catch(() => {})
-      localAgent.persistSession(this.data.sessionId, next, this.data.context || {})
-        .then((id) => { if (id) wx.setStorageSync(agentApi.sessionKey('training'), id) })
-        .catch((saveError) => console.error('保存本地降级会话失败', saveError))
+      next[assistantIndex] = { role: 'assistant', content: '这次没有收到线上回复，请点击重试。' }
+      this.setData({ messages: next, sending: false, planDraft: null, error: modelErrorText(error) })
+      this.checkAvailability()
     })
   },
 
   stop() {
     if (!this.data.sending) return
     this._requestToken += 1
-    this.setData({ sending: false, error: '已停止本次请求。' })
+    const messages = this.data.messages.slice()
+    if (messages[messages.length - 1] && messages[messages.length - 1].role === 'assistant' && !messages[messages.length - 1].content) messages.pop()
+    this.setData({ messages, sending: false, error: '已停止本次请求。' })
   },
 
   retry() {
-    if (this.data.sending) return
+    if (this.data.sending || this.data.uploading || !this.data.agentOnline) return
     const messages = this.data.messages.slice()
     let lastQuery = ''
     for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i].role === 'user') { lastQuery = messages[i].content; break }
+      if (messages[i].role === 'user' && messages[i].content !== '[上传图片]') { lastQuery = messages[i].content; break }
     }
     if (!lastQuery) return
     if (messages[messages.length - 1] && messages[messages.length - 1].role === 'assistant') messages.pop()
@@ -141,10 +230,40 @@ page({
   },
 
   clearSession() {
-    if (this.data.sending) return
+    if (this.data.sending || this.data.uploading) return
     wx.removeStorageSync(agentApi.sessionKey('training'))
-    wx.removeStorageSync(localAgent.SESSION_KEY)
-    this.setData({ messages: localAgent.DEFAULT_MESSAGES, sessionId: '', planDraft: null, error: '' })
+    this.setData({ messages: DEFAULT_MESSAGES, sessionId: '', planDraft: null, error: '' })
+  },
+
+  chooseImage() {
+    if (!this.data.agentOnline || this.data.sending || this.data.uploading) return
+    this.setData({ uploading: true, error: '' })
+    let fileID = ''
+    chooseImage()
+      .then((path) => compressImage(path))
+      .then((filePath) => agentApi.prepareUpload().then((upload) => ({ filePath, upload })))
+      .then(({ filePath, upload }) => {
+        if (!upload || !upload.cloudPath) throw new Error('图片上传路径无效')
+        return uploadFile(upload.cloudPath, filePath)
+      })
+      .then((uploadResult) => {
+        fileID = uploadResult && uploadResult.fileID
+        if (!fileID) throw new Error('图片上传失败')
+        return agentApi.analyzeMeal(fileID, todayString(), 'other')
+      })
+      .then((result) => {
+        const meal = result && result.meal
+        if (!meal) throw new Error('图片识别结果无效')
+        const next = this.data.messages.concat([
+          { role: 'user', content: '[上传图片]' },
+          { role: 'assistant', content: mealMessage(meal) }
+        ])
+        this.setData({ messages: next, uploading: false, error: '' })
+      })
+      .catch((error) => {
+        if (fileID && wx.cloud && wx.cloud.deleteFile) wx.cloud.deleteFile({ fileList: [fileID] }).catch(() => {})
+        this.setData({ uploading: false, error: modelErrorText(error) })
+      })
   },
 
   saveDraft() {

@@ -79,6 +79,23 @@
 .overview-label { display: block; margin-top: 12rpx; color: var(--text); font-size: 22rpx; font-weight: 600; }
 .overview-note { display: block; margin-top: 7rpx; color: var(--text-dim); font-size: 18rpx; line-height: 1.3; }
 
+.energy-card { margin-top: 20rpx; padding: 24rpx 22rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-card); }
+.energy-card:active { opacity: .78; }
+.energy-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; }
+.energy-kicker { display: block; color: var(--primary); font-size: 18rpx; font-weight: 750; letter-spacing: 2rpx; }
+.energy-title { display: block; margin-top: 8rpx; color: var(--text); font-size: 28rpx; font-weight: 750; }
+.energy-total { flex: none; color: var(--primary); font-size: 38rpx; font-weight: 800; line-height: 1; }
+.energy-total text { font-size: 18rpx; font-weight: 600; }
+.energy-total-label { display: block; margin-top: 8rpx; color: var(--text-dim); font-size: 20rpx; }
+.energy-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin-top: 20rpx; }
+.energy-item { padding: 16rpx; border-radius: var(--radius-sm); background: var(--surface-2); }
+.energy-item text { display: block; }
+.energy-item text:first-child { color: var(--text-dim); font-size: 20rpx; }
+.energy-item text:nth-child(2) { margin-top: 8rpx; color: var(--text); font-size: 28rpx; font-weight: 750; }
+.energy-item text:nth-child(2) text { display: inline; color: var(--text-dim); font-size: 17rpx; font-weight: 500; }
+.energy-item text:last-child { margin-top: 5rpx; color: var(--text-dim); font-size: 17rpx; }
+.energy-note { display: block; margin-top: 14rpx; color: var(--text-dim); font-size: 18rpx; line-height: 1.45; }
+
 /* 饮食快照 */
 .nutrition-snapshot { display: flex; align-items: center; gap: 16rpx; margin-top: 20rpx; padding: 20rpx 18rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius-sm); background: var(--surface); }
 .nutrition-snapshot:active { opacity: .72; }

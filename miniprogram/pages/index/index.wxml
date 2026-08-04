@@ -42,6 +42,22 @@
     </view>
   </view>
 
+  <view class="energy-card" bindtap="goBody">
+    <view class="energy-card-head">
+      <view>
+        <text class="energy-kicker">ENERGY BALANCE</text>
+        <text class="energy-title">今日能量概况</text>
+      </view>
+      <text class="energy-total">{{energySummary.total}} <text>kcal</text></text>
+    </view>
+    <text class="energy-total-label">估算总消耗 · {{energySummary.bodyNote}}</text>
+    <view class="energy-breakdown">
+      <view class="energy-item"><text>基础代谢</text><text>{{energySummary.bmr}} <text>kcal</text></text><text>身体自然消耗</text></view>
+      <view class="energy-item"><text>运动消耗</text><text>{{energySummary.exercise}} <text>kcal</text></text><text>今日已记录训练</text></view>
+    </view>
+    <text class="energy-note">{{energySummary.note}}</text>
+  </view>
+
   <view class="nutrition-snapshot" bindtap="goNutrition">
     <view class="nutrition-snapshot-mark">营</view>
     <view class="nutrition-snapshot-copy">
