@@ -5,15 +5,15 @@
 
   <view class="settings-head"><text class="section-title">我的记录</text><text class="section-meta">点击一行进入</text></view>
   <view class="settings-list">
-    <view class="setting-row" bindtap="goPlans"><view class="setting-icon lime-icon"><image src="/assets/icons/quick-plan-light.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">训练计划</text><text class="setting-sub">{{planCount}} 个计划 · 整理常练动作</text></view><text class="row-arrow">›</text></view>
-    <view class="setting-row" bindtap="goBody"><view class="setting-icon plain-icon"><image src="/assets/icons/quick-body-light.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">身体数据</text><text class="setting-sub">{{bodySummary.weight}} · BMI {{bodySummary.bmi}}</text></view><text class="row-arrow">›</text></view>
-    <view class="setting-row" bindtap="goNutrition"><view class="setting-icon orange-icon"><image src="/assets/icons/quick-history-light.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">饮食记录</text><text class="setting-sub">{{todayNutritionText}}</text></view><text class="row-arrow">›</text></view>
-    <view class="setting-row" bindtap="goHistory"><view class="setting-icon rust-icon"><image src="/assets/icons/quick-history-light.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">训练历史</text><text class="setting-sub">回看每次训练，找到自己的进步</text></view><text class="row-arrow">›</text></view>
+    <view class="setting-row" bindtap="goPlans"><view class="setting-icon lime-icon"><image src="/assets/icons/clipboard-list{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">训练计划</text><text class="setting-sub">{{planCount}} 个计划 · 整理常练动作</text></view><text class="row-arrow">›</text></view>
+    <view class="setting-row" bindtap="goBody"><view class="setting-icon plain-icon"><image src="/assets/icons/scale{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">身体数据</text><text class="setting-sub">{{bodySummary.weight}} · BMI {{bodySummary.bmi}}</text></view><text class="row-arrow">›</text></view>
+    <view class="setting-row" bindtap="goNutrition"><view class="setting-icon orange-icon"><image src="/assets/icons/utensils{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">饮食记录</text><text class="setting-sub">{{todayNutritionText}}</text></view><text class="row-arrow">›</text></view>
+    <view class="setting-row" bindtap="goHistory"><view class="setting-icon rust-icon"><image src="/assets/icons/history{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">训练历史</text><text class="setting-sub">回看每次训练，找到自己的进步</text></view><text class="row-arrow">›</text></view>
   </view>
 
   <view class="settings-head tools-head"><text class="section-title">数据工具</text><text class="section-meta">持续回看和整理</text></view>
   <view class="settings-list">
-    <view class="setting-row" bindtap="goStats"><view class="setting-icon teal-icon"><image src="/assets/icons/quick-stats-light.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">数据统计</text><text class="setting-sub">趋势、训练次数与个人记录</text></view><text class="row-arrow">›</text></view>
+    <view class="setting-row" bindtap="goStats"><view class="setting-icon teal-icon"><image src="/assets/icons/chart-column-increasing{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view><view class="row-copy"><text class="setting-title">数据统计</text><text class="setting-sub">趋势、训练次数与个人记录</text></view><text class="row-arrow">›</text></view>
   </view>
   <text class="mine-foot">FITLOG · 让进步可见</text>
 </view>
