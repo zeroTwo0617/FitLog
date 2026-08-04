@@ -17,10 +17,11 @@
 .primary-button { display: inline-flex; align-items: center; justify-content: center; gap: 10rpx; min-height: 76rpx; padding: 0 22rpx; border-radius: 10rpx; background: var(--primary); color: var(--on-primary); font-size: 23rpx; font-weight: 900; }
 .button-symbol { font-size: 25rpx; }
 .progress-ring { position: relative; display: flex; align-items: center; justify-content: center; width: 156rpx; height: 156rpx; padding: 12rpx; box-sizing: content-box; border-radius: 50%; background: var(--hairline); transform: rotate(-22deg); }
-.progress-inner { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; width: 100%; height: 100%; box-sizing: border-box; border-radius: 50%; background: var(--card-bg); transform: rotate(22deg); }
+.progress-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; box-sizing: border-box; border-radius: 50%; background: var(--card-bg); transform: rotate(22deg); }
+.progress-value-row { display: flex; align-items: baseline; justify-content: center; line-height: 1; }
 .progress-inner text { color: var(--text); font-size: 24rpx; font-weight: 900; }
 .progress-inner .progress-value { font-size: 42rpx; }
-.progress-inner .progress-caption { width: 100%; margin-top: 6rpx; color: var(--text-dim); font-size: 16rpx; text-align: center; }
+.progress-inner .progress-caption { margin-top: 6rpx; color: var(--text-dim); font-size: 16rpx; line-height: 1.2; text-align: center; }
 .metric-strip { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 14rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--card-bg); }
 .metric { min-width: 0; padding: 17rpx 8rpx 15rpx; text-align: center; }
 .metric + .metric { border-left: 1rpx solid var(--hairline); }
