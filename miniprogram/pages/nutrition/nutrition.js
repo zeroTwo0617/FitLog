@@ -20,7 +20,6 @@ page({
     saving: false,
     records: [],
     summary: emptySummary(),
-    dailyTargetCalories: 0,
     mealTypes: nutrition.MEAL_TYPES,
     mealTypeIndex: 1,
     editor: null,
@@ -42,10 +41,7 @@ page({
 
   load() {
     this.setData({ loading: true, error: '' })
-    Promise.all([
-      nutritionRepo.listByDate(this.data.date).catch(() => []),
-      nutritionRepo.latestPlan().catch(() => null)
-    ]).then(([recordsRaw, latestPlan]) => {
+    nutritionRepo.listByDate(this.data.date).catch(() => []).then((recordsRaw) => {
       const records = (recordsRaw || []).map((item) => Object.assign({}, item, {
         mealTypeLabel: nutrition.mealLabel(item.mealType)
       }))
@@ -53,8 +49,7 @@ page({
       this.setData({
         loading: false,
         records,
-        summary,
-        dailyTargetCalories: Number(latestPlan && latestPlan.dailyTarget && latestPlan.dailyTarget.calories) || 0
+        summary
       }, () => {
         if (this._pendingId) {
           const id = this._pendingId

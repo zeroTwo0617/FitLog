@@ -8,15 +8,13 @@
 .daily-kicker { display: block; color: var(--primary-strong); font-size: 18rpx; font-weight: 850; letter-spacing: 2rpx; }
 .daily-calories { display: block; margin-top: 8rpx; font-size: 46rpx; font-weight: 800; }
 .daily-calories text { font-size: 20rpx; font-weight: 500; }
-.daily-target { color: var(--text-dim); font-size: 20rpx; }
 .macro-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8rpx; margin-top: 20rpx; }
 .macro-summary view { padding-top: 12rpx; border-top: 1rpx solid #cbd9a0; }
 .macro-summary text { display: block; }
 .macro-summary text:first-child { font-size: 24rpx; font-weight: 800; }
 .macro-summary text:last-child { margin-top: 4rpx; color: var(--text-dim); font-size: 18rpx; }
-.section-head { display: flex; align-items: center; justify-content: space-between; margin-top: 28rpx; margin-bottom: 12rpx; }
+.section-head { display: flex; align-items: center; justify-content: flex-start; margin-top: 28rpx; margin-bottom: 12rpx; }
 .section-title { color: var(--text); font-size: 28rpx; font-weight: 700; }
-.add-button { width: auto; padding: 8rpx 12rpx; border: 1rpx solid var(--primary); border-radius: var(--radius-sm); color: var(--primary); font-size: 21rpx; }
 .meal-list { border-top: 1rpx solid var(--card-border); }
 .meal-row { display: flex; align-items: center; gap: 12rpx; min-height: 100rpx; border-bottom: 1rpx solid var(--card-border); }
 .meal-row:active { opacity: .65; }
@@ -30,7 +28,7 @@
 .meal-calories text:first-child { color: var(--text); font-size: 25rpx; font-weight: 750; }
 .meal-calories text:last-child { margin-top: 2rpx; color: var(--text-dim); font-size: 17rpx; }
 .meal-arrow { flex: none; color: var(--text-dim); font-size: 24rpx; }
-.empty-add { width: 250rpx; margin-top: 18rpx; }
+.empty-add { margin-top: 24rpx; }
 .error-note { margin-top: 18rpx; padding: 14rpx; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent); font-size: 20rpx; }
 
 .editor-mask { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; justify-content: flex-end; background: var(--mask); }
