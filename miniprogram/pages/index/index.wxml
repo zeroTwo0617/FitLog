@@ -1,105 +1,48 @@
-<view class="page tab-page home theme-{{theme ? theme : 'dark'}}">
+<view class="page tab-page home theme-{{theme ? theme : 'light'}}">
   <view wx:if="{{loading}}" class="loading-banner">正在同步训练数据...</view>
+
   <view class="home-header">
     <view>
-      <text class="eyebrow">FITLOG / 训练工作台</text>
+      <text class="brand-mark">FITLOG</text>
       <text class="home-title">今天，练什么？</text>
-      <text class="home-date">{{todayText}}</text>
-    </view>
-    <view class="avatar-mark">FL</view>
-  </view>
-
-  <view class="start-panel">
-    <view class="start-copy">
-      <text class="start-kicker">TODAY'S SESSION</text>
-      <text class="start-title">把一次训练记下来</text>
-      <text class="start-note">{{heroNote}}</text>
-    </view>
-    <button class="start-button" bindtap="goRecord">开始训练 <text>→</text></button>
-  </view>
-
-  <view class="week-strip" wx:if="{{weekDays.length > 0}}">
-    <view class="week-head"><text class="week-title">本周打卡</text><text class="week-meta">{{weekDone}} / 7 天</text></view>
-    <view class="week-days">
-      <view class="wd {{item.trained ? 'done' : ''}} {{item.isToday ? 'today' : ''}}" wx:for="{{weekDays}}" wx:key="dateStr">
-        <view class="wd-cell">{{item.trained ? '✓' : (item.isToday ? '今' : '·')}}</view>
-        <text class="wd-label">{{item.label}}</text>
-      </view>
+      <view class="date-line"><text class="date-dot">●</text><text>{{todayText}}</text><text class="date-divider">/</text><text>保持节奏</text></view>
     </view>
   </view>
 
-  <view class="section overview-section">
-    <view class="section-head">
-      <text class="section-title">训练概览</text>
-      <text class="section-meta">累计数据</text>
+  <view class="focus-panel">
+    <view class="focus-copy">
+      <view class="section-kicker"><text class="accent-mark"></text><text>今日训练焦点</text></view>
+      <text class="focus-title">把一次训练记下来</text>
+      <text class="focus-description">{{heroNote}}</text>
+      <view class="focus-meta"><text>{{todayText}}</text><text>{{weekDone}} / 7 天已完成</text></view>
+      <button class="primary-button" bindtap="goRecord"><text>开始训练</text><text class="button-symbol">→</text></button>
     </view>
-    <view class="overview-grid">
-      <view class="overview-item" wx:for="{{stats}}" wx:key="label">
-        <text class="overview-value {{index === 0 ? 'value-accent' : ''}}">{{item.value}}</text>
-        <text class="overview-label">{{item.label}}</text>
-        <text class="overview-note">{{item.note}}</text>
-      </view>
-    </view>
+    <view class="progress-ring"><view class="progress-inner"><text class="progress-value">{{weekDone}}</text><text>/7</text><text class="progress-caption">本周完成</text></view></view>
   </view>
 
-  <view class="energy-card" bindtap="goBody">
-    <view class="energy-card-head">
-      <view>
-        <text class="energy-kicker">ENERGY BALANCE</text>
-        <text class="energy-title">今日能量概况</text>
-      </view>
-      <text class="energy-total">{{energySummary.total}} <text>kcal</text></text>
-    </view>
-    <text class="energy-total-label">估算总消耗 · {{energySummary.bodyNote}}</text>
-    <view class="energy-breakdown">
-      <view class="energy-item"><text>基础代谢</text><text>{{energySummary.bmr}} <text>kcal</text></text><text>身体自然消耗</text></view>
-      <view class="energy-item"><text>运动消耗</text><text>{{energySummary.exercise}} <text>kcal</text></text><text>今日已记录训练</text></view>
-    </view>
-    <text class="energy-note">{{energySummary.note}}</text>
+  <view class="metric-strip">
+    <view class="metric" wx:for="{{stats}}" wx:key="label"><text class="metric-icon {{index === 0 ? 'lime' : (index === 1 ? 'orange' : 'rust')}}">{{index === 0 ? '◆' : (index === 1 ? '□' : '↗')}}</text><text class="metric-label">{{item.label}}</text><text class="metric-value">{{item.value}}</text><text class="metric-note">{{item.note}}</text></view>
   </view>
 
-  <view class="nutrition-snapshot" bindtap="goNutrition">
-    <view class="nutrition-snapshot-mark">营</view>
-    <view class="nutrition-snapshot-copy">
-      <text class="nutrition-snapshot-title">今日饮食</text>
-      <text class="nutrition-snapshot-main">{{todayNutritionText}}</text>
-      <text class="nutrition-snapshot-meta">{{todayNutritionMeta}}</text>
-    </view>
-    <text class="nutrition-snapshot-arrow">→</text>
+  <view class="metric-strip energy-strip" bindtap="goBody">
+    <view class="metric energy-metric"><text class="metric-icon lime">◌</text><text class="metric-label">基础代谢</text><text class="metric-value">{{energySummary.bmr}}</text><text class="metric-note">kcal · 估算</text></view>
+    <view class="metric energy-metric"><text class="metric-icon orange">▲</text><text class="metric-label">运动消耗</text><text class="metric-value">{{energySummary.exercise}}</text><text class="metric-note">kcal · 今日</text></view>
+    <view class="metric energy-metric"><text class="metric-icon rust">+</text><text class="metric-label">总消耗</text><text class="metric-value">{{energySummary.total}}</text><text class="metric-note">kcal · 查看身体数据</text></view>
   </view>
+  <text class="energy-note">{{energySummary.note}}</text>
 
-  <view class="section">
-    <view class="section-head">
-      <text class="section-title">常用入口</text>
-      <text class="section-meta">快速到达</text>
-    </view>
-    <view class="quick-grid">
-      <view class="quick-cell" bindtap="goPlans">
-        <view class="quick-ic qi-volt"><image src="/assets/icons/quick-plan{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view>
-        <view class="quick-copy"><text>训练计划</text><text>整理常练动作</text></view>
-      </view>
-      <view class="quick-cell" bindtap="goHistory">
-        <view class="quick-ic qi-orange"><image src="/assets/icons/quick-history{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view>
-        <view class="quick-copy"><text>训练历史</text><text>回看每次训练</text></view>
-      </view>
-      <view class="quick-cell" bindtap="goStats">
-        <view class="quick-ic qi-teal"><image src="/assets/icons/quick-stats{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view>
-        <view class="quick-copy"><text>数据统计</text><text>趋势与 PR</text></view>
-      </view>
-      <view class="quick-cell" bindtap="goBody">
-        <view class="quick-ic qi-plain"><image src="/assets/icons/quick-body{{theme === 'light' ? '-light' : ''}}.svg" mode="aspectFit" /></view>
-        <view class="quick-copy"><text>身体数据</text><text>体重与围度</text></view>
-      </view>
+  <view class="next-section">
+    <view class="section-heading"><text class="section-title">接下来</text><text class="section-meta">快速进入</text></view>
+    <view class="action-list">
+      <view class="action-row" bindtap="goPlans"><view class="row-icon lime-icon">□</view><view class="row-copy"><text class="row-title">训练计划</text><text class="row-sub">整理常练动作与下一次安排</text></view><text class="row-arrow">›</text></view>
+      <view class="action-row" bindtap="goAgent"><view class="row-icon rust-icon">✦</view><view class="row-copy"><text class="row-title">训练助手</text><text class="row-sub">让线上教练结合你的训练记录给建议</text></view><text class="row-arrow">›</text></view>
+      <view class="action-row" bindtap="goNutrition"><view class="row-icon orange-icon">◉</view><view class="row-copy"><text class="row-title">今日饮食</text><text class="row-sub">{{todayNutritionText}} · {{todayNutritionMeta}}</text></view><text class="row-arrow">›</text></view>
+      <view class="action-row" bindtap="goHistory"><view class="row-icon plain-icon">↗</view><view class="row-copy"><text class="row-title">训练历史</text><text class="row-sub">回看每次训练，找到自己的进步</text></view><text class="row-arrow">›</text></view>
     </view>
   </view>
 
   <view class="section" wx:if="{{recentPlans.length > 0}}">
     <view class="section-head"><text class="section-title">最近计划</text><text class="section-meta">{{recentPlans.length}} 个</text></view>
-    <view class="plan-list">
-      <view class="plan-row" wx:for="{{recentPlans}}" wx:key="_id" bindtap="openPlan" data-id="{{item._id}}">
-        <view><text class="plan-name">{{item.name}}</text><text class="plan-preview">{{item.preview}}</text></view>
-        <text class="plan-count">{{item.count}}<text> 动作</text></text>
-      </view>
-    </view>
+    <view class="plan-list"><view class="plan-row" wx:for="{{recentPlans}}" wx:key="_id" bindtap="openPlan" data-id="{{item._id}}"><view class="row-copy"><text class="plan-name">{{item.name}}</text><text class="plan-preview">{{item.preview}}</text></view><text class="plan-count">{{item.count}}<text> 动作</text></text><text class="row-arrow">›</text></view></view>
   </view>
 </view>

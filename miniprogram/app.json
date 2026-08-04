@@ -18,9 +18,9 @@
     "pages/agent/agent"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#0a0c0b",
-    "navigationBarTextStyle": "white",
-    "backgroundColor": "#0a0c0b",
+    "navigationBarBackgroundColor": "#f8f9f6",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f8f9f6",
     "navigationBarTitleText": "FitLog"
   },
   "tabBar": {

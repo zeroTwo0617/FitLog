@@ -5,7 +5,7 @@ function registerPage(options) {
   const originalOnShow = options.onShow
   options.onShow = function () {
     const app = getApp()
-    theme.syncNavBar((app && app.globalData && app.globalData.theme) || 'dark')
+    theme.syncNavBar((app && app.globalData && app.globalData.theme) || 'light')
     if (typeof originalOnShow === 'function') return originalOnShow.apply(this, arguments)
   }
   return Page(options)

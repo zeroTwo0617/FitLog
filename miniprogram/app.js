@@ -3,7 +3,7 @@ const theme = require('./utils/theme.js')
 
 App({
   globalData: {
-    theme: 'dark',
+    theme: 'light',
     cloudReady: false
   },
   onLaunch() {
@@ -16,7 +16,8 @@ App({
       traceUser: true
     })
     this.globalData.cloudReady = true
-    // 启动时读取已保存的主题
-    this.globalData.theme = theme.getTheme()
+    // 这版视觉统一使用浅色工作面，迁移旧版本可能保存的深色偏好。
+    theme.setTheme('light')
+    this.globalData.theme = 'light'
   }
 })

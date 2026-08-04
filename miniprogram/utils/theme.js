@@ -1,4 +1,4 @@
-// 主题管理：dark / light
+// 主题管理：light / dark
 // - 持久化到本地存储，下次启动沿用
 // - 切换时通过 getCurrentPages() 广播给所有已打开页面，立即生效
 const KEY = 'fitlog_theme'
@@ -11,7 +11,7 @@ const NAV = {
 
 function getTheme() {
   const s = wx.getStorageSync(KEY)
-  return s === 'light' || s === 'dark' ? s : 'dark'
+  return s === 'light' || s === 'dark' ? s : 'light'
 }
 
 // 同步原生顶栏颜色（frontColor 仅支持 #ffffff / #000000）

@@ -1,55 +1,26 @@
-<view class="page agent-page theme-{{theme}}">
-  <view class="agent-head">
-    <view>
-      <text class="eyebrow">AI COACH</text>
-      <text class="h-title">教练</text>
-      <text class="h-sub">训练建议与计划</text>
-    </view>
-    <view class="agent-status status-{{availabilityStatus}}"><view class="status-dot"></view><text>{{availabilityText}}</text></view>
+<view class="page agent-page theme-{{theme ? theme : 'light'}}">
+  <view class="coach-header">
+    <view class="brand-row"><view><text class="brand-mark">FITLOG / COACH</text><text class="h-title">训练教练</text><text class="h-sub">只在云端模型在线时工作，结合你的记录给建议</text></view><view class="agent-status status-{{availabilityStatus}}"><view class="status-dot"></view><text>{{availabilityText}}</text></view></view>
   </view>
 
-  <view class="agent-toolbar"><text>线上训练助手</text><button class="text-btn" bindtap="clearSession" disabled="{{sending || uploading}}">新会话 ＋</button></view>
-
+  <view class="agent-toolbar"><view><text class="toolbar-label">当前会话</text><text class="toolbar-note">训练目标 · 近期记录 · 身体数据</text></view><button class="text-btn" bindtap="clearSession" disabled="{{sending || uploading}}">新会话 ＋</button></view>
   <view wx:if="{{loadingContext}}" class="context-note">正在同步训练数据...</view>
-  <view wx:if="{{error}}" class="error-note">{{error}}</view>
+  <view wx:if="{{!agentOnline && availabilityStatus === 'offline'}}" class="offline-panel"><text class="offline-mark">!</text><view><text class="offline-title">线上教练暂时离线</text><text class="offline-copy">当前不会启用本地助手。检查云函数和模型配置后，可以重新连接。</text></view><button class="offline-retry" bindtap="checkAvailability">重试</button></view>
+  <view wx:if="{{error && agentOnline}}" class="error-note">{{error}}</view>
 
   <scroll-view class="messages" scroll-y="true" scroll-into-view="msg-{{messages.length - 1}}">
-    <view wx:for="{{messages}}" wx:key="index" id="msg-{{index}}" class="message {{item.role}}">
-      <view wx:if="{{item.role === 'assistant'}}" class="message-label">FITLOG</view>
-      <view class="bubble">{{item.content}}</view>
-    </view>
-    <view wx:if="{{sending}}" class="typing"><view class="typing-dot"></view>正在整理...</view>
-
-    <view wx:if="{{planDraft}}" class="draft card">
-      <view class="draft-head">
-        <view>
-          <text class="draft-kicker">训练草案</text>
-          <text class="draft-title">{{planDraft.name}}</text>
-        </view>
-        <text class="draft-count">{{planDraft.items.length}} 个动作</text>
-      </view>
-      <view wx:for="{{planDraft.items}}" wx:key="exerciseId" class="draft-item">
-        <text class="draft-name">{{item.exerciseName}}</text>
-        <text class="draft-meta">{{item.targetSets}} 组 × {{item.targetReps}} 次</text>
-      </view>
+    <view wx:for="{{messages}}" wx:key="index" id="msg-{{index}}" class="message {{item.role}}"><view wx:if="{{item.role === 'assistant'}}" class="message-label">FITLOG COACH</view><view class="bubble">{{item.content}}</view></view>
+    <view wx:if="{{sending}}" class="typing"><view class="typing-dot"></view><text>线上教练正在整理建议...</text></view>
+    <view wx:if="{{planDraft}}" class="draft">
+      <view class="draft-head"><view><text class="draft-kicker">PLAN DRAFT</text><text class="draft-title">{{planDraft.name}}</text></view><text class="draft-count">{{planDraft.items.length}} 个动作</text></view>
+      <view wx:for="{{planDraft.items}}" wx:key="exerciseId" class="draft-item"><text class="draft-index">{{index + 1}}</text><text class="draft-name">{{item.exerciseName}}</text><text class="draft-meta">{{item.targetSets}} 组 × {{item.targetReps}} 次</text></view>
       <button class="btn-primary" bindtap="saveDraft">确认并编辑训练计划</button>
     </view>
   </scroll-view>
 
-  <view class="assistant-actions" wx:if="{{!sending && messages.length > 1}}">
-    <button class="outline-btn" bindtap="retry" disabled="{{!agentOnline || uploading}}">重试上一条</button>
-  </view>
-
-  <view class="prompt-list" wx:if="{{!sending}}">
-    <button class="prompt-chip" bindtap="usePrompt" data-query="今天怎么安排训练" disabled="{{!agentOnline || uploading}}">今天怎么安排训练</button>
-    <button class="prompt-chip" bindtap="usePrompt" data-query="帮我安排一个 3 天增肌计划" disabled="{{!agentOnline || uploading}}">安排 3 天计划</button>
-    <button class="prompt-chip" bindtap="usePrompt" data-query="我今天状态一般，应该怎么练" disabled="{{!agentOnline || uploading}}">今天状态一般</button>
-  </view>
-
-  <view class="composer">
-    <button class="attach-button" bindtap="chooseImage" disabled="{{!agentOnline || sending || uploading}}" aria-label="上传图片">＋</button>
-    <input class="agent-input" value="{{input}}" bindinput="onInput" confirm-type="send" bindconfirm="send" maxlength="500" disabled="{{!agentOnline || sending || uploading}}" placeholder="输入你的训练问题" />
-    <button wx:if="{{sending}}" class="btn-stop" bindtap="stop">停止</button>
-    <button wx:else class="btn-send" bindtap="send" disabled="{{!input || !agentOnline || uploading}}">↑</button>
+  <view class="agent-footer">
+    <view class="assistant-actions" wx:if="{{!sending && messages.length > 1}}"><button class="outline-btn" bindtap="retry" disabled="{{!agentOnline || uploading}}">重试上一条</button></view>
+    <scroll-view class="prompt-list" wx:if="{{!sending}}" scroll-x="true" show-scrollbar="false"><button class="prompt-chip" bindtap="usePrompt" data-query="今天怎么安排训练" disabled="{{!agentOnline || uploading}}">今天怎么安排训练</button><button class="prompt-chip" bindtap="usePrompt" data-query="帮我安排一个 3 天增肌计划" disabled="{{!agentOnline || uploading}}">安排 3 天计划</button><button class="prompt-chip" bindtap="usePrompt" data-query="我今天状态一般，应该怎么练" disabled="{{!agentOnline || uploading}}">今天状态一般</button></scroll-view>
+    <view class="composer"><button class="attach-button" bindtap="chooseImage" disabled="{{!agentOnline || sending || uploading}}" aria-label="上传动作或饮食图片">＋</button><input class="agent-input" value="{{input}}" bindinput="onInput" confirm-type="send" bindconfirm="send" maxlength="500" disabled="{{!agentOnline || sending || uploading}}" placeholder="输入你的训练问题" /><button wx:if="{{sending}}" class="btn-stop" bindtap="stop">停止</button><button wx:else class="btn-send" bindtap="send" disabled="{{!input || !agentOnline || uploading}}">↑</button></view>
   </view>
 </view>

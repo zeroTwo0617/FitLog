@@ -1,15 +1,11 @@
-<view class="page tab-page exercises-page theme-{{theme ? theme : 'dark'}}">
-  <view class="exercises-header"><view><text class="eyebrow">EXERCISE LIBRARY</text><text class="h-title">动作库</text><text class="h-sub">按部位找到下一组要练的动作</text></view><view class="result-total"><text>{{list.length}}</text><text>当前结果</text></view></view>
-  <view class="search-box"><input class="search-input" placeholder="搜索动作名称或英文名" value="{{keyword}}" bindinput="onSearch" confirm-type="search" /></view>
-  <scroll-view class="cat-chips" scroll-x="true" enhanced="true" show-scrollbar="false"><view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat===item.key ? 'chip-on' : ''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}} {{item.count}}</view></scroll-view>
-  <scroll-view class="exercise-grid-scroll" scroll-y="true" enhanced="true" show-scrollbar="false" scroll-top="{{scrollTop}}">
-    <view class="ex-grid">
-      <view class="ex-card" wx:for="{{list}}" wx:key="id" bindtap="onOpen" data-id="{{item.id}}">
-        <view class="ex-tile tile-{{index % 4}}">{{item.initial}}</view>
-        <text class="ex-name">{{item.nameZh}}</text>
-        <text class="ex-en">{{item.name}}</text>
-        <view class="ex-tags"><text class="hot">{{item.tgZh}}</text><text>{{item.eqZh}}</text></view>
-      </view>
+<view class="page tab-page exercises-page theme-{{theme ? theme : 'light'}}">
+  <view class="exercises-header"><view><text class="brand-mark">FITLOG / LIBRARY</text><text class="h-title">动作库</text><text class="h-sub">按部位找到下一组要练的动作，不用依赖图片也能快速扫读。</text></view></view>
+  <view class="search-box"><text class="search-mark">⌕</text><input class="search-input" placeholder="搜索动作名称或英文名" value="{{keyword}}" bindinput="onSearch" confirm-type="search" /></view>
+  <scroll-view class="cat-chips" scroll-x="true" enhanced="true" show-scrollbar="false"><view wx:for="{{categories}}" wx:key="key" class="chip {{activeCat===item.key ? 'chip-on' : ''}}" data-cat="{{item.key}}" bindtap="onCat">{{item.label}} <text class="chip-count">{{item.count}}</text></view></scroll-view>
+  <view class="library-toolbar"><text>{{activeCatLabel}}</text><text>{{list.length}} 个动作</text></view>
+  <scroll-view class="exercise-list-scroll" scroll-y="true" enhanced="true" show-scrollbar="false" scroll-top="{{scrollTop}}">
+    <view class="exercise-list">
+      <view class="exercise-row" wx:for="{{list}}" wx:key="id" bindtap="onOpen" data-id="{{item.id}}"><text class="exercise-index">{{index + 1}}</text><view class="exercise-main"><text class="exercise-name">{{item.nameZh}}</text><text class="exercise-en">{{item.name}}</text><view class="exercise-meta-line"><text>{{item.tgZh}}</text><text class="meta-divider">·</text><text>{{item.eqZh}}</text></view></view><text class="exercise-tag">{{item.bpZh}}</text><text class="exercise-arrow">›</text></view>
     </view>
     <view wx:if="{{list.length===0}}" class="empty"><text class="empty-text">没有匹配的动作</text><text class="empty-sub">换个关键词或切换分类试试</text></view>
     <view wx:else class="list-end">已显示 {{list.length}} 个动作</view>

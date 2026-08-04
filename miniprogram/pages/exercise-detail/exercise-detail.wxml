@@ -1,40 +1,11 @@
-<view class="page detail theme-{{theme ? theme : 'dark'}}">
-  <view class="loading" wx:if="{{loading}}">加载中…</view>
-
+<view class="page detail theme-{{theme ? theme : 'light'}}">
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
   <block wx:if="{{!loading && ex}}">
-    <view class="hero">
-      <text class="hero-initial">{{ex.initial}}</text>
-      <text class="hero-caption">文字动作卡</text>
-    </view>
-
-    <view class="title-block">
-      <text class="name">{{ex.nameZh}}</text>
-      <text class="name-en">{{ex.name}}</text>
-    </view>
-
-    <view class="tags">
-      <text class="tag">{{ex.bpZh}}</text>
-      <text class="tag">{{ex.eqZh}}</text>
-      <text class="tag">{{ex.tgZh}}</text>
-    </view>
-
-    <view class="quick-facts">
-      <view><text class="fact-label">目标</text><text class="fact-value">{{ex.tgZh}}</text></view>
-      <view><text class="fact-label">部位</text><text class="fact-value">{{ex.bpZh}}</text></view>
-      <view><text class="fact-label">器械</text><text class="fact-value">{{ex.eqZh}}</text></view>
-    </view>
-
-    <view class="card">
-      <text class="card-title">动作步骤</text>
-      <view wx:for="{{ex.steps}}" wx:for-item="s" wx:key="index" class="step">
-        <text class="step-no">{{index + 1}}</text>
-        <text class="step-txt">{{s}}</text>
-      </view>
-    </view>
-
+    <view class="detail-heading"><view class="detail-index">{{ex.initial}}</view><view><text class="eyebrow">EXERCISE DETAIL</text><text class="name">{{ex.nameZh}}</text><text class="name-en">{{ex.name}}</text></view></view>
+    <view class="tags"><text class="tag">{{ex.bpZh}}</text><text class="tag">{{ex.tgZh}}</text><text class="tag dim">{{ex.eqZh}}</text></view>
+    <view class="detail-facts"><view><text>目标肌群</text><text>{{ex.tgZh}}</text></view><view><text>器械</text><text>{{ex.eqZh}}</text></view><view><text>身体部位</text><text>{{ex.bpZh}}</text></view></view>
+    <view class="detail-section"><view class="section-kicker"><text class="accent-mark"></text><text>动作步骤</text></view><view wx:for="{{ex.steps}}" wx:for-item="s" wx:key="index" class="step"><text class="step-no">{{index + 1}}</text><text class="step-txt">{{s}}</text></view></view>
+    <view class="tip-section"><text class="tip-title">训练提示</text><text class="tip-copy">保持动作可控，优先保证姿势和完整幅度。出现疼痛时停止训练，并根据自身情况调整。</text></view>
   </block>
-
-  <view class="empty" wx:if="{{!loading && !ex}}">
-    <text class="empty-text">未找到该动作</text>
-  </view>
+  <view class="empty" wx:if="{{!loading && !ex}}"><text class="empty-text">未找到该动作</text></view>
 </view>

@@ -256,6 +256,10 @@ page({
     wx.navigateTo({ url: '/pages/body/body' })
   },
 
+  goAgent() {
+    wx.switchTab({ url: '/pages/agent/agent' })
+  },
+
   openPlan(e) {
     const id = e.currentTarget.dataset.id
     if (!id) return
