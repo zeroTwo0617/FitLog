@@ -1,6 +1,7 @@
 const cloud = require('../../utils/cloud.js')
 const auth = require('../../utils/auth.js')
 const sd = require('../../utils/statsData.js')
+const lc = require('../../utils/lineChart.js')
 const page = require('../../utils/page.js')
 const validation = require('../../utils/validation.js')
 const bodyRepo = require('../../utils/repositories/body.js')
@@ -9,6 +10,24 @@ function fmtToday() {
   const d = new Date()
   const p = (x) => (x < 10 ? '0' + x : '' + x)
   return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+}
+
+function buildTrendSummary(trend) {
+  const values = (trend || []).map((item) => Number(item.value)).filter((value) => value > 0)
+  if (!values.length) {
+    return { latest: '--', first: '--', min: '--', max: '--', change: '暂无变化', tone: 'flat' }
+  }
+  const first = values[0]
+  const latest = values[values.length - 1]
+  const change = latest - first
+  return {
+    latest: latest.toFixed(1),
+    first: first.toFixed(1),
+    min: Math.min.apply(null, values).toFixed(1),
+    max: Math.max.apply(null, values).toFixed(1),
+    change: values.length > 1 ? `${change > 0 ? '+' : ''}${change.toFixed(1)} kg` : '首次记录',
+    tone: change < -0.05 ? 'down' : (change > 0.05 ? 'up' : 'flat')
+  }
 }
 
 page({
@@ -26,6 +45,7 @@ page({
     saving: false,
     records: [],
     trend: [],
+    trendSummary: { latest: '--', first: '--', min: '--', max: '--', change: '暂无变化', tone: 'flat' },
     hasData: false
   },
 
@@ -56,17 +76,48 @@ page({
           }
           return Object.assign({}, r, { bmi: bmi })
         }) // 倒序，最新在前
-        const trend = sd.bodyTrend(deduped, 'weight')
+        const trend = sd.bodyTrend(deduped, 'weight').filter((item) => item.value > 0)
         this.setData({
           records: sorted,
           trend: trend,
+          trendSummary: buildTrendSummary(trend),
           hasData: sorted.length > 0
-        })
+        }, () => this.drawWeightChart())
       })
       .catch((err) => {
         wx.showToast({ title: '加载失败', icon: 'none' })
         console.error('加载身体数据失败', err)
       })
+  },
+
+  drawWeightChart(attempt) {
+    if (!this.data.trend || this.data.trend.length < 2) return
+    const query = wx.createSelectorQuery().in(this)
+    query.select('#weightChart').fields({ node: true, size: true }).exec((res) => {
+      const item = res && res[0]
+      const node = item && item.node
+      const width = item && item.width
+      const height = item && item.height
+      if (!node || !width || !height) {
+        const retry = attempt || 0
+        if (retry < 6) setTimeout(() => this.drawWeightChart(retry + 1), 180)
+        return
+      }
+      const info = (wx.getWindowInfo && wx.getWindowInfo()) || { pixelRatio: 2 }
+      const dark = this.data.theme !== 'light'
+      lc.drawLineChart(node, {
+        width: width,
+        height: height,
+        dpr: info.pixelRatio || 2,
+        points: this.data.trend.map((point) => ({ label: point.dateStr.slice(5), value: point.value })),
+        unit: 'kg',
+        color: dark ? '#c6f24e' : '#3f6b0f',
+        dimColor: dark ? '#8a958e' : '#6a7568',
+        gridColor: dark ? 'rgba(126,138,129,0.18)' : 'rgba(106,117,104,0.22)',
+        areaTop: dark ? 'rgba(198,242,78,0.22)' : 'rgba(63,107,15,0.16)',
+        areaBottom: dark ? 'rgba(198,242,78,0)' : 'rgba(63,107,15,0)'
+      })
+    })
   },
 
   onDate(e) {

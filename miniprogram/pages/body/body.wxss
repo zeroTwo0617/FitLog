@@ -38,18 +38,20 @@
 .btn-save { margin-top: 24rpx; }
 
 /* 体重趋势 */
-.chart { display: flex; align-items: flex-end; gap: 8rpx; height: 220rpx; }
-.bar-col {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; height: 100%; justify-content: flex-end;
-}
-.bar {
-  width: 100%; min-height: 4rpx;
-  border-radius: 6rpx 6rpx 0 0;
-  background: var(--primary);
-  transition: height 0.4s ease;
-}
-.bar-day { margin-top: 8rpx; font-size: 16rpx; color: var(--text-dim); white-space: nowrap; }
+.trend-card { padding-bottom: 16rpx; }
+.trend-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; }
+.trend-caption { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 18rpx; }
+.trend-latest { flex: 0 0 auto; text-align: right; }
+.trend-latest > view { display: flex; align-items: baseline; justify-content: flex-end; }
+.trend-latest-value { color: var(--text); font-size: 38rpx; font-weight: 900; line-height: 1; }
+.trend-unit { margin-left: 4rpx; color: var(--text-dim); font-size: 18rpx; }
+.trend-change { display: block; margin-top: 7rpx; font-size: 18rpx; font-weight: 800; }
+.trend-change.down { color: var(--primary-strong); }
+.trend-change.up { color: var(--danger); }
+.trend-change.flat { color: var(--text-dim); }
+.weight-chart-wrap { height: 300rpx; margin-top: 16rpx; padding: 0 2rpx; }
+.weight-chart { display: block; width: 100%; height: 100%; }
+.trend-foot { display: flex; justify-content: space-between; gap: 16rpx; margin-top: 3rpx; color: var(--text-dim); font-size: 18rpx; }
 
 /* 历史列表 */
 .rec { padding: 20rpx 0; border-bottom: 1rpx solid var(--hairline); }
