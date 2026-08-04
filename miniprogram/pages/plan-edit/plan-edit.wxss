@@ -13,13 +13,18 @@
 
 .targets { display: flex; gap: 16rpx; }
 .tg { flex: 1; display: flex; flex-direction: column; gap: 8rpx; }
-.tg-label { font-size: 22rpx; color: var(--text-dim); }
+.tg-label { display: block; height: 28rpx; color: var(--text-dim); font-size: 22rpx; line-height: 28rpx; white-space: nowrap; }
 .tg-inp {
+  display: block;
+  width: 100%;
+  height: 56rpx;
+  box-sizing: border-box;
   background: var(--overlay);
   border: 1rpx solid var(--hairline);
   border-radius: 12rpx;
-  padding: 14rpx 16rpx;
-  font-size: 28rpx;
+  padding: 0 16rpx;
+  font-size: 24rpx;
+  line-height: 56rpx;
   text-align: center;
   color: var(--text);
 }
