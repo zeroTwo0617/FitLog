@@ -4,6 +4,33 @@
 
 ---
 
+## 2026-08-03 · 日历详情消除 N+1 查询
+
+### 背景
+
+日历页 `tapDay` 和 day-detail 页原先对当天的每个训练**逐条查 sets**（`Promise.all(workouts.map(w => sets(w._id)))`），一天 N 个训练就 N 次查询；day-detail 还用 `listAll()` 全量拉训练只为筛某天。
+
+### 修复
+
+新增 `getDayDetail` 云函数：按 `{ dateStr, _openid }` 一次查当天全部 workouts，再按 `sessionId in [...]` 一次查当天全部 sets（`in` 上限 10 个、按批取），返回 `{ workouts, sets }`。
+
+- 日历页 `tapDay`：从逐条查 sets 改为一次 `workoutRepo.dayDetail(ds)`。
+- day-detail 页 `load`：从全量 `listAll()` + N+1 改为 `workoutRepo.dayDetail(date)`。
+- repository 新增 `workoutRepo.dayDetail(dateStr)`。
+
+日历详情从 **N+1 次查询 → 2 次查询**（一次 workouts + 一次 sets，超过 10 个训练按批）。
+
+### 验证
+
+- 模拟：8/3 两天训练 + 3 组 sets 正确关联，不含其他日期数据。
+- 全部测试套件通过。
+
+### 涉及文件
+
+`cloudfunctions/getDayDetail/`（新增）、`miniprogram/utils/repositories/workout.js`、`miniprogram/pages/calendar/calendar.js`、`miniprogram/pages/day-detail/day-detail.js`。
+
+---
+
 ## 2026-08-03 · 移除 seedData 云函数
 
 ### 背景
