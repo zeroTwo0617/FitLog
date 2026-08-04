@@ -15,7 +15,14 @@ const COLLECTIONS = {
 function ok(data) { return Object.assign({ ok: true }, data || {}) }
 function fail(code, message) { return { ok: false, code, message: message || '请求失败' } }
 
-// 真实日期校验：格式 YYYY-MM-DD、月份/日期合法（含闰年归一化拦截）、不允许未来日期
+function todayInChina() {
+  const date = new Date(Date.now() + 8 * 60 * 60 * 1000)
+  const pad = (value) => (value < 10 ? '0' + value : String(value))
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`
+}
+
+// 真实日期校验：格式 YYYY-MM-DD、月份/日期合法（含闰年归一化拦截）、不允许未来日期。
+// CloudBase 运行时可能使用 UTC，产品日期统一按 UTC+8 计算。
 function isDateStr(value) {
   const str = String(value || '')
   if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false
@@ -24,11 +31,9 @@ function isDateStr(value) {
   const m = parts[1]
   const d = parts[2]
   if (m < 1 || m > 12 || d < 1 || d > 31) return false
-  const date = new Date(y, m - 1, d)
-  if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) return false
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  return date.getTime() <= today.getTime()
+  const date = new Date(Date.UTC(y, m - 1, d))
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== m - 1 || date.getUTCDate() !== d) return false
+  return str <= todayInChina()
 }
 
 function diagnostics() {
