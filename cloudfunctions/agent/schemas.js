@@ -1,5 +1,20 @@
 const MEAL_TYPES = new Set(['breakfast', 'lunch', 'dinner', 'snack', 'other'])
 
+function todayInChina() {
+  const date = new Date(Date.now() + 8 * 60 * 60 * 1000)
+  const pad = (value) => (value < 10 ? '0' + value : String(value))
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`
+}
+
+function isDateStr(value) {
+  const str = String(value == null ? '' : value).trim()
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false
+  const parts = str.split('-').map(Number)
+  const date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]))
+  if (date.getUTCFullYear() !== parts[0] || date.getUTCMonth() !== parts[1] - 1 || date.getUTCDate() !== parts[2]) return false
+  return str <= todayInChina()
+}
+
 function text(value, max) {
   return String(value == null ? '' : value).trim().slice(0, max)
 }
@@ -93,12 +108,18 @@ function validateDiet(value) {
 
 function validateMeal(value, requireFood) {
   const payload = value || {}
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(payload.dateStr)) throw new Error('饮食日期格式不正确')
+  const dateStr = String(payload.dateStr == null ? '' : payload.dateStr).trim()
+  if (!isDateStr(dateStr)) {
+    const error = new Error('Invalid meal date')
+    error.code = 'INVALID_DATE'
+    throw error
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) throw new Error('饮食日期格式不正确')
   if (!MEAL_TYPES.has(payload.mealType)) throw new Error('餐次不正确')
   const foods = Array.isArray(payload.foods) ? payload.foods.slice(0, 12).map(food) : []
   if (requireFood && (!foods.length || foods.some((item) => !item))) throw new Error('食物识别结果无效')
   const result = {
-    dateStr: payload.dateStr,
+    dateStr: dateStr,
     mealType: payload.mealType,
     foods: foods.filter(Boolean),
     calories: number(payload.calories != null ? payload.calories : payload.totalCalories, 0, 10000),
@@ -113,4 +134,4 @@ function validateMeal(value, requireFood) {
   return result
 }
 
-module.exports = { validateTraining, validateDiet, validateMeal }
+module.exports = { validateTraining, validateDiet, validateMeal, isDateStr }

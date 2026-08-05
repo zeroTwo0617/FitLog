@@ -26,18 +26,29 @@ function syncNavBar(t) {
   })
 }
 
+function findTabBar(pages) {
+  const stack = Array.isArray(pages) ? pages : []
+  for (let i = stack.length - 1; i >= 0; i--) {
+    const page = stack[i]
+    if (!page || typeof page.getTabBar !== 'function') continue
+    const tabBar = page.getTabBar()
+    if (tabBar && typeof tabBar.setData === 'function') return tabBar
+  }
+  return null
+}
+
 function setTheme(t) {
   if (t !== 'light' && t !== 'dark') return
   wx.setStorageSync(KEY, t)
   const app = getApp()
   if (app && app.globalData) app.globalData.theme = t
   // 只更新当前可见页；隐藏页会在 onShow 时读取 globalData，避免大页面同时重绘。
-  const pages = getCurrentPages()
+  const pages = typeof getCurrentPages === 'function' ? getCurrentPages() : []
   const current = pages[pages.length - 1]
   if (current && typeof current.setData === 'function') current.setData({ theme: t })
-  // 同步自定义底部导航（tab 栏是独立组件，不随页面 setData 刷新）
-  const tabBar = current && typeof current.getTabBar === 'function' && current.getTabBar()
-  if (tabBar && typeof tabBar.setData === 'function') tabBar.setData({ theme: t })
+  // 设置页不是 tab 页面，从页面栈中寻找仍存活的自定义底部导航实例。
+  const tabBar = findTabBar(pages)
+  if (tabBar) tabBar.setData({ theme: t })
   // 立即同步当前可见页的顶栏颜色
   syncNavBar(t)
 }

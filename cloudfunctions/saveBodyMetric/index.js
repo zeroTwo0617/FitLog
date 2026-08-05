@@ -13,11 +13,11 @@ function isDateStr(value) {
   const m = parts[1]
   const d = parts[2]
   if (m < 1 || m > 12 || d < 1 || d > 31) return false
-  const date = new Date(y, m - 1, d)
-  if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) return false
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  return date.getTime() <= today.getTime()
+  const date = new Date(Date.UTC(y, m - 1, d))
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== m - 1 || date.getUTCDate() !== d) return false
+  const today = new Date(Date.now() + 8 * 60 * 60 * 1000)
+  const todayStr = `${today.getUTCFullYear()}-${String(today.getUTCMonth() + 1).padStart(2, '0')}-${String(today.getUTCDate()).padStart(2, '0')}`
+  return str <= todayStr
 }
 function normalize(value, range) {
   if (value == null || value === '') return null

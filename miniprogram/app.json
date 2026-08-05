@@ -15,7 +15,9 @@
     "pages/calendar/calendar",
     "pages/nutrition/nutrition",
     "pages/day-detail/day-detail",
-    "pages/agent/agent"
+    "pages/agent/agent",
+    "pages/settings/settings",
+    "pages/legal/legal"
   ],
   "window": {
     "navigationBarBackgroundColor": "#f8f9f6",

@@ -32,6 +32,24 @@ function callFunction(name, data) {
   })
 }
 
+function uploadFile(cloudPath, filePath) {
+  if (!wx.cloud || typeof wx.cloud.uploadFile !== 'function') {
+    return Promise.reject(new Error('CloudBase uploadFile is unavailable'))
+  }
+  return new Promise((resolve, reject) => {
+    wx.cloud.uploadFile({ cloudPath: cloudPath, filePath: filePath, success: resolve, fail: reject })
+  })
+}
+
+function deleteFile(fileList) {
+  if (!wx.cloud || typeof wx.cloud.deleteFile !== 'function') {
+    return Promise.reject(new Error('CloudBase deleteFile is unavailable'))
+  }
+  return new Promise((resolve, reject) => {
+    wx.cloud.deleteFile({ fileList: fileList || [], success: resolve, fail: reject })
+  })
+}
+
 // 分页读取集合，避免页面使用固定 limit 后在数据增长时静默截断。
 // 注意：小程序端 SDK 单次 get() 有 20 条上限，size 需设为安全值。
 // 分页策略：第一页串行判断是否还有更多；后续每批最多 PARALLEL_BATCH 页并行，
@@ -66,6 +84,8 @@ module.exports = {
   isReady,
   collection,
   callFunction,
+  uploadFile,
+  deleteFile,
   getAll,
   C: config.COLLECTIONS // 集合名快捷引用
 }

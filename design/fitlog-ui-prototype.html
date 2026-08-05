@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f8f4">
+  <title>FitLog UI Prototype</title>
+  <link rel="stylesheet" href="./fitlog-ui-prototype.css">
+</head>
+<body>
+  <div class="prototype-stage">
+    <p class="stage-label">FITLOG / UI PROTOTYPE</p>
+    <div class="phone-shell" aria-label="FitLog 小程序交互原型">
+      <div class="status-bar" aria-hidden="true">
+        <span>9:41</span>
+        <span class="status-icons"><i></i><i></i><i class="battery"></i></span>
+      </div>
+
+      <main class="app-viewport">
+        <section class="screen is-active" id="screen-overview" aria-labelledby="overview-title">
+          <header class="screen-header hero-header">
+            <div class="brand-row">
+              <span class="brand-mark">FITLOG</span>
+              <button class="icon-button" type="button" data-action="toggle-theme" aria-label="切换主题">☼</button>
+            </div>
+            <p class="eyebrow">早上好，准备好动起来吗？</p>
+            <h1 id="overview-title">今天，练一点</h1>
+            <p class="date-line"><span class="mini-icon">▦</span> 2026年8月4日 <span class="date-divider">/</span> 星期二</p>
+          </header>
+
+          <section class="focus-panel" aria-label="今日训练">
+            <div class="focus-copy">
+              <p class="section-kicker"><span class="accent-mark"></span>今日训练</p>
+              <h2>上肢力量</h2>
+              <p class="focus-description">专注推举与划船，强化上肢肌群</p>
+              <div class="focus-meta"><span>45–60 分钟</span><span>中等强度</span></div>
+              <button class="primary-button" type="button" data-action="start-workout">
+                <span class="button-symbol">▶</span><span>开始训练</span>
+              </button>
+            </div>
+            <div class="progress-ring" aria-label="完成度 68%">
+              <div class="progress-inner"><strong>68</strong><span>%</span><small>完成度</small></div>
+            </div>
+          </section>
+
+          <section class="metric-strip" aria-label="训练概况">
+            <div class="metric"><span class="metric-icon lime">▰</span><small>训练</small><strong>12 <em>次</em></strong></div>
+            <div class="metric"><span class="metric-icon orange">◒</span><small>连续</small><strong>4 <em>天</em></strong></div>
+            <button class="metric energy-metric" type="button" data-action="energy-detail" aria-label="查看今日能量消耗"><span class="metric-icon rust">◉</span><small>总消耗</small><strong><span data-energy="total">1,949</span> <em>kcal</em></strong><b class="metric-note">基础 + 运动</b></button>
+          </section>
+
+          <section class="next-section">
+            <div class="section-heading"><h2>接下来</h2><button class="text-button" type="button" data-screen="calendar">查看全部 <span>›</span></button></div>
+            <button class="action-row" type="button" data-action="resume-workout">
+              <span class="row-icon rust-icon">◷</span><span class="row-copy"><strong>继续上次训练</strong><small>上肢力量 <b></b> 进行中</small></span><span class="row-arrow">›</span>
+            </button>
+            <button class="action-row" type="button" data-screen="coach">
+              <span class="row-icon lime-icon">□</span><span class="row-copy"><strong>训练助手</strong><small>为你定制训练建议与计划</small></span><span class="row-arrow">›</span>
+            </button>
+          </section>
+        </section>
+
+        <section class="screen" id="screen-library" aria-labelledby="library-title">
+          <header class="screen-header compact-header">
+            <div class="brand-row"><div><p class="eyebrow">MOVE BETTER</p><h1 id="library-title">动作库</h1></div><button class="icon-button" type="button" data-action="toggle-theme" aria-label="切换主题">☼</button></div>
+            <label class="search-field"><span aria-hidden="true">⌕</span><input id="exercise-search" type="search" placeholder="搜索动作、肌群或器械"><kbd>/</kbd></label>
+          </header>
+          <div class="library-toolbar"><span>64 个动作</span><button class="sort-button" type="button" data-action="toast" data-message="已按推荐顺序排列">推荐排序 <span>⌄</span></button></div>
+          <div class="filter-list" role="tablist" aria-label="动作分类">
+            <button class="filter-chip is-active" type="button" data-filter="all" role="tab">全部</button>
+            <button class="filter-chip" type="button" data-filter="胸" role="tab">胸</button>
+            <button class="filter-chip" type="button" data-filter="背" role="tab">背</button>
+            <button class="filter-chip" type="button" data-filter="腿" role="tab">腿</button>
+            <button class="filter-chip" type="button" data-filter="核心" role="tab">核心</button>
+          </div>
+          <div class="exercise-list" id="exercise-list">
+            <button class="exercise-row" type="button" data-exercise data-category="胸" data-name="俯卧撑" data-en="Push-up" data-muscle="胸大肌 · 三头肌" data-equipment="自重">
+              <span class="exercise-index">01</span><span class="exercise-main"><strong>俯卧撑</strong><small>Push-up</small></span><span class="exercise-meta"><b>胸</b><small>自重</small></span><span class="row-arrow">›</span>
+            </button>
+            <button class="exercise-row" type="button" data-exercise data-category="背" data-name="哑铃划船" data-en="Dumbbell Row" data-muscle="背阔肌 · 菱形肌" data-equipment="哑铃">
+              <span class="exercise-index">02</span><span class="exercise-main"><strong>哑铃划船</strong><small>Dumbbell Row</small></span><span class="exercise-meta"><b>背</b><small>哑铃</small></span><span class="row-arrow">›</span>
+            </button>
+            <button class="exercise-row" type="button" data-exercise data-category="腿" data-name="高脚杯深蹲" data-en="Goblet Squat" data-muscle="股四头肌 · 臀大肌" data-equipment="壶铃">
+              <span class="exercise-index">03</span><span class="exercise-main"><strong>高脚杯深蹲</strong><small>Goblet Squat</small></span><span class="exercise-meta"><b>腿</b><small>壶铃</small></span><span class="row-arrow">›</span>
+            </button>
+            <button class="exercise-row" type="button" data-exercise data-category="核心" data-name="平板支撑" data-en="Plank" data-muscle="腹横肌 · 核心稳定" data-equipment="自重">
+              <span class="exercise-index">04</span><span class="exercise-main"><strong>平板支撑</strong><small>Plank</small></span><span class="exercise-meta"><b>核心</b><small>自重</small></span><span class="row-arrow">›</span>
+            </button>
+            <button class="exercise-row" type="button" data-exercise data-category="胸" data-name="哑铃卧推" data-en="Dumbbell Press" data-muscle="胸大肌 · 肩前束" data-equipment="哑铃">
+              <span class="exercise-index">05</span><span class="exercise-main"><strong>哑铃卧推</strong><small>Dumbbell Press</small></span><span class="exercise-meta"><b>胸</b><small>哑铃</small></span><span class="row-arrow">›</span>
+            </button>
+          </div>
+          <p class="empty-state" id="exercise-empty" hidden>没有找到匹配动作</p>
+        </section>
+
+        <section class="screen coach-screen" id="screen-coach" aria-labelledby="coach-title">
+          <header class="screen-header compact-header coach-header">
+            <div class="brand-row"><div><p class="eyebrow">YOUR TRAINING PARTNER</p><h1 id="coach-title">训练助手</h1></div><button class="status-pill" type="button" data-action="toggle-agent" aria-pressed="true"><i></i><span class="agent-status-label">在线</span></button></div>
+            <p class="header-note">把目标告诉我，我会帮你拆成今天能完成的一步。</p>
+          </header>
+          <div class="agent-offline-message" id="agent-offline-message" hidden><span class="offline-mark">!</span><span><strong>训练助手暂时离线</strong><small>连接恢复后才可以继续对话和上传图片</small></span><button type="button" data-action="toggle-agent">重试</button></div>
+          <div class="coach-topline"><span>本次会话</span><button class="text-button" type="button" data-action="new-session">新会话 <span>＋</span></button></div>
+          <div class="chat-list" id="chat-list" aria-live="polite">
+            <div class="message assistant-message"><span class="message-label">教练</span><p>你这周已经连续训练 4 天了。今天建议做一组 45 分钟的上肢力量，重点放在推举和划船。</p></div>
+            <div class="message user-message"><p>我今天只有 30 分钟，怎么调整？</p></div>
+            <div class="message assistant-message"><span class="message-label">教练</span><p>可以。保留三个动作，每个动作 3 组，组间休息控制在 60 秒内。先从热身开始。</p></div>
+          </div>
+          <section class="plan-preview" aria-label="训练计划草案">
+            <div class="plan-heading"><div><span class="section-kicker"><span class="accent-mark"></span>计划草案</span><h2>30 分钟上肢力量</h2></div><span class="draft-label">可编辑</span></div>
+            <div class="plan-item"><span>01</span><strong>哑铃卧推</strong><small>3 组 × 10 次</small></div>
+            <div class="plan-item"><span>02</span><strong>哑铃划船</strong><small>3 组 × 10 次</small></div>
+            <div class="plan-item"><span>03</span><strong>平板支撑</strong><small>3 组 × 40 秒</small></div>
+            <button class="outline-button" type="button" data-action="toast" data-message="计划草案已准备保存">查看并保存计划 <span>→</span></button>
+          </section>
+          <div class="prompt-list"><button type="button" class="prompt-chip" data-prompt="帮我安排下一周的训练计划">下一周怎么练</button><button type="button" class="prompt-chip" data-prompt="今天状态一般，给我一个轻量方案">今天状态一般</button></div>
+          <div class="composer-area"><form class="composer" id="coach-form"><button class="attach-button" type="button" data-action="pick-image" aria-label="上传图片" title="上传图片">＋</button><input id="coach-input" type="text" placeholder="输入你的训练问题"><button class="send-button" type="submit" aria-label="发送">↑</button></form><input id="coach-image" type="file" accept="image/*" hidden></div>
+        </section>
+
+        <section class="screen" id="screen-calendar" aria-labelledby="calendar-title">
+          <header class="screen-header compact-header">
+            <div class="brand-row"><div><p class="eyebrow">YOUR RHYTHM</p><h1 id="calendar-title">训练日历</h1></div><button class="icon-button" type="button" data-action="toggle-theme" aria-label="切换主题">☼</button></div>
+            <div class="month-switch"><button type="button" aria-label="上个月">‹</button><strong>2026年 8月</strong><button type="button" aria-label="下个月">›</button></div>
+          </header>
+          <div class="calendar-week"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+          <div class="calendar-grid" id="calendar-grid">
+            <span class="day muted">26</span><span class="day muted">27</span><span class="day muted">28</span><span class="day muted">29</span><span class="day muted">30</span><span class="day muted">31</span>
+            <button class="day" type="button" data-day="1">1</button><button class="day" type="button" data-day="2">2</button><button class="day trained" type="button" data-day="3">3<i></i></button><button class="day" type="button" data-day="4">4</button><button class="day" type="button" data-day="5">5</button><button class="day trained" type="button" data-day="6">6<i></i></button><button class="day" type="button" data-day="7">7</button>
+            <button class="day" type="button" data-day="8">8</button><button class="day trained" type="button" data-day="9">9<i></i></button><button class="day" type="button" data-day="10">10</button><button class="day" type="button" data-day="11">11</button><button class="day trained" type="button" data-day="12">12<i></i></button><button class="day" type="button" data-day="13">13</button><button class="day" type="button" data-day="14">14</button>
+            <button class="day" type="button" data-day="15">15</button><button class="day" type="button" data-day="16">16</button><button class="day trained" type="button" data-day="17">17<i></i></button><button class="day" type="button" data-day="18">18</button><button class="day" type="button" data-day="19">19</button><button class="day" type="button" data-day="20">20</button><button class="day trained" type="button" data-day="21">21<i></i></button>
+            <button class="day" type="button" data-day="22">22</button><button class="day" type="button" data-day="23">23</button><button class="day" type="button" data-day="24">24</button><button class="day" type="button" data-day="25">25</button><button class="day" type="button" data-day="26">26</button><button class="day" type="button" data-day="27">27</button><button class="day" type="button" data-day="28">28</button>
+            <button class="day" type="button" data-day="29">29</button><button class="day" type="button" data-day="30">30</button><button class="day" type="button" data-day="31">31</button><span class="day muted">1</span><span class="day muted">2</span><span class="day muted">3</span><span class="day muted">4</span>
+          </div>
+          <div class="calendar-legend"><span><i class="legend-dot lime-dot"></i>完成训练</span><span><i class="legend-dot"></i>休息日</span></div>
+          <section class="day-detail" id="day-detail">
+            <div class="section-heading"><div><p class="eyebrow">2026年8月4日 · 星期二</p><h2>今天的节奏</h2></div><span class="day-score">68%</span></div>
+            <div class="day-detail-row"><span class="row-icon lime-icon">✓</span><span class="row-copy"><strong>上肢力量</strong><small>45 分钟 <b></b> 5 个动作</small></span><span class="detail-status">待完成</span></div>
+            <div class="day-detail-row"><span class="row-icon orange-icon">◌</span><span class="row-copy"><strong>今日摄入</strong><small>1,860 kcal <b></b> 3 餐</small></span><span class="detail-status neutral">记录</span></div>
+          </section>
+        </section>
+
+        <section class="screen" id="screen-profile" aria-label="个人空间">
+          <section class="profile-intro"><div class="avatar">ZT</div><div><p class="eyebrow">TRAINING WITH PURPOSE</p><h2>ZeroTwo0617</h2><p>保持节奏，比追求完美更重要。</p></div><button class="edit-button" type="button" data-action="toast" data-message="个人资料编辑即将开放">编辑</button></section>
+          <section class="profile-stats"><div><small>累计训练</small><strong>48 <em>次</em></strong></div><div><small>训练时长</small><strong>36 <em>小时</em></strong></div><div><small>最长连续</small><strong>11 <em>天</em></strong></div></section>
+          <div class="settings-list">
+            <button class="setting-row" type="button" data-screen="coach"><span class="setting-icon lime-icon">□</span><span class="row-copy"><strong>我的训练计划</strong><small>上肢力量 · 进行中</small></span><span class="row-arrow">›</span></button>
+            <button class="setting-row" type="button" data-action="toast" data-message="身体数据页面即将开放"><span class="setting-icon orange-icon">◈</span><span class="row-copy"><strong>身体数据</strong><small>体重、围度与趋势</small></span><span class="row-arrow">›</span></button>
+            <button class="setting-row" type="button" data-action="toast" data-message="饮食记录页面即将开放"><span class="setting-icon orange-icon">◔</span><span class="row-copy"><strong>饮食记录</strong><small>今日摄入 · 1,860 kcal</small></span><span class="row-arrow">›</span></button>
+          </div>
+        </section>
+
+        <nav class="bottom-nav" aria-label="主导航">
+          <button class="nav-item is-active" type="button" data-screen="overview" aria-current="page"><span class="nav-glyph">⌂</span><span>概览</span></button>
+          <button class="nav-item" type="button" data-screen="library"><span class="nav-glyph">⊞</span><span>动作库</span></button>
+          <button class="nav-item" type="button" data-screen="coach"><span class="nav-glyph">●</span><span>教练</span></button>
+          <button class="nav-item" type="button" data-screen="calendar"><span class="nav-glyph">□</span><span>日历</span></button>
+          <button class="nav-item" type="button" data-screen="profile"><span class="nav-glyph">○</span><span>我的</span></button>
+        </nav>
+      </main>
+    </div>
+  </div>
+
+  <div class="detail-overlay" id="detail-overlay" hidden>
+    <button class="sheet-scrim" type="button" data-action="close-detail" aria-label="关闭动作详情"></button>
+    <section class="detail-sheet" aria-labelledby="detail-title">
+      <div class="sheet-handle"></div>
+      <div class="sheet-heading"><div><p class="eyebrow">EXERCISE DETAIL</p><h2 id="detail-title">俯卧撑</h2><p id="detail-en">Push-up</p></div><button class="icon-button" type="button" data-action="close-detail" aria-label="关闭">×</button></div>
+      <div class="detail-facts"><span><small>目标肌群</small><strong id="detail-muscle">胸大肌 · 三头肌</strong></span><span><small>器械</small><strong id="detail-equipment">自重</strong></span></div>
+      <div class="detail-copy"><p class="section-kicker"><span class="accent-mark"></span>动作步骤</p><ol><li>双手略宽于肩，身体保持一条直线。</li><li>屈肘下降，胸口接近地面后推起。</li><li>全程收紧核心，避免塌腰或耸肩。</li></ol></div>
+      <button class="primary-button full-button" type="button" data-action="add-exercise"><span class="button-symbol">＋</span><span>加入训练计划</span></button>
+    </section>
+  </div>
+  <div class="detail-overlay" id="energy-overlay" hidden>
+    <button class="sheet-scrim" type="button" data-action="close-energy" aria-label="关闭能量详情"></button>
+    <section class="detail-sheet energy-sheet" aria-labelledby="energy-title">
+      <div class="sheet-handle"></div>
+      <div class="sheet-heading"><div><p class="eyebrow">ENERGY BALANCE</p><h2 id="energy-title">今日能量消耗</h2><p>按身体数据与已记录训练估算</p></div><button class="icon-button" type="button" data-action="close-energy" aria-label="关闭">×</button></div>
+      <div class="energy-total"><strong><span data-energy="total">1,949</span></strong><span>kcal</span><small>今日估算总消耗</small></div>
+      <div class="energy-breakdown"><div><small>基础代谢</small><strong><span data-energy="bmr">1,623</span> <em>kcal</em></strong><span>身体自然消耗</span></div><div><small>运动消耗</small><strong><span data-energy="exercise">326</span> <em>kcal</em></strong><span>已记录训练</span></div></div>
+      <div class="energy-data"><p class="section-kicker"><span class="accent-mark"></span>估算依据</p><div class="body-data-row"><span>体重 <strong>68 kg</strong></span><span>身高 <strong>170 cm</strong></span><span>年龄 <strong>25 岁</strong></span><span>性别 <strong>男</strong></span></div></div>
+      <p class="energy-note">基础代谢按 Mifflin–St Jeor 公式估算，运动消耗来自已记录训练，仅供记录参考，不作为医疗建议。</p>
+      <button class="outline-button full-button" type="button" data-action="close-energy">知道了</button>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./fitlog-ui-prototype.js"></script>
+</body>
+</html>

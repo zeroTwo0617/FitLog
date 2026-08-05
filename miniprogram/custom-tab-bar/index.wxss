@@ -1,3 +1,19 @@
+.tabbar.theme-light {
+  --surface: #f8f9f6;
+  --card-border: #d9ddd4;
+  --text-dim: #8b9388;
+  --primary-strong: #6e8f00;
+  --primary: #b4dc16;
+}
+
+.tabbar.theme-dark {
+  --surface: #101411;
+  --card-border: #2d382e;
+  --text-dim: #9da99d;
+  --primary-strong: #d8f27a;
+  --primary: #c4e63b;
+}
+
 .tabbar-shell {
   position: fixed;
   right: 0;
@@ -12,9 +28,9 @@
   display: flex;
   height: 112rpx;
   padding: 8rpx 10rpx 10rpx;
-  border-top: 1rpx solid #d9ddd4;
-  background: #f8f9f6;
-  box-shadow: 0 -8rpx 24rpx rgba(28, 35, 27, 0.07);
+  border-top: 1rpx solid var(--card-border);
+  background: var(--surface);
+  box-shadow: 0 -8rpx 24rpx rgba(0, 0, 0, 0.12);
   pointer-events: auto;
 }
 
@@ -27,11 +43,11 @@
   justify-content: center;
   gap: 5rpx;
   min-width: 0;
-  color: #8b9388;
+  color: var(--text-dim);
 }
 
-.tab.active { color: #6e8f00; }
-.tab.active::before { position: absolute; top: -8rpx; width: 42rpx; height: 4rpx; border-radius: 0 0 4rpx 4rpx; background: #b4dc16; content: ''; }
+.tab.active { color: var(--primary-strong); }
+.tab.active::before { position: absolute; top: -8rpx; width: 42rpx; height: 4rpx; border-radius: 0 0 4rpx 4rpx; background: var(--primary); content: ''; }
 .tab-icon { display: block; width: 40rpx; height: 40rpx; }
 .tab.active .tab-icon { transform: translateY(-1rpx); }
 .tab-label { overflow: hidden; max-width: 100%; color: currentColor; font-size: 18rpx; font-weight: 700; line-height: 1; text-overflow: ellipsis; white-space: nowrap; }

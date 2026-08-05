@@ -20,6 +20,16 @@ const meal = schemas.validateMeal({
 }, true)
 assert.strictEqual(meal.foods.length, 1)
 assert.throws(() => schemas.validateMeal({ dateStr: '2026-08-01', mealType: 'lunch', foods: [], calories: 0, protein: 0, carbs: 0, fat: 0 }, true))
+assert.throws(() => schemas.validateMeal({ dateStr: '2026-02-30', mealType: 'lunch', foods: [], calories: 0, protein: 0, carbs: 0, fat: 0 }, false), /Invalid meal date/)
+assert.throws(() => schemas.validateMeal({ dateStr: '2999-01-01', mealType: 'lunch', foods: [], calories: 0, protein: 0, carbs: 0, fat: 0 }, false), /Invalid meal date/)
+
+const originalNow = Date.now
+Date.now = () => Date.UTC(2026, 7, 5, 15, 59, 0)
+assert.strictEqual(schemas.isDateStr('2026-08-05'), true)
+assert.strictEqual(schemas.isDateStr('2026-08-06'), false)
+Date.now = () => Date.UTC(2026, 7, 5, 16, 1, 0)
+assert.strictEqual(schemas.isDateStr('2026-08-06'), true)
+Date.now = originalNow
 
 const training = schemas.validateTraining({ reply: '建议逐步增加训练量', planDraft: { name: '训练计划', items: [{ exerciseId: '0001', exerciseName: '深蹲', targetSets: 3, targetReps: 8, targetWeight: null }] } })
 assert.strictEqual(training.planDraft.items[0].targetSets, 3)

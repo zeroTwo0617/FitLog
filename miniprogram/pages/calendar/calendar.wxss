@@ -1,8 +1,8 @@
 .calendar-page { padding-top: 24rpx; }
 .calendar-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18rpx; margin-bottom: 24rpx; }
-.eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
-.month-total { display: flex; flex: none; flex-direction: column; align-items: flex-end; gap: 5rpx; padding-top: 24rpx; color: var(--text-dim); font-size: 20rpx; }
-.month-total text:first-child { color: var(--primary); font-size: 36rpx; font-weight: 760; line-height: 1; }
+.eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 22rpx; font-weight: 750; letter-spacing: 2rpx; }
+.month-total { display: flex; flex: none; flex-direction: column; align-items: flex-end; gap: 5rpx; padding-top: 24rpx; color: var(--text-dim); font-size: 22rpx; }
+.month-total text:first-child { color: var(--primary); font-size: 40rpx; font-weight: 760; line-height: 1; }
 /* 连续训练火焰卡：把打卡从记录变成「不想断」的钩子 */
 .streak-card {
   display: flex;
@@ -16,34 +16,34 @@
   background: var(--card-bg);
 }
 .theme-light .streak-card { background: var(--card-bg); }
-.streak-label { display: block; color: var(--primary); font-size: 20rpx; font-weight: 700; letter-spacing: 2rpx; }
-.streak-num { display: block; margin-top: 8rpx; color: var(--primary); font-size: 56rpx; font-weight: 800; line-height: 1; }
+.streak-label { display: block; color: var(--primary); font-size: 22rpx; font-weight: 700; letter-spacing: 2rpx; }
+.streak-num { display: block; margin-top: 8rpx; color: var(--primary); font-size: 60rpx; font-weight: 800; line-height: 1; }
 .theme-light .streak-num, .theme-light .streak-label { color: var(--primary-strong); }
-.streak-sub { display: block; margin-top: 10rpx; color: var(--text-dim); font-size: 20rpx; }
+.streak-sub { display: block; margin-top: 10rpx; color: var(--text-dim); font-size: 22rpx; }
 .streak-flame { display: flex; align-items: center; justify-content: center; width: 96rpx; height: 96rpx; flex: none; border-radius: 26rpx; background: var(--primary-soft); }
 .streak-flame image { width: 52rpx; height: 52rpx; }
 
 .calendar-board { padding: 20rpx 16rpx 16rpx; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-card); }
 .calendar-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0 8rpx 20rpx; }
-.calendar-month { display: block; color: var(--text); font-size: 31rpx; font-weight: 750; }
-.calendar-caption { display: block; margin-top: 5rpx; color: var(--text-dim); font-size: 20rpx; }
+.calendar-month { display: block; color: var(--text); font-size: 34rpx; font-weight: 750; }
+.calendar-caption { display: block; margin-top: 5rpx; color: var(--text-dim); font-size: 22rpx; }
 .calendar-nav { display: flex; gap: 8rpx; }
 .calendar-arrow { display: flex; align-items: center; justify-content: center; width: 58rpx; height: 58rpx; border: 1rpx solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 38rpx; line-height: 1; }
 .calendar-arrow.disabled { color: var(--placeholder); opacity: 0.45; }
 .calendar-week, .calendar-grid { display: flex; flex-wrap: wrap; }
 .calendar-week { padding-bottom: 8rpx; }
-.calendar-week text { width: 14.28%; color: var(--text-dim); font-size: 20rpx; text-align: center; }
+.calendar-week text { width: 14.28%; color: var(--text-dim); font-size: 22rpx; text-align: center; }
 .calendar-cell { position: relative; display: flex; align-items: center; justify-content: center; width: 14.28%; height: 84rpx; }
-.calendar-day { display: flex; align-items: center; justify-content: center; width: 68rpx; height: 68rpx; border-radius: 16rpx; background: var(--surface-2); color: var(--text-dim); font-size: 22rpx; }
+.calendar-day { display: flex; align-items: center; justify-content: center; width: 68rpx; height: 68rpx; border-radius: 16rpx; background: var(--surface-2); color: var(--text-dim); font-size: 24rpx; }
 .calendar-day.blank { background: transparent; }
 .calendar-cell.trained .calendar-day { background: var(--primary); color: var(--on-primary); font-weight: 800; }
 .calendar-cell.today .calendar-day { border: 2rpx solid var(--primary); background: var(--primary-soft); color: var(--primary); font-weight: 700; }
 .calendar-cell.trained.today .calendar-day { background: var(--primary); color: var(--on-primary); }
 .calendar-cell.selected .calendar-day { box-shadow: 0 0 0 5rpx var(--primary-soft); }
-.calendar-count { position: absolute; top: 2rpx; right: calc(50% - 38rpx); min-width: 24rpx; height: 24rpx; padding: 0 4rpx; border-radius: 999rpx; background: var(--accent); color: #fff; font-size: 16rpx; line-height: 24rpx; text-align: center; }
+.calendar-count { position: absolute; top: 2rpx; right: calc(50% - 38rpx); min-width: 24rpx; height: 24rpx; padding: 0 4rpx; border-radius: 999rpx; background: var(--accent); color: #fff; font-size: 18rpx; line-height: 24rpx; text-align: center; }
 .calorie-dot { position: absolute; bottom: 6rpx; width: 8rpx; height: 8rpx; border-radius: 50%; background: var(--primary); }
 .calorie-dot.over { background: var(--danger); }
-.calendar-legend { display: flex; gap: 22rpx; padding: 16rpx 8rpx 0; border-top: 1rpx solid var(--hairline); color: var(--text-dim); font-size: 20rpx; }
+.calendar-legend { display: flex; gap: 22rpx; padding: 16rpx 8rpx 0; border-top: 1rpx solid var(--hairline); color: var(--text-dim); font-size: 22rpx; }
 .calendar-legend .legend-item { display: flex; align-items: center; gap: 7rpx; }
 .legend-dot { display: inline-block; width: 16rpx; height: 16rpx; border: 1rpx solid var(--border); border-radius: 5rpx; background: var(--surface-2); }
 .legend-dot.trained { border-color: var(--primary); background: var(--primary); }
@@ -52,19 +52,19 @@
 
 .day-detail { margin-top: 18rpx; padding: 22rpx; border: 1rpx solid var(--primary); border-radius: var(--radius); background: var(--surface); animation: fadeUp 0.18s ease both; }
 .detail-header, .session-head, .group-head { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; }
-.detail-date { display: block; color: var(--text); font-size: 31rpx; font-weight: 750; }
-.detail-summary, .session-meta, .group-count { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 20rpx; }
+.detail-date { display: block; color: var(--text); font-size: 34rpx; font-weight: 750; }
+.detail-summary, .session-meta, .group-count { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 22rpx; }
 .detail-close { display: flex; align-items: center; justify-content: center; width: 46rpx; height: 46rpx; border-radius: 50%; background: var(--surface-2); color: var(--text-dim); font-size: 32rpx; }
 .nutrition-summary, .nutrition-empty { margin-top: 18rpx; padding: 16rpx; border-radius: var(--radius-sm); background: var(--primary-soft); }
 .nutrition-summary-head { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; }
-.nutrition-title { display: block; color: var(--text); font-size: 24rpx; font-weight: 700; }
-.nutrition-action { flex: none; color: var(--primary); font-size: 20rpx; font-weight: 650; }
-.nutrition-macro { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 19rpx; line-height: 1.4; }
-.nutrition-meal { display: flex; justify-content: space-between; margin-top: 10rpx; padding-top: 10rpx; border-top: 1rpx solid var(--border); color: var(--text); font-size: 20rpx; }
-.nutrition-empty, .detail-loading, .detail-empty { color: var(--text-dim); font-size: 21rpx; }
+.nutrition-title { display: block; color: var(--text); font-size: 26rpx; font-weight: 700; }
+.nutrition-action { flex: none; color: var(--primary); font-size: 22rpx; font-weight: 650; }
+.nutrition-macro { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 21rpx; line-height: 1.4; }
+.nutrition-meal { display: flex; justify-content: space-between; margin-top: 10rpx; padding-top: 10rpx; border-top: 1rpx solid var(--border); color: var(--text); font-size: 22rpx; }
+.nutrition-empty, .detail-loading, .detail-empty { color: var(--text-dim); font-size: 23rpx; }
 .detail-loading, .detail-empty { padding: 24rpx 0 4rpx; }
 .detail-session { margin-top: 22rpx; padding-top: 18rpx; border-top: 1rpx solid var(--hairline); }
-.session-title, .group-name { color: var(--text); font-size: 25rpx; font-weight: 700; }
+.session-title, .group-name { color: var(--text); font-size: 27rpx; font-weight: 700; }
 .detail-group { margin-top: 16rpx; padding: 14rpx; border-radius: var(--radius-sm); background: var(--inset); }
-.detail-set { display: grid; grid-template-columns: 0.7fr 1fr 1.25fr 1fr; gap: 8rpx; padding: 10rpx 0; color: var(--text); font-size: 20rpx; text-align: center; }
-.detail-set-head { margin-top: 10rpx; border-bottom: 1rpx solid var(--border); color: var(--text-dim); font-size: 18rpx; }
+.detail-set { display: grid; grid-template-columns: 0.7fr 1fr 1.25fr 1fr; gap: 8rpx; padding: 10rpx 0; color: var(--text); font-size: 22rpx; text-align: center; }
+.detail-set-head { margin-top: 10rpx; border-bottom: 1rpx solid var(--border); color: var(--text-dim); font-size: 20rpx; }

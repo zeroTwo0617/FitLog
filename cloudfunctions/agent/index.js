@@ -103,6 +103,18 @@ async function sessionOf(sessionId, openid) {
   return result.data && result.data[0] ? result.data[0] : null
 }
 
+async function getSession(event, context) {
+  const openid = openidOf(context)
+  const sessionId = String(event && event.sessionId || '').trim()
+  if (!openid) return fail('AUTH_REQUIRED', 'AUTH_REQUIRED')
+  if (!sessionId || sessionId.length > 128) return fail('INVALID_SESSION', 'Invalid sessionId')
+  try {
+    return ok({ session: await sessionOf(sessionId, openid) })
+  } catch (error) {
+    return fail('GET_SESSION_FAILED', 'Unable to load agent session')
+  }
+}
+
 async function saveSession(sessionId, openid, mode, query, reply, context) {
   const appendMessages = (messages) => {
     const previous = Array.isArray(messages) ? messages : []
@@ -236,7 +248,7 @@ async function saveMeal(event, context) {
     const saved = await db.collection(COLLECTIONS.NUTRITION_LOGS).add({ data: Object.assign({}, result, { _openid: openid, createdAt: new Date(), updatedAt: new Date() }) })
     return ok({ id: saved._id, meal: result })
   } catch (error) {
-    return fail('INVALID_MEAL', error.message)
+    return fail(error.code || 'INVALID_MEAL', error.message)
   }
 }
 
@@ -265,6 +277,7 @@ exports.main = async (event, context) => {
   try {
     switch (event && event.action) {
       case 'chat': return await chat(event, context)
+      case 'getSession': return await getSession(event, context)
       case 'diagnose': return diagnostics()
       case 'prepareUpload': return await prepareUpload(context)
       case 'analyzeMeal': return await analyzeMeal(event, context)

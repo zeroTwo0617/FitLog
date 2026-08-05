@@ -103,6 +103,10 @@ page({
     wx.navigateTo({ url: `/pages/nutrition/nutrition?date=${nutrition.today()}` })
   },
 
+  goSettings() {
+    wx.navigateTo({ url: '/pages/settings/settings' })
+  },
+
   goAgent() {
     wx.switchTab({ url: '/pages/agent/agent' })
   },

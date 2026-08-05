@@ -1,19 +1,19 @@
 /* 计划名称：外观由全局 .card 提供 */
 .field { display: flex; flex-direction: column; gap: 14rpx; }
-.label { font-size: 26rpx; color: var(--text-dim); }
-.name-inp { font-size: 34rpx; font-weight: 600; color: var(--text); }
+.label { font-size: 28rpx; color: var(--text-dim); }
+.name-inp { font-size: 38rpx; font-weight: 600; color: var(--text); }
 
-.sec-title { margin: 36rpx 4rpx 18rpx; font-size: 28rpx; font-weight: 600; color: var(--text-dim); }
+.sec-title { margin: 36rpx 4rpx 18rpx; font-size: 31rpx; font-weight: 600; color: var(--text-dim); }
 
 .items { display: flex; flex-direction: column; gap: 18rpx; }
 /* 动作项：外观由全局 .card 提供 */
 .item-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18rpx; }
-.item-name { font-size: 32rpx; font-weight: 600; }
-.item-del { font-size: 24rpx; color: var(--danger); }
+.item-name { font-size: 35rpx; font-weight: 600; }
+.item-del { font-size: 26rpx; color: var(--danger); }
 
 .targets { display: flex; gap: 16rpx; }
 .tg { flex: 1; display: flex; flex-direction: column; gap: 8rpx; }
-.tg-label { display: block; height: 28rpx; color: var(--text-dim); font-size: 22rpx; line-height: 28rpx; white-space: nowrap; }
+.tg-label { display: block; height: 28rpx; color: var(--text-dim); font-size: 24rpx; line-height: 28rpx; white-space: nowrap; }
 .tg-inp {
   display: block;
   width: 100%;
@@ -23,7 +23,7 @@
   border: 1rpx solid var(--hairline);
   border-radius: 12rpx;
   padding: 0 16rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 56rpx;
   text-align: center;
   color: var(--text);
@@ -57,7 +57,7 @@
 .pick-list { max-height: 56vh; flex: 1; }
 .pick-item { display: flex; flex-direction: column; gap: 6rpx; padding: 22rpx 8rpx; border-bottom: 1rpx solid var(--hairline); }
 .pick-item:active { background: var(--surface-2); }
-.pick-name { font-size: 30rpx; }
-.pick-meta { font-size: 22rpx; color: var(--text-dim); }
+.pick-name { font-size: 32rpx; }
+.pick-meta { font-size: 24rpx; color: var(--text-dim); }
 
 .btn-save { margin-top: 36rpx; }

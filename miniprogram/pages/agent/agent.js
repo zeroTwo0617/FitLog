@@ -1,5 +1,6 @@
 const agentContext = require('../../utils/agent.js')
 const agentApi = require('../../utils/agentApi.js')
+const agentRepo = require('../../utils/repositories/agent.js')
 const page = require('../../utils/page.js')
 
 const DEFAULT_MESSAGES = [{
@@ -82,12 +83,6 @@ function compressImage(path) {
       success: (res) => resolve(res.tempFilePath || path),
       fail: () => resolve(path)
     })
-  })
-}
-
-function uploadFile(cloudPath, filePath) {
-  return new Promise((resolve, reject) => {
-    wx.cloud.uploadFile({ cloudPath, filePath, success: resolve, fail: reject })
   })
 }
 
@@ -354,7 +349,7 @@ page({
       .then((filePath) => agentApi.prepareUpload().then((upload) => ({ filePath, upload })))
       .then(({ filePath, upload }) => {
         if (!upload || !upload.cloudPath) throw new Error('图片上传路径无效')
-        return uploadFile(upload.cloudPath, filePath)
+        return agentRepo.uploadImage(upload.cloudPath, filePath)
       })
       .then((uploadResult) => {
         fileID = uploadResult && uploadResult.fileID
@@ -375,7 +370,7 @@ page({
           this.setData({ uploading: false, error: '' })
           return
         }
-        if (fileID && wx.cloud && wx.cloud.deleteFile) wx.cloud.deleteFile({ fileList: [fileID] }).catch(() => {})
+        if (fileID) agentRepo.deleteImage(fileID).catch(() => {})
         this.setData({ uploading: false, error: modelErrorText(error) })
       })
   },

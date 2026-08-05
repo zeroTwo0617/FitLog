@@ -5,12 +5,18 @@
 - 形态：微信小程序原生 + 微信云开发（CloudBase-only）
 - 数据：训练记录、计划、身体数据、训练/饮食会话和营养记录全部保存在 CloudBase
 - 动作库：内置文字动作库，不依赖 GIF、图片 CDN 或独立后端
-- 文档：[开发文档.md](./开发文档.md)（PRD v0.1）
+- 文档：[开发文档.md](./开发文档.md)（当前架构、数据口径与开发约定）
+- UI 规范：[docs/architecture/ui-design-system.md](./docs/architecture/ui-design-system.md)
 
 ## 快速开始（开发环境）
 1. 用「微信开发者工具」导入本目录
 2. 开通云开发环境，填入 `env` 配置
-3. 见 `开发文档.md` 的 Phase 0 ~ Phase 4 规划
+3. 见 `开发文档.md` 的当前架构、主题和本地验证说明
+
+## 界面主题
+- 默认使用浅色主题；进入「我的 > 应用 > 设置」可以切换黑色主题。
+- 主题会保存在本地，页面顶栏和自定义底部导航会同步切换。
+- 字号和页面层级以 [视觉与字体设计系统](./docs/architecture/ui-design-system.md) 为准。
 
 ## 本地配置与密钥
 - `project.private.config.json` 只放微信开发者工具的本地设置，模板见 `project.private.config.json.example`；该文件已被 `.gitignore` 忽略。

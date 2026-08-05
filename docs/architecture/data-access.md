@@ -21,4 +21,4 @@ Deploy these functions after every change:
 
 `saveWorkout`, `ensureUser`, `updateUserActive`, `savePlan`, `deletePlan`,
 `saveBodyMetric`, `saveNutritionLog`, `deleteNutritionLog`, `agent`,
-and `exportData`.
+`exportData`, and `deleteUserData`.

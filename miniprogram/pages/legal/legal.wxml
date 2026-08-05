@@ -1,0 +1,15 @@
+<view class="page legal-page theme-{{theme ? theme : 'light'}}">
+  <view class="legal-hero">
+    <text class="eyebrow">{{eyebrow}}</text>
+    <text class="legal-title">{{title}}</text>
+    <text class="legal-updated">{{updatedAt}}</text>
+  </view>
+
+  <scroll-view class="legal-scroll" scroll-y="true">
+    <view class="legal-section" wx:for="{{sections}}" wx:key="title">
+      <text class="legal-section-title">{{item.title}}</text>
+      <text class="legal-paragraph" wx:for="{{item.paragraphs}}" wx:for-item="paragraph" wx:key="*this">{{paragraph}}</text>
+    </view>
+    <view class="legal-footer">FitLog · 请以发布时在微信公众平台登记的正式隐私文件为准</view>
+  </scroll-view>
+</view>

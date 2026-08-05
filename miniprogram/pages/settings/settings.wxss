@@ -1,0 +1,22 @@
+.settings-page { padding-top: 38rpx; }
+.settings-hero { padding-bottom: 12rpx; }
+.settings-title { display: block; color: var(--text); font-size: 58rpx; font-weight: 900; line-height: 1.1; }
+.settings-subtitle { display: block; margin-top: 12rpx; color: var(--text-dim); font-size: 24rpx; line-height: 1.5; }
+.settings-section { margin-top: 42rpx; }
+.section-label { display: block; margin-bottom: 12rpx; color: var(--text-dim); font-size: 20rpx; font-weight: 900; letter-spacing: 2rpx; }
+.settings-card { overflow: hidden; border: 1rpx solid var(--card-border); border-radius: var(--radius); background: var(--card-bg); box-shadow: var(--shadow-card); }
+.settings-row { display: flex; align-items: center; gap: 14rpx; min-height: 112rpx; padding: 18rpx 20rpx; }
+.settings-row-icon { display: flex; align-items: center; justify-content: center; width: 52rpx; height: 52rpx; flex: 0 0 auto; border-radius: 14rpx; background: var(--surface-2); }
+.settings-row-icon image { width: 29rpx; height: 29rpx; }
+.settings-row-copy { min-width: 0; flex: 1; }
+.settings-row-title { display: block; color: var(--text); font-size: 28rpx; font-weight: 900; }
+.settings-row-note { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 21rpx; line-height: 1.35; }
+.settings-row switch { flex: 0 0 auto; transform: scale(.9); transform-origin: right center; }
+.settings-tip { margin-top: 18rpx; padding: 0 4rpx; color: var(--text-dim); font-size: 20rpx; line-height: 1.5; }
+.settings-links { margin-top: 0; }
+.settings-link-row { min-height: 104rpx; border-bottom: 1rpx solid var(--hairline); }
+.settings-link-row:last-child { border-bottom: 0; }
+.settings-link-row:active { background: var(--surface-2); }
+.settings-row-arrow { flex: 0 0 auto; color: var(--text-dim); font-size: 40rpx; font-weight: 300; line-height: 1; }
+.danger-row .settings-row-title { color: var(--danger); }
+.danger-row .settings-row-note { color: var(--danger); opacity: .78; }

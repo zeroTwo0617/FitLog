@@ -2,30 +2,27 @@
 .profile-intro { display: grid; grid-template-columns: 72rpx minmax(0, 1fr); align-items: center; gap: 16rpx; margin-bottom: 24rpx; }
 .avatar { display: flex; align-items: center; justify-content: center; width: 72rpx; height: 72rpx; border-radius: 50%; background: var(--text); color: var(--surface); font-size: 23rpx; font-weight: 900; letter-spacing: 1rpx; }
 .profile-copy { min-width: 0; }
-.profile-copy .eyebrow { margin-bottom: 4rpx; font-size: 16rpx; }
-.profile-name { display: block; overflow: hidden; color: var(--text); font-size: 31rpx; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
-.profile-tagline { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 19rpx; line-height: 1.35; }
+.profile-copy .eyebrow { margin-bottom: 4rpx; font-size: 18rpx; }
+.profile-name { display: block; overflow: hidden; color: var(--text); font-size: 35rpx; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
+.profile-tagline { display: block; margin-top: 6rpx; color: var(--text-dim); font-size: 21rpx; line-height: 1.35; }
 .profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); margin: 14rpx 0 32rpx; border-top: 1rpx solid var(--border); border-bottom: 1rpx solid var(--border); }
 .profile-stats view { padding: 15rpx 6rpx; text-align: center; }
 .profile-stats view + view { border-left: 1rpx solid var(--hairline); }
 .profile-stats text { display: block; }
-.profile-stats text:first-child { color: var(--text); font-size: 25rpx; font-weight: 900; }
-.profile-stats text:last-child { margin-top: 5rpx; color: var(--text-dim); font-size: 17rpx; }
+.profile-stats text:first-child { color: var(--text); font-size: 28rpx; font-weight: 900; }
+.profile-stats text:last-child { margin-top: 5rpx; color: var(--text-dim); font-size: 19rpx; }
 .settings-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 11rpx; }
 .tools-head { margin-top: 30rpx; }
-.settings-list { display: flex; flex-direction: column; gap: 12rpx; }
-.setting-row { display: flex; align-items: center; gap: 13rpx; min-height: 82rpx; box-sizing: border-box; padding: 15rpx 18rpx; border: 1rpx solid var(--hairline); border-radius: 999rpx; background: var(--surface); }
-.setting-row:active { opacity: .72; transform: scale(.99); }
-.setting-icon { display: flex; align-items: center; justify-content: center; width: 48rpx; height: 48rpx; flex: 0 0 auto; border-radius: 10rpx; }
-.setting-icon image { width: 27rpx; height: 27rpx; }
-.lime-icon { background: var(--primary-soft); }
-.orange-icon { background: var(--accent-soft); }
-.rust-icon { background: #fbe9e3; }
-.teal-icon { background: #e4f1ed; }
-.plain-icon { background: var(--surface-2); }
+.settings-list { display: flex; flex-direction: column; gap: 0; overflow: hidden; border: 1rpx solid var(--card-border); border-radius: 26rpx; background: var(--card-bg); box-shadow: var(--shadow-card); }
+.setting-row { position: relative; display: flex; align-items: center; gap: 16rpx; min-height: 100rpx; box-sizing: border-box; padding: 18rpx 22rpx; border: 0; border-radius: 0; background: transparent; }
+.setting-row + .setting-row { border-top: 1rpx solid var(--hairline); }
+.setting-row:active { background: var(--surface-2); opacity: .82; }
+.setting-icon { display: flex; align-items: center; justify-content: center; width: 52rpx; height: 52rpx; flex: 0 0 auto; border-radius: 0; background: transparent; }
+.setting-icon image { width: 44rpx; height: 44rpx; }
+.lime-icon, .orange-icon, .rust-icon, .teal-icon, .plain-icon { background: transparent; }
 .row-copy { flex: 1; min-width: 0; }
 .setting-title, .setting-sub { display: block; }
-.setting-title { color: var(--text); font-size: 23rpx; font-weight: 900; }
-.setting-sub { overflow: hidden; margin-top: 5rpx; color: var(--text-dim); font-size: 18rpx; text-overflow: ellipsis; white-space: nowrap; }
-.row-arrow { flex: 0 0 auto; color: var(--text-dim); font-size: 34rpx; font-weight: 300; line-height: 1; }
-.mine-foot { display: block; margin-top: 34rpx; color: var(--text-dim); font-size: 17rpx; letter-spacing: 1rpx; text-align: center; }
+.setting-title { color: var(--text); font-size: 30rpx; font-weight: 900; }
+.setting-sub { overflow: hidden; margin-top: 5rpx; color: var(--text-dim); font-size: 22rpx; text-overflow: ellipsis; white-space: nowrap; }
+.row-arrow { flex: 0 0 auto; color: var(--text-dim); font-size: 40rpx; font-weight: 300; line-height: 1; }
+.mine-foot { display: block; margin-top: 34rpx; color: var(--text-dim); font-size: 19rpx; letter-spacing: 1rpx; text-align: center; }

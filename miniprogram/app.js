@@ -16,8 +16,8 @@ App({
       traceUser: true
     })
     this.globalData.cloudReady = true
-    // 这版视觉统一使用浅色工作面，迁移旧版本可能保存的深色偏好。
-    theme.setTheme('light')
-    this.globalData.theme = 'light'
+    const savedTheme = theme.getTheme()
+    this.globalData.theme = savedTheme
+    theme.syncNavBar(savedTheme)
   }
 })

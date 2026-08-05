@@ -1,55 +1,55 @@
 .nutrition-page { padding-top: 24rpx; padding-bottom: calc(156rpx + env(safe-area-inset-bottom)); }
 .nutrition-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; margin-bottom: 22rpx; }
-.eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
-.date-picker { flex: none; margin-top: 24rpx; padding: 12rpx 14rpx; border: 1rpx solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 20rpx; }
+.eyebrow { display: block; margin-bottom: 12rpx; color: var(--primary); font-size: 22rpx; font-weight: 750; letter-spacing: 2rpx; }
+.date-picker { flex: none; margin-top: 24rpx; padding: 12rpx 14rpx; border: 1rpx solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 22rpx; }
 .daily-card { padding: 24rpx; border: 1rpx solid #b9cf72; border-radius: var(--radius); background: var(--primary-soft); color: var(--text); box-shadow: none; }
 .theme-light .daily-card { background: var(--primary-soft); box-shadow: none; }
 .daily-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12rpx; }
-.daily-kicker { display: block; color: var(--primary-strong); font-size: 18rpx; font-weight: 850; letter-spacing: 2rpx; }
-.daily-calories { display: block; margin-top: 8rpx; font-size: 46rpx; font-weight: 800; }
-.daily-calories text { font-size: 20rpx; font-weight: 500; }
+.daily-kicker { display: block; color: var(--primary-strong); font-size: 20rpx; font-weight: 850; letter-spacing: 2rpx; }
+.daily-calories { display: block; margin-top: 8rpx; font-size: 50rpx; font-weight: 800; }
+.daily-calories text { font-size: 22rpx; font-weight: 500; }
 .macro-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8rpx; margin-top: 20rpx; }
 .macro-summary view { padding-top: 12rpx; border-top: 1rpx solid #cbd9a0; }
 .macro-summary text { display: block; }
-.macro-summary text:first-child { font-size: 24rpx; font-weight: 800; }
-.macro-summary text:last-child { margin-top: 4rpx; color: var(--text-dim); font-size: 18rpx; }
+.macro-summary text:first-child { font-size: 26rpx; font-weight: 800; }
+.macro-summary text:last-child { margin-top: 4rpx; color: var(--text-dim); font-size: 20rpx; }
 .section-head { display: flex; align-items: center; justify-content: flex-start; margin-top: 28rpx; margin-bottom: 12rpx; }
-.section-title { color: var(--text); font-size: 28rpx; font-weight: 700; }
+.section-title { color: var(--text); font-size: 31rpx; font-weight: 700; }
 .meal-list { border-top: 1rpx solid var(--card-border); }
 .meal-row { display: flex; align-items: center; gap: 12rpx; min-height: 100rpx; border-bottom: 1rpx solid var(--card-border); }
 .meal-row:active { opacity: .65; }
-.meal-mark { display: flex; align-items: center; justify-content: center; width: 58rpx; height: 58rpx; flex: none; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent); font-size: 19rpx; font-weight: 700; }
+.meal-mark { display: flex; align-items: center; justify-content: center; width: 58rpx; height: 58rpx; flex: none; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent); font-size: 21rpx; font-weight: 700; }
 .meal-copy { flex: 1; min-width: 0; }
 .meal-copy text { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.meal-copy text:first-child { color: var(--text); font-size: 25rpx; font-weight: 650; }
-.meal-copy text:last-child { margin-top: 6rpx; color: var(--text-dim); font-size: 18rpx; }
+.meal-copy text:first-child { color: var(--text); font-size: 28rpx; font-weight: 650; }
+.meal-copy text:last-child { margin-top: 6rpx; color: var(--text-dim); font-size: 20rpx; }
 .meal-calories { flex: none; text-align: right; }
 .meal-calories text { display: block; }
-.meal-calories text:first-child { color: var(--text); font-size: 25rpx; font-weight: 750; }
-.meal-calories text:last-child { margin-top: 2rpx; color: var(--text-dim); font-size: 17rpx; }
+.meal-calories text:first-child { color: var(--text); font-size: 28rpx; font-weight: 750; }
+.meal-calories text:last-child { margin-top: 2rpx; color: var(--text-dim); font-size: 19rpx; }
 .meal-arrow { flex: none; color: var(--text-dim); font-size: 24rpx; }
-.error-note { margin-top: 18rpx; padding: 14rpx; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent); font-size: 20rpx; }
+.error-note { margin-top: 18rpx; padding: 14rpx; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent); font-size: 22rpx; }
 
 .editor-mask { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; justify-content: flex-end; background: var(--mask); }
 .editor-sheet { max-height: 82vh; padding: 8rpx 24rpx 28rpx; border-radius: 16rpx 16rpx 0 0; background: var(--sheet-bg); animation: sheetUp .22s ease-out both; }
 .sheet-handle { width: 68rpx; height: 7rpx; margin: 8rpx auto 18rpx; border-radius: 999rpx; background: var(--surface-3); }
 .editor-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14rpx; }
-.editor-kicker { display: block; color: var(--primary); font-size: 18rpx; font-weight: 750; letter-spacing: 2rpx; }
-.editor-title { display: block; margin-top: 5rpx; color: var(--text); font-size: 30rpx; font-weight: 750; }
+.editor-kicker { display: block; color: var(--primary); font-size: 20rpx; font-weight: 750; letter-spacing: 2rpx; }
+.editor-title { display: block; margin-top: 5rpx; color: var(--text); font-size: 33rpx; font-weight: 750; }
 .editor-close { color: var(--text-dim); font-size: 32rpx; }
 .meal-type-picker { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; margin-top: 18rpx; padding: 14rpx; border-radius: var(--radius-sm); background: var(--surface-2); }
-.meal-type-picker text:first-child { color: var(--text-dim); font-size: 20rpx; }
-.meal-type-picker text:last-child { color: var(--text); font-size: 22rpx; font-weight: 650; }
+.meal-type-picker text:first-child { color: var(--text-dim); font-size: 22rpx; }
+.meal-type-picker text:last-child { color: var(--text); font-size: 24rpx; font-weight: 650; }
 .editor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8rpx; margin-top: 10rpx; }
 .editor-field, .calorie-field { min-width: 0; padding: 12rpx; border-radius: var(--radius-sm); background: var(--surface-2); }
 .editor-field text, .calorie-field text { display: block; }
-.editor-field text, .calorie-field text:first-child { color: var(--text-dim); font-size: 18rpx; }
-.editor-field input { width: 100%; height: 46rpx; margin-top: 5rpx; color: var(--text); font-size: 25rpx; line-height: 46rpx; }
+.editor-field text, .calorie-field text:first-child { color: var(--text-dim); font-size: 20rpx; }
+.editor-field input { width: 100%; height: 46rpx; margin-top: 5rpx; color: var(--text); font-size: 27rpx; line-height: 46rpx; }
 .calorie-field { border: 1rpx solid var(--primary); background: var(--primary-soft); }
-.calorie-field text:last-child { margin-top: 7rpx; color: var(--primary-strong); font-size: 25rpx; font-weight: 750; }
-.formula-note { display: block; margin-top: 10rpx; color: var(--primary); font-size: 18rpx; }
-.note-input { width: 100%; height: 68rpx; margin-top: 12rpx; padding: 0 14rpx; border: 1rpx solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text); font-size: 22rpx; line-height: 68rpx; }
+.calorie-field text:last-child { margin-top: 7rpx; color: var(--primary-strong); font-size: 27rpx; font-weight: 750; }
+.formula-note { display: block; margin-top: 10rpx; color: var(--primary); font-size: 20rpx; }
+.note-input { width: 100%; height: 68rpx; margin-top: 12rpx; padding: 0 14rpx; border: 1rpx solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text); font-size: 24rpx; line-height: 68rpx; }
 .editor-actions { display: flex; gap: 10rpx; margin-top: 16rpx; }
 .editor-actions .btn-primary { flex: 1; }
-.delete-button { width: 130rpx; padding: 18rpx 0; border: 1rpx solid var(--danger); border-radius: var(--radius-sm); color: var(--danger); font-size: 24rpx; }
+.delete-button { width: 130rpx; padding: 18rpx 0; border: 1rpx solid var(--danger); border-radius: var(--radius-sm); color: var(--danger); font-size: 26rpx; }
 .nutrition-add { position: fixed; right: 32rpx; bottom: calc(24rpx + env(safe-area-inset-bottom)); left: 32rpx; z-index: 90; width: auto; }

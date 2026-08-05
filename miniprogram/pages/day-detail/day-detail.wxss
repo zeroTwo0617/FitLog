@@ -1,7 +1,7 @@
 .page.detail { padding-bottom: 60rpx; }
 
-.head .date { font-size: 44rpx; font-weight: 700; display: block; }
-.head .summary { color: var(--text-dim); font-size: 26rpx; margin-top: 6rpx; display: block; }
+.head .date { font-size: 48rpx; font-weight: 700; display: block; }
+.head .summary { color: var(--text-dim); font-size: 28rpx; margin-top: 6rpx; display: block; }
 
 /* 一次训练（可能一天有多练） */
 .session { margin-bottom: 32rpx; }
@@ -9,8 +9,8 @@
   display: flex; align-items: baseline; justify-content: space-between;
   margin-bottom: 14rpx;
 }
-.s-title { font-size: 30rpx; font-weight: 700; color: var(--primary); }
-.s-meta { font-size: 22rpx; color: var(--text-dim); }
+.s-title { font-size: 32rpx; font-weight: 700; color: var(--primary); }
+.s-meta { font-size: 24rpx; color: var(--text-dim); }
 
 /* 动作组：外观由全局 .card 提供 */
 .group-head {
@@ -18,15 +18,15 @@
   margin-bottom: 14rpx; padding-bottom: 12rpx;
   border-bottom: 1rpx solid var(--border);
 }
-.g-name { font-size: 30rpx; font-weight: 600; }
-.g-count { color: var(--text-dim); font-size: 24rpx; }
+.g-name { font-size: 32rpx; font-weight: 600; }
+.g-count { color: var(--text-dim); font-size: 26rpx; }
 
-.set-row { display: flex; align-items: center; padding: 12rpx 0; font-size: 28rpx; }
+.set-row { display: flex; align-items: center; padding: 12rpx 0; font-size: 30rpx; }
 .set-row:nth-child(even) { background: var(--surface-2); }
-.c-no { width: 64rpx; text-align: center; color: var(--primary); font-size: 24rpx; flex: none; }
+.c-no { width: 64rpx; text-align: center; color: var(--primary); font-size: 26rpx; flex: none; }
 .c-reps, .c-weight, .c-rest { flex: 1; text-align: center; color: var(--text); }
 
 /* 空态 */
 .empty { display: flex; flex-direction: column; align-items: center; gap: 16rpx; padding: 120rpx 0; }
 .empty-emoji { font-size: 72rpx; }
-.empty-text { font-size: 26rpx; color: var(--text-dim); }
+.empty-text { font-size: 28rpx; color: var(--text-dim); }

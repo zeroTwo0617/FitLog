@@ -75,7 +75,15 @@ async function main() {
   const cloudMock = {
     DYNAMIC_CURRENT_ENV: 'test',
     init: () => {},
-    database: () => ({}),
+    database: () => ({
+      collection: () => ({
+        where: () => ({
+          limit: () => ({
+            get: () => Promise.resolve({ data: [{ _id: 'session-test', _openid: 'server-openid', messages: [] }] })
+          })
+        })
+      })
+    }),
     getWXContext: () => ({ OPENID: 'server-openid' })
   }
   Module._load = function (request, parent, isMain) {
@@ -90,8 +98,13 @@ async function main() {
     Module._load = originalLoad
   }
   assert.strictEqual(cloudAgent.openidOf({ OPENID: 'client-openid' }), 'server-openid')
+  const sessionResult = await cloudAgent.main({ action: 'getSession', sessionId: 'session-test' }, { OPENID: 'client-openid' })
+  assert.strictEqual(sessionResult.ok, true)
+  assert.strictEqual(sessionResult.session._openid, 'server-openid')
   cloudMock.getWXContext = () => ({})
   assert.strictEqual(cloudAgent.openidOf({ OPENID: 'client-openid' }), '')
+  const unauthorized = await cloudAgent.main({ action: 'getSession', sessionId: 'session-test' }, { OPENID: 'client-openid' })
+  assert.strictEqual(unauthorized.code, 'AUTH_REQUIRED')
 
   console.log('CloudBase Agent contract tests passed')
 }
