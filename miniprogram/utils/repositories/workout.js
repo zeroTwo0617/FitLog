@@ -18,7 +18,15 @@ function listSetsAll() {
   if (typeof cloud.getAll === 'function') return cloud.getAll(cloud.C.SETS, 100)
   return cloud.db().collection(cloud.C.SETS).limit(1000).get().then((res) => (res && res.data) || [])
 }
-function save(payload) { return cloud.callFunction('saveWorkout', payload) }
+function createRequestId() {
+  return 'fitlog-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)
+}
+
+function save(payload) {
+  const data = Object.assign({}, payload || {})
+  if (!data.requestId) data.requestId = createRequestId()
+  return cloud.callFunction('saveWorkout', data)
+}
 
 function isFunctionNotFound(error) {
   const message = String(error && (error.errMsg || error.message || ''))
@@ -47,4 +55,4 @@ function dayDetail(dateStr) {
   })
 }
 
-module.exports = { listAll, listRecent, count, get, sets, listSetsAll, save, dayDetail }
+module.exports = { listAll, listRecent, count, get, sets, listSetsAll, save, createRequestId, dayDetail }

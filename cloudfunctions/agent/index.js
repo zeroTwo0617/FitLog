@@ -43,14 +43,14 @@ function diagnostics() {
   })
 }
 
-function openidOf(context) {
+function openidOf() {
   let wxContext = {}
   try {
     wxContext = typeof cloud.getWXContext === 'function' ? cloud.getWXContext() || {} : {}
   } catch (error) {
     console.warn('failed to read CloudBase user context', error)
   }
-  return wxContext.OPENID || (context && context.OPENID) || (context && context.openid) || ''
+  return wxContext.OPENID || ''
 }
 
 function cleanContext(context) {
@@ -278,3 +278,6 @@ exports.main = async (event, context) => {
     return fail(error.code || 'INTERNAL_ERROR', error.message || '服务暂时不可用')
   }
 }
+
+// Exposed only for the local contract test; the CloudBase entry point remains `main`.
+exports.openidOf = openidOf

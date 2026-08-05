@@ -25,13 +25,13 @@ exports.main = async function (event) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return fail('INVALID_DATE', '训练日期无效')
 
   try {
-    const workouts = await getAll('workouts', { dateStr, _openid })
+    const workouts = await getAll('workouts', { dateStr, _openid: openid })
     const ids = workouts.map((w) => w._id)
     let sets = []
     // 云数据库 in 一次最多 10 个值，按批查当天所有组
     for (let i = 0; i < ids.length; i += 10) {
       const batch = ids.slice(i, i + 10)
-      const rows = await getAll('sets', { sessionId: _.in(batch), _openid })
+      const rows = await getAll('sets', { sessionId: _.in(batch), _openid: openid })
       sets = sets.concat(rows)
     }
     return { ok: true, workouts, sets }

@@ -30,6 +30,7 @@ page({
     categories: ex.categoryOptions(),
     pickerList: [],
     saving: false,
+    saveRequestId: '',
     planList: [],          // 导入计划选择器列表
     showPlanPicker: false,
     exerciseCount: 0,
@@ -347,7 +348,8 @@ page({
       return
     }
 
-    this.setData({ saving: true })
+    const requestId = this.data.saveRequestId || workoutRepo.createRequestId()
+    this.setData({ saving: true, saveRequestId: requestId })
     let prevSets = []
 
     // PR 检测的历史基线：保存前先读一次已有 sets；失败不阻塞保存
@@ -357,6 +359,7 @@ page({
       .then(() => auth.ensureUser())
       .then(() => {
         return workoutRepo.save({
+            requestId,
             dateStr: this.data.today,
             title: this.data.title || '',
             planId: this.data.planId || '',
@@ -391,7 +394,7 @@ page({
           if (m > 0 && prev > 0 && m > prev) prs.push({ name: s.name, weight: m, prev })
         })
 
-        this.setData(Object.assign({ saving: false, session: [], showPicker: false }, this.sessionStats([])))
+        this.setData(Object.assign({ saving: false, saveRequestId: '', session: [], showPicker: false }, this.sessionStats([])))
         if (prs.length) {
           const lines = prs.map((p) => p.name + '  ' + p.weight + ' kg（原 ' + p.prev + ' kg）').join('\n')
           wx.showModal({ title: '🏆 新纪录！', content: lines, showCancel: false, confirmText: '继续加油' })

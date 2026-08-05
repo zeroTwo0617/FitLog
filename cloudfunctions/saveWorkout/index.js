@@ -1,4 +1,5 @@
 const cloud = require('wx-server-sdk')
+const { normalizeRequestId, workoutIdFor } = require('./idempotency.js')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
@@ -71,6 +72,13 @@ function normalizeSession(input) {
   return { exercises, sets, setTotal: totalSets }
 }
 
+function isMissingDocument(error) {
+  const message = String(error && (error.errMsg || error.message || '')).toLowerCase()
+  const code = String(error && (error.errCode || error.code || '')).toLowerCase()
+  return code.indexOf('document_not_exist') >= 0 || code.indexOf('document_not_found') >= 0 ||
+    message.indexOf('document does not exist') >= 0 || message.indexOf('document not exist') >= 0
+}
+
 exports.main = async function (event) {
   const context = cloud.getWXContext()
   const openid = context && context.OPENID
@@ -79,14 +87,39 @@ exports.main = async function (event) {
   const dateStr = String(event && event.dateStr || '')
   if (!isDateStr(dateStr)) return fail('INVALID_DATE', '训练日期无效或晚于今天')
   const normalized = normalizeSession(event && event.session)
+  const requestId = normalizeRequestId(event && (event.requestId || event.idempotencyKey))
+  if (!requestId) return fail('INVALID_REQUEST_ID', 'requestId is required')
+  const workoutId = workoutIdFor(openid, requestId)
   if (!normalized) return fail('INVALID_SESSION', '训练动作或组数据无效')
 
   try {
     const result = await db.runTransaction(async (transaction) => {
       const now = new Date()
-      const workout = await transaction.collection('workouts').add({
+      const workoutRef = transaction.collection('workouts').doc(workoutId)
+      let existing
+      try {
+        existing = await workoutRef.get()
+      } catch (error) {
+        if (!isMissingDocument(error)) throw error
+      }
+      if (existing && existing.data) {
+        const row = existing.data
+        if (row._openid !== openid || row.requestId !== requestId) {
+          const conflict = new Error('requestId conflict')
+          conflict.code = 'IDEMPOTENCY_CONFLICT'
+          throw conflict
+        }
+        return {
+          workoutId: row._id || workoutId,
+          setTotal: Number(row.setTotal) || normalized.setTotal,
+          savedAt: row.createdAt || now,
+          idempotent: true
+        }
+      }
+      await workoutRef.set({
         data: {
           _openid: openid,
+          requestId,
           date: now,
           dateStr,
           title: String(event.title || '').slice(0, 100),
@@ -98,13 +131,14 @@ exports.main = async function (event) {
       })
       for (const set of normalized.sets) {
         await transaction.collection('sets').add({
-          data: Object.assign({}, set, { _openid: openid, sessionId: workout._id, createdAt: now })
+          data: Object.assign({}, set, { _openid: openid, sessionId: workoutId, createdAt: now })
         })
       }
-      return { workoutId: workout._id, setTotal: normalized.setTotal, savedAt: now.toISOString() }
+      return { workoutId, setTotal: normalized.setTotal, savedAt: now.toISOString(), idempotent: false }
     })
     return { ok: true, result }
   } catch (error) {
+    if (error && error.code === 'IDEMPOTENCY_CONFLICT') return fail('IDEMPOTENCY_CONFLICT', error.message)
     console.error('保存训练事务失败', error)
     return fail('SAVE_WORKOUT_FAILED', '训练保存失败，请稍后重试')
   }
