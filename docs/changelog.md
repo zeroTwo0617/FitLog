@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-08-06 · Agent 动作库搜索工具
+
+### 变更
+
+- 从小程序真实动作目录生成云函数侧精简索引，保留 1324 个动作的 ID、名称、部位、目标肌群和器械字段。
+- 新增 `agent` 的 `searchExercises` action，以及前端 `agentApi.searchExercises()` 封装；查询需要服务端 CloudBase 身份，最多返回 12 条结果。
+- 训练模式支持 OpenAI-compatible `search_exercises` function tool。模型先搜索真实动作，再生成计划；schema 会拒绝不在目录中的动作 ID。
+- 模型不支持工具调用时降级为普通结构化请求，饮食模式不携带动作搜索工具。
+
+### 验证
+
+- 全量 `scripts/test_*.js` 通过。
+- 新增动作索引同步、搜索白名单、身份隔离和工具调用二次生成测试。
+
+---
+
 ## 2026-08-05 · 主题设置与字体可读性调整
 
 ### 变更
@@ -63,7 +79,7 @@
 - `cloudfunctions/seedData/`（index.js、genData.js、config.json、package.json）
 - `scripts/test_seed.js`
 - 前端入口：`mine.js` 的 `loadSeed()`、`mine.wxml` 的「载入测试数据」菜单行
-- `repositories/system.js` 的 `seedData()`（保留 `exportData()`）
+- `repositories/system.js` 的 `seedData()`；当前仅保留用户数据删除能力
 - 文档引用：`data-access.md`、`v1-release-plan.md`、`开发文档.md` 中相关条目
 
 `sparkles` 图标保留（仍被「教练」tab 使用）。

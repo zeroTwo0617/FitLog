@@ -4,11 +4,10 @@ const MEAL_TYPES = [
   { value: 'dinner', label: '晚餐' },
   { value: 'snack', label: '加餐' }
 ]
+const dateUtil = require('./date.js')
 
 function today() {
-  const d = new Date()
-  const pad = (n) => (n < 10 ? '0' + n : '' + n)
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+  return dateUtil.todayString()
 }
 
 function numberOrZero(value) {

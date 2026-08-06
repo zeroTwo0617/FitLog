@@ -1,22 +1,41 @@
 const cloud = require('../cloud.js')
+const { applyOrder } = require('../queryOrder.js')
+
+const WORKOUT_ORDER = [
+  { field: 'dateStr', direction: 'desc' },
+  { field: 'date', direction: 'desc' },
+  { field: 'createdAt', direction: 'desc' },
+  { field: '_id', direction: 'desc' }
+]
+const SET_ORDER = [
+  { field: 'setIndex', direction: 'asc' },
+  { field: 'createdAt', direction: 'asc' },
+  { field: '_id', direction: 'asc' }
+]
+const SETS_ALL_ORDER = [
+  { field: 'createdAt', direction: 'desc' },
+  { field: '_id', direction: 'desc' }
+]
 
 function listAll() {
-  if (typeof cloud.getAll === 'function') return cloud.getAll(cloud.C.WORKOUTS, 100)
-  return cloud.db().collection(cloud.C.WORKOUTS).limit(1000).get().then((res) => (res && res.data) || [])
+  if (typeof cloud.getAll === 'function') return cloud.getAll(cloud.C.WORKOUTS, 100, WORKOUT_ORDER)
+  return applyOrder(cloud.db().collection(cloud.C.WORKOUTS), WORKOUT_ORDER).limit(20).get().then((res) => (res && res.data) || [])
 }
 function listRecent(limit) {
-  return cloud.db().collection(cloud.C.WORKOUTS).orderBy('dateStr', 'desc').limit(limit || 30).get()
+  const requested = Number(limit)
+  const bounded = Number.isFinite(requested) && requested > 0 ? Math.floor(requested) : 30
+  if (bounded > 20) return cloud.getAll(cloud.C.WORKOUTS, 20, WORKOUT_ORDER).then((rows) => rows.slice(0, bounded))
+  return applyOrder(cloud.db().collection(cloud.C.WORKOUTS), WORKOUT_ORDER).limit(bounded).get()
     .then((res) => (res && res.data) || [])
 }
 function count() { return cloud.db().collection(cloud.C.WORKOUTS).count() }
 function get(id) { return cloud.db().collection(cloud.C.WORKOUTS).doc(id).get() }
 function sets(sessionId) {
-  return cloud.db().collection(cloud.C.SETS).where({ sessionId: sessionId }).get()
-    .then((res) => (res && res.data) || [])
+  return cloud.getAll(cloud.C.SETS, 20, SET_ORDER, { sessionId: sessionId })
 }
 function listSetsAll() {
-  if (typeof cloud.getAll === 'function') return cloud.getAll(cloud.C.SETS, 100)
-  return cloud.db().collection(cloud.C.SETS).limit(1000).get().then((res) => (res && res.data) || [])
+  if (typeof cloud.getAll === 'function') return cloud.getAll(cloud.C.SETS, 100, SETS_ALL_ORDER)
+  return applyOrder(cloud.db().collection(cloud.C.SETS), SETS_ALL_ORDER).limit(20).get().then((res) => (res && res.data) || [])
 }
 function createRequestId() {
   return 'fitlog-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)

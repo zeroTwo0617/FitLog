@@ -98,5 +98,18 @@ page({
 
   onShow() {
     this.setData({ theme: theme.getTheme() })
+  },
+
+  openPlatformPrivacy() {
+    if (typeof wx.openPrivacyContract !== 'function') {
+      wx.showToast({ title: '当前基础库不支持该功能', icon: 'none' })
+      return
+    }
+    wx.openPrivacyContract({
+      fail: (error) => {
+        console.error('打开微信隐私指引失败', error)
+        wx.showToast({ title: '隐私指引暂时无法打开', icon: 'none' })
+      }
+    })
   }
 })

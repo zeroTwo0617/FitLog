@@ -28,7 +28,7 @@
 ## Agent 云函数
 1. 在微信开发者工具中部署 `cloudfunctions/agent`，修改云函数代码后需要再次部署。
 2. 在 CloudBase 云函数环境变量中配置 `LLM_API_KEY`、`LLM_BASE_URL`、`LLM_MODEL` 和可选的 `LLM_VISION_MODEL`。
-3. 创建 `agentSessions`、`nutritionLogs`、`dietPlans` 集合，并将权限设置为“仅创建者可读写”。
+3. 创建 `agentSessions`、`agentUploads`、`nutritionLogs`、`dietPlans` 集合，并将权限设置为“仅创建者可读写”。
 4. 图片通过按用户隔离的临时路径上传；`analyzeMeal` 会在识别完成后删除原始图片，只把用户确认后的结构化营养结果写入 `nutritionLogs`。
 
 如果页面提示模型不可用，优先查看提示中的错误码。`MODEL_CONFIG_MISSING` 表示环境变量没有注入到云函数实例；`.env.example` 只是模板，`project.private.config.json` 也不会注入云函数环境变量。部署后的页面会显示一行脱敏配置诊断，不会显示 API Key。
@@ -36,7 +36,8 @@
 ## 数据写入云函数
 - `cloudfunctions/saveWorkout`：以事务方式写入一条 `workouts` 和全部 `sets`。
 - `cloudfunctions/ensureUser`：按当前用户 openid 幂等创建用户档案。
-- 修改这两个目录后，需要在微信开发者工具中重新部署对应云函数。
+- `cloudfunctions/getDayDetail`：按当前用户和日期聚合训练及组明细，避免页面逐条查询。
+- 修改任一 `cloudfunctions/<name>` 目录后，需要在微信开发者工具中重新部署对应云函数。
 
 ## Git 工作流
 - 分支：`main` / `dev` / `feature/<功能>`

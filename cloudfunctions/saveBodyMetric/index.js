@@ -28,7 +28,8 @@ exports.main = async function (event) {
   const openid = cloud.getWXContext().OPENID
   if (!openid) return fail('AUTH_REQUIRED', '请先登录微信云开发')
   if (!isDateStr(event && event.dateStr)) return fail('INVALID_DATE', '身体数据日期无效或晚于今天')
-  const data = { dateStr: String(event.dateStr), date: new Date(String(event.dateStr)) }
+  // dateStr 是用户选择的业务日期；审计时间全部由云函数生成，不能由客户端传入。
+  const data = { dateStr: String(event.dateStr) }
   Object.keys(RANGES).forEach((key) => { data[key] = normalize(event[key], RANGES[key]) })
   if (Object.keys(RANGES).some((key) => data[key] === undefined)) return fail('INVALID_BODY_METRIC', '身体数据超出合理范围')
   if (!Object.keys(RANGES).some((key) => data[key] != null)) return fail('INVALID_BODY_METRIC', '至少填写一项身体数据')
@@ -41,11 +42,12 @@ exports.main = async function (event) {
           const existing = await transaction.collection('bodyMetrics').where({ dateStr: data.dateStr, _openid: openid }).get()
           const row = existing && existing.data && existing.data[0]
           const now = new Date()
+          const auditedData = Object.assign({}, data, { date: now, updatedAt: now })
           if (row) {
-            await transaction.collection('bodyMetrics').doc(row._id).update({ data: Object.assign({}, data, { updatedAt: now }) })
+            await transaction.collection('bodyMetrics').doc(row._id).update({ data: auditedData })
             return { id: row._id, created: false }
           }
-          const added = await transaction.collection('bodyMetrics').add({ data: Object.assign({}, data, { _openid: openid, createdAt: now }) })
+          const added = await transaction.collection('bodyMetrics').add({ data: Object.assign({}, auditedData, { _openid: openid, createdAt: now }) })
           return { id: added._id, created: true }
         })
         return { ok: true, id: result.id, created: result.created }

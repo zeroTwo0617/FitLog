@@ -6,16 +6,39 @@ const rt = require('../../utils/restTimer.js')
 const page = require('../../utils/page.js')
 const planRepo = require('../../utils/repositories/plan.js')
 const workoutRepo = require('../../utils/repositories/workout.js')
+const dateUtil = require('../../utils/date.js')
 
 function fmtToday() {
-  const d = new Date()
-  const p = (n) => (n < 10 ? '0' : '') + n
-  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+  return dateUtil.todayString()
 }
 
 // 一组默认空数据（completed 复用 sets.completed 字段：练一组勾一组）
 function blankSet() {
   return { reps: '', weight: '', rest: '', completed: false }
+}
+
+// 只把会影响 saveWorkout 结果的编辑内容纳入指纹，保证失败重试的幂等范围与实际保存数据一致。
+function savePayloadFingerprint(payload) {
+  const session = Array.isArray(payload && payload.session) ? payload.session : []
+  return JSON.stringify({
+    dateStr: String(payload && payload.dateStr || ''),
+    title: String(payload && payload.title || ''),
+    planId: String(payload && payload.planId || ''),
+    session: session.map((item) => ({
+      exerciseId: String(item && item.exerciseId || ''),
+      name: String(item && item.name || ''),
+      nameEn: String(item && item.nameEn || ''),
+      targetSets: item && item.targetSets != null ? item.targetSets : '',
+      targetReps: item && item.targetReps != null ? item.targetReps : '',
+      targetWeight: item && item.targetWeight != null ? item.targetWeight : '',
+      sets: Array.isArray(item && item.sets) ? item.sets.map((set) => ({
+        reps: set && set.reps != null ? set.reps : '',
+        weight: set && set.weight != null ? set.weight : '',
+        rest: set && set.rest != null ? set.rest : '',
+        completed: !!(set && set.completed)
+      })) : []
+    }))
+  })
 }
 
 page({
@@ -31,6 +54,7 @@ page({
     pickerList: [],
     saving: false,
     saveRequestId: '',
+    saveFingerprint: '',
     planList: [],          // 导入计划选择器列表
     showPlanPicker: false,
     exerciseCount: 0,
@@ -333,7 +357,7 @@ page({
   // ===== 保存训练：先读历史最大重量（PR 检测），再写 workouts + sets =====
   save() {
     if (this.data.saving) return
-    const session = this.data.session
+    const session = JSON.parse(JSON.stringify(this.data.session || []))
     if (!session || session.length === 0) {
       wx.showToast({ title: '请先添加一个动作', icon: 'none' })
       return
@@ -348,8 +372,17 @@ page({
       return
     }
 
-    const requestId = this.data.saveRequestId || workoutRepo.createRequestId()
-    this.setData({ saving: true, saveRequestId: requestId })
+    const payload = {
+      dateStr: this.data.today,
+      title: this.data.title || '',
+      planId: this.data.planId || '',
+      session: session
+    }
+    const fingerprint = savePayloadFingerprint(payload)
+    const requestId = this.data.saveRequestId && this.data.saveFingerprint === fingerprint
+      ? this.data.saveRequestId
+      : workoutRepo.createRequestId()
+    this.setData({ saving: true, saveRequestId: requestId, saveFingerprint: fingerprint })
     let prevSets = []
 
     // PR 检测的历史基线：保存前先读一次已有 sets；失败不阻塞保存
@@ -358,13 +391,7 @@ page({
       .catch((err) => { console.warn('读取历史记录失败，跳过 PR 检测', err) })
       .then(() => auth.ensureUser())
       .then(() => {
-        return workoutRepo.save({
-            requestId,
-            dateStr: this.data.today,
-            title: this.data.title || '',
-            planId: this.data.planId || '',
-            session: session
-        })
+        return workoutRepo.save(Object.assign({ requestId }, payload))
       })
       .then((res) => {
         const result = res
@@ -394,7 +421,20 @@ page({
           if (m > 0 && prev > 0 && m > prev) prs.push({ name: s.name, weight: m, prev })
         })
 
-        this.setData(Object.assign({ saving: false, saveRequestId: '', session: [], showPicker: false }, this.sessionStats([])))
+        // 请求期间若页面内容发生变化，只结束本次请求，不覆盖用户尚未提交的新编辑。
+        const currentFingerprint = savePayloadFingerprint({
+          dateStr: this.data.today,
+          title: this.data.title || '',
+          planId: this.data.planId || '',
+          session: this.data.session || []
+        })
+        if (currentFingerprint !== fingerprint) {
+          this.setData({ saving: false, saveRequestId: '', saveFingerprint: '' })
+          wx.showToast({ title: '已保存，当前修改尚未提交', icon: 'none' })
+          return
+        }
+
+        this.setData(Object.assign({ saving: false, saveRequestId: '', saveFingerprint: '', session: [], showPicker: false }, this.sessionStats([])))
         if (prs.length) {
           const lines = prs.map((p) => p.name + '  ' + p.weight + ' kg（原 ' + p.prev + ' kg）').join('\n')
           wx.showModal({ title: '🏆 新纪录！', content: lines, showCancel: false, confirmText: '继续加油' })

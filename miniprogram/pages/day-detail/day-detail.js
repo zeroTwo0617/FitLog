@@ -1,13 +1,10 @@
 const hd = require('../../utils/historyData.js')
 const page = require('../../utils/page.js')
 const workoutRepo = require('../../utils/repositories/workout.js')
+const dateUtil = require('../../utils/date.js')
 
 function fmtTime(iso) {
-  if (!iso) return ''
-  const d = new Date(iso)
-  const h = d.getHours()
-  const m = d.getMinutes()
-  return (h < 10 ? '0' + h : '' + h) + ':' + (m < 10 ? '0' + m : '' + m)
+  return iso ? dateUtil.timeString(iso) : ''
 }
 
 page({

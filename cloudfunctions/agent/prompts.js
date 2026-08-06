@@ -7,7 +7,10 @@ function chatMessages(mode, query, context, history) {
   const system = training
     ? '你是 FitLog 训练方案助手。只根据用户提供的训练上下文给出安全、可执行的建议。涉及疼痛、受伤、康复时不要生成训练计划。必须只返回 JSON：{"reply":"文本","planDraft":null或{"name":"","items":[{"exerciseId":"","exerciseName":"","targetSets":3,"targetReps":10,"targetWeight":null}]}}。没有足够信息时 planDraft 必须为 null。不要编造动作 ID。'
     : '你是 FitLog 饮食方案助手。给出非医疗性质的饮食建议，热量和营养素都必须标注为估算。必须只返回 JSON：{"reply":"文本","dietPlanDraft":null或{"name":"","goal":"","dailyTarget":{"calories":0,"protein":0,"carbs":0,"fat":0},"meals":[{"name":"","time":"","calories":0,"foods":[{"name":"","portion":"","calories":0,"protein":0,"carbs":0,"fat":0}]}],"constraints":[]}}。如果用户要求医疗诊断，建议咨询专业人士，不生成医疗结论。'
-  const messages = [{ role: 'system', content: system }]
+  const toolInstruction = training
+    ? ' When recommending specific exercises or creating planDraft, call the search_exercises tool first and only use exercise IDs returned by that tool.'
+    : ''
+  const messages = [{ role: 'system', content: system + toolInstruction }]
   ;(history || []).slice(-10).forEach((item) => messages.push({ role: item.role, content: String(item.content || '').slice(0, 1200) }))
   messages.push({ role: 'user', content: `用户问题：${String(query || '').slice(0, 1200)}\n用户数据上下文：${contextText(context)}` })
   return messages
@@ -39,4 +42,25 @@ function textMealMessages(dateStr, mealType, query) {
   ]
 }
 
-module.exports = { chatMessages, mealMessages, textMealMessages }
+function exerciseSearchTool() {
+  return {
+    type: 'function',
+    function: {
+      name: 'search_exercises',
+      description: 'Search the real FitLog exercise catalog. Use this before proposing specific exercises or exercise IDs.',
+      parameters: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          query: { type: 'string', description: 'Chinese name, English name, body part or exercise description' },
+          bodyPart: { type: 'string', description: 'Body part such as chest, back, or Chinese equivalent' },
+          target: { type: 'string', description: 'Target muscle such as pectorals, lats, or Chinese equivalent' },
+          equipment: { type: 'string', description: 'Equipment such as dumbbell or Chinese equivalent' },
+          limit: { type: 'integer', minimum: 1, maximum: 12, description: 'Maximum number of results' }
+        }
+      }
+    }
+  }
+}
+
+module.exports = { chatMessages, mealMessages, textMealMessages, exerciseSearchTool }

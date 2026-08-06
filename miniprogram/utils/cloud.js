@@ -1,5 +1,6 @@
 // 云数据库访问封装。必须在 app.js 中 wx.cloud.init 之后使用。
 const config = require('./config.js')
+const { applyOrder } = require('./queryOrder.js')
 
 // 惰性获取数据库实例（避免未初始化时提前 require 报错）
 function db() {
@@ -19,16 +20,30 @@ function collection(name) {
 
 function callFunction(name, data) {
   if (!wx.cloud || typeof wx.cloud.callFunction !== 'function') {
-    return Promise.reject(new Error('云环境未初始化'))
+    const error = new Error('云环境未初始化')
+    error.code = 'CLOUD_NOT_READY'
+    return Promise.reject(error)
   }
   return wx.cloud.callFunction({ name: name, data: data || {} }).then((res) => {
     const result = res && res.result ? res.result : res
+    if (res && res.errCode && !res.result) {
+      const error = new Error('云服务暂不可用，请稍后重试')
+      error.code = res.errCode
+      error.errMsg = res.errMsg || ''
+      throw error
+    }
     if (result && result.ok === false) {
       const error = new Error(result.error && result.error.message || result.message || '云操作失败')
       error.code = result.error && result.error.code || result.code || 'CLOUD_OPERATION_FAILED'
       throw error
     }
     return result
+  }).catch((error) => {
+    if (error && error.code && error.message && error.code !== 'CLOUD_OPERATION_FAILED') throw error
+    const normalized = new Error('云服务暂不可用，请稍后重试')
+    normalized.code = error && (error.code || error.errCode) || 'CLOUD_OPERATION_FAILED'
+    normalized.errMsg = error && (error.errMsg || error.message) || ''
+    throw normalized
   })
 }
 
@@ -55,12 +70,14 @@ function deleteFile(fileList) {
 // 分页策略：第一页串行判断是否还有更多；后续每批最多 PARALLEL_BATCH 页并行，
 // 批内出现不满页即到底。相比逐页串行，大数据量下往返次数显著减少。
 const PARALLEL_BATCH = 5
-function getAll(name, batchSize) {
+function getAll(name, batchSize, order, where) {
   const size = batchSize > 0 && batchSize <= 20 ? batchSize : 20
   const database = db()
-  const col = database.collection(name)
+  const base = database.collection(name)
+  const col = where && typeof base.where === 'function' ? base.where(where) : base
+  const ordered = applyOrder(col, order)
   const page = (skip) => {
-    const q = typeof col.skip === 'function' ? col.skip(skip).limit(size) : col.limit(size)
+    const q = typeof ordered.skip === 'function' ? ordered.skip(skip).limit(size) : ordered.limit(size)
     return q.get().then((res) => (res && res.data) || [])
   }
   const fetchBatch = (startSkip, acc) => {

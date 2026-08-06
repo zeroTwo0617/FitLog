@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f2">
+  <title>FitLog Agent Lab</title>
+  <link rel="stylesheet" href="./agent-learning.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#overview" aria-label="FitLog Agent Lab">
+        <span class="brand-mark">F</span>
+        <span class="brand-copy"><strong>FITLOG</strong><small>AGENT LAB</small></span>
+      </a>
+
+      <p class="sidebar-label">学习导航</p>
+      <nav class="side-nav" aria-label="学习导航">
+        <button class="nav-link is-active" type="button" data-target="overview"><span>01</span>请求总览</button>
+        <button class="nav-link" type="button" data-target="pipeline"><span>02</span>调用链路</button>
+        <button class="nav-link" type="button" data-target="context"><span>03</span>上下文与图表</button>
+        <button class="nav-link" type="button" data-target="response"><span>04</span>结果如何落库</button>
+        <button class="nav-link" type="button" data-target="pseudocode"><span>05</span>伪代码阅读</button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <span class="online-dot"></span>
+        <div><strong>演示模式</strong><small>只展示流程，不调用真实模型</small></div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div class="breadcrumb"><span>FITLOG</span><b>/</b> AGENT LAB</div>
+        <div class="top-actions">
+          <span class="provider-badge"><i></i> OPENAI-COMPATIBLE</span>
+          <button class="icon-button" id="refreshDemo" type="button" title="重新播放演示" aria-label="重新播放演示">↻</button>
+        </div>
+      </header>
+
+      <section class="hero section-anchor" id="overview">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> FITLOG / AGENT SYSTEM</p>
+          <h1>Agent 是一条<br><em>可追踪的请求链</em></h1>
+          <p class="hero-description">用户的问题不会直接碰到模型。小程序先整理上下文，云函数负责身份、提示词、模型调用和结果校验，最后才把可保存的数据交回前端。</p>
+          <div class="hero-actions">
+            <button class="primary-button" id="runDemo" type="button"><span>▶</span>运行一次请求</button>
+            <span class="hero-caption">点击下方节点，可查看每一站发生了什么</span>
+          </div>
+        </div>
+
+        <div class="hero-map" aria-label="Agent 请求摘要">
+          <div class="map-topline"><span>REQUEST TRACE</span><strong>FIT-2026-0806</strong></div>
+          <div class="mini-route">
+            <span class="route-node active"></span><span class="route-line"></span><span class="route-node"></span><span class="route-line"></span><span class="route-node"></span><span class="route-line"></span><span class="route-node"></span>
+          </div>
+          <div class="map-labels"><span>输入</span><span>云函数</span><span>模型</span><span>结果</span></div>
+          <div class="hero-metrics">
+            <div><small>平均响应</small><strong>1.48s</strong></div>
+            <div><small>上下文长度</small><strong>2.4k</strong></div>
+            <div><small>校验通过</small><strong class="success-text">98.6%</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block section-anchor" id="pipeline">
+        <div class="section-heading">
+          <div><p class="section-kicker">02 / REQUEST PIPELINE</p><h2>一次对话经过哪些站</h2></div>
+          <span class="section-note">点击节点查看代码职责</span>
+        </div>
+
+        <div class="pipeline" role="tablist" aria-label="Agent 请求链路">
+          <button class="pipeline-node is-active" type="button" data-step="input" role="tab" aria-selected="true">
+            <span class="node-number">01</span><span class="node-icon icon-input">↗</span><strong>小程序输入</strong><small>query + context</small>
+          </button>
+          <span class="pipeline-connector"><i></i></span>
+          <button class="pipeline-node" type="button" data-step="function" role="tab" aria-selected="false">
+            <span class="node-number">02</span><span class="node-icon icon-function">λ</span><strong>CloudBase 云函数</strong><small>auth + prompt</small>
+          </button>
+          <span class="pipeline-connector"><i></i></span>
+          <button class="pipeline-node" type="button" data-step="model" role="tab" aria-selected="false">
+            <span class="node-number">03</span><span class="node-icon icon-model">✦</span><strong>兼容模型</strong><small>chat/completions</small>
+          </button>
+          <span class="pipeline-connector"><i></i></span>
+          <button class="pipeline-node" type="button" data-step="schema" role="tab" aria-selected="false">
+            <span class="node-number">04</span><span class="node-icon icon-schema">✓</span><strong>结构化结果</strong><small>schema + save</small>
+          </button>
+        </div>
+
+        <div class="step-detail" aria-live="polite">
+          <div class="detail-copy"><p class="detail-kicker" id="stepKicker">01 / INPUT</p><h3 id="stepTitle">小程序只负责收集问题</h3><p id="stepDescription">页面读取训练记录、计划和身体数据，整理成白名单 context，再把 sessionId 一起交给 Agent API。</p><div class="detail-tags" id="stepTags"><span>pages/agent</span><span>utils/agentApi</span></div></div>
+          <pre class="code-snippet"><code id="stepCode">agentApi.chat('training', query, context, sessionId)</code></pre>
+          <div class="trace-log"><span class="log-pulse"></span><div><small>LIVE TRACE</small><strong id="traceText">等待开始请求</strong></div><span class="trace-time" id="traceTime">-- ms</span></div>
+        </div>
+      </section>
+
+      <section class="section-block section-anchor" id="context">
+        <div class="section-heading context-heading">
+          <div><p class="section-kicker">03 / CONTEXT &amp; METRICS</p><h2>模型看到什么，耗时在哪里</h2></div>
+          <div class="segmented" role="tablist" aria-label="Agent 模式"><button class="is-active" type="button" data-mode="training" role="tab" aria-selected="true">训练</button><button type="button" data-mode="diet" role="tab" aria-selected="false">饮食</button></div>
+        </div>
+
+        <div class="chart-grid">
+          <article class="chart-panel context-panel">
+            <div class="panel-heading"><div><span class="panel-label">CONTEXT MIX</span><h3>上下文组成</h3></div><span class="panel-value" id="contextTotal">2.4k tokens</span></div>
+            <div class="donut-layout">
+              <div class="donut-chart" id="contextDonut"><div class="donut-hole"><strong id="contextMainValue">42%</strong><small>近期记录</small></div></div>
+              <div class="legend" id="contextLegend"><div><i class="swatch green"></i><span>近期训练</span><b>42%</b></div><div><i class="swatch blue"></i><span>已有计划</span><b>28%</b></div><div><i class="swatch orange"></i><span>身体数据</span><b>12%</b></div><div><i class="swatch pale"></i><span>当前问题</span><b>18%</b></div></div>
+            </div>
+            <p class="panel-footnote" id="contextFootnote">只传与训练相关的字段，最多 10 条近期记录。</p>
+          </article>
+
+          <article class="chart-panel latency-panel">
+            <div class="panel-heading"><div><span class="panel-label">LATENCY TRACE</span><h3>一次请求的耗时</h3></div><span class="panel-value" id="latencyTotal">1,480 ms</span></div>
+            <div class="bar-chart" id="latencyChart">
+              <div class="bar-row" data-stage="整理上下文"><span>整理上下文</span><div class="bar-track"><i style="--bar-size: 24%"></i></div><b>180 ms</b></div>
+              <div class="bar-row" data-stage="模型生成"><span>模型生成</span><div class="bar-track"><i class="bar-model" style="--bar-size: 100%"></i></div><b>920 ms</b></div>
+              <div class="bar-row" data-stage="JSON 校验"><span>JSON 校验</span><div class="bar-track"><i class="bar-check" style="--bar-size: 20%"></i></div><b>110 ms</b></div>
+              <div class="bar-row" data-stage="保存会话"><span>保存会话</span><div class="bar-track"><i class="bar-save" style="--bar-size: 30%"></i></div><b>270 ms</b></div>
+            </div>
+            <p class="panel-footnote">模型最慢，但前端不会直接暴露 API Key。</p>
+          </article>
+
+          <article class="schema-panel">
+            <div class="panel-heading"><div><span class="panel-label">OUTPUT CONTRACT</span><h3>模型不能随便返回文字</h3></div><span class="valid-badge"><i>✓</i> schema passed</span></div>
+            <div class="schema-body"><pre id="schemaCode"></pre><div class="schema-rail"><span></span><span></span><span></span><span></span></div></div>
+            <p class="panel-footnote">训练计划只有校验通过后才会显示“保存计划”。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block section-anchor" id="response">
+        <div class="section-heading"><div><p class="section-kicker">04 / FROM RESPONSE TO DATA</p><h2>结果如何回到产品里</h2></div><span class="section-note">Agent 不直接写训练计划</span></div>
+        <div class="response-grid">
+          <article class="conversation-panel">
+            <div class="conversation-top"><span class="avatar">F</span><div><strong id="conversationTitle">训练助手</strong><small>本次请求的可读结果</small></div><span class="conversation-status">已校验</span></div>
+            <div class="conversation-body" id="conversationBody"><div class="message user-message">帮我安排一个 3 天增肌计划</div><div class="message assistant-message">可以。我会结合你最近的训练记录，先给出一个可编辑的计划草案。</div><div class="draft-preview"><div><span>PLAN DRAFT</span><strong>基础力量 · 3 天</strong></div><b>3 个动作日</b></div></div>
+          </article>
+          <article class="data-route-panel">
+            <div class="data-route-step"><span>01</span><div><strong>前端展示建议</strong><small>message + planDraft</small></div></div>
+            <span class="route-arrow">↓</span>
+            <div class="data-route-step"><span>02</span><div><strong>用户确认并编辑</strong><small>pages/plan-edit/plan-edit</small></div></div>
+            <span class="route-arrow">↓</span>
+            <div class="data-route-step"><span>03</span><div><strong>小程序写入 CloudBase</strong><small>plans / nutritionLogs</small></div></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block section-anchor" id="pseudocode">
+        <div class="section-heading"><div><p class="section-kicker">05 / READABLE LOGIC</p><h2>把调用链读成伪代码</h2></div><span class="section-note">点击上方节点，代码会同步定位</span></div>
+        <div class="pseudocode-layout">
+          <div class="pseudo-code-panel">
+            <div class="code-panel-top"><span>AGENT_FLOW.PSEUDO</span><span class="code-lang">PSEUDOCODE</span></div>
+            <div class="pseudo-code" id="pseudoCode" role="region" aria-label="Agent 调用伪代码">
+              <div class="code-line" data-step="input"><span class="line-no">01</span><code><b class="code-keyword">function</b> askAgent(query, mode) {</code></div>
+              <div class="code-line" data-step="input"><span class="line-no">02</span><code>  context <b class="code-keyword">=</b> loadWhitelistContext(mode)</code></div>
+              <div class="code-line" data-step="input"><span class="line-no">03</span><code>  session <b class="code-keyword">=</b> loadSession(sessionId)</code></div>
+              <div class="code-line" data-step="function"><span class="line-no">04</span><code>  openid <b class="code-keyword">=</b> cloud.serverIdentity()</code></div>
+              <div class="code-line" data-step="function"><span class="line-no">05</span><code>  <b class="code-keyword">if</b> (!openid) <b class="code-keyword">return</b> error(<b class="code-string">"AUTH_REQUIRED"</b>)</code></div>
+              <div class="code-line" data-step="function"><span class="line-no">06</span><code>  prompt <b class="code-keyword">=</b> buildPrompt(mode, query, context, session)</code></div>
+              <div class="code-line" data-step="model"><span class="line-no">07</span><code>  response <b class="code-keyword">= await</b> LLM.chat(prompt, tools)</code></div>
+              <div class="code-line" data-step="model"><span class="line-no">08</span><code>  <b class="code-keyword">if</b> (response.toolCall == <b class="code-string">"search_exercises"</b>)</code></div>
+              <div class="code-line" data-step="model"><span class="line-no">09</span><code>    matches <b class="code-keyword">= await</b> searchExercises(response.args)</code></div>
+              <div class="code-line" data-step="model"><span class="line-no">10</span><code>    raw <b class="code-keyword">= await</b> LLM.chat(prompt + matches, serverEnv)</code></div>
+              <div class="code-line" data-step="schema"><span class="line-no">11</span><code>  parsed <b class="code-keyword">=</b> parseJSON(raw)</code></div>
+              <div class="code-line" data-step="schema"><span class="line-no">12</span><code>  result <b class="code-keyword">=</b> validateSchema(parsed)</code></div>
+              <div class="code-line" data-step="schema"><span class="line-no">13</span><code>  <b class="code-keyword">if</b> (!result.valid) <b class="code-keyword">return</b> textOnly(result.reply)</code></div>
+              <div class="code-line" data-step="schema"><span class="line-no">14</span><code>  sessionId <b class="code-keyword">= await</b> saveSession(openid, result.reply)</code></div>
+              <div class="code-line" data-step="schema"><span class="line-no">15</span><code>  <b class="code-keyword">return</b> { message: result.reply, draft: result.planDraft }</code></div>
+              <div class="code-line" data-step="schema"><span class="line-no">16</span><code>}</code></div>
+              <div class="code-line code-comment" data-step="model"><span class="line-no">14</span><code><span>// 图片饮食识别走同一个安全边界</span></code></div>
+              <div class="code-line" data-step="model"><span class="line-no">15</span><code><b class="code-keyword">if</b> (image) meal <b class="code-keyword">= await</b> analyzeAndDelete(fileID)</code></div>
+              <div class="code-line" data-step="schema"><span class="line-no">16</span><code><b class="code-keyword">if</b> (userConfirms) <b class="code-keyword">await</b> saveNutritionLog(meal)</code></div>
+            </div>
+          </div>
+          <aside class="pseudo-note" aria-live="polite">
+            <span class="note-label">CURRENT STEP</span>
+            <h3 id="pseudoTitle">输入整理</h3>
+            <p id="pseudoDescription">先从小程序侧准备有限、可解释的上下文，不把任意 CloudBase 文档直接交给模型。</p>
+            <dl><div><dt>真实文件</dt><dd id="pseudoFile">miniprogram/pages/agent/agent.js</dd></div><div><dt>关键词</dt><dd id="pseudoKeyword">context / sessionId</dd></div></dl>
+            <div class="note-rule"><span></span><strong>读法</strong><p id="pseudoRead">把每一行想成一个明确的责任边界：页面准备数据，云函数保护数据，模型只生成建议。</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <footer class="page-footer"><span>FITLOG / AGENT LAB</span><span>学习版流程演示 · 不会发送真实请求</span></footer>
+    </main>
+  </div>
+  <script src="./agent-learning.js"></script>
+</body>
+</html>

@@ -79,7 +79,7 @@ function request(url, headers, body, timeout) {
           return
         }
         if (res.statusCode < 200 || res.statusCode >= 300) {
-          const error = new Error((parsed && parsed.error && parsed.error.message) || `模型请求失败：${res.statusCode}`)
+          const error = new Error('模型服务请求失败')
           error.code = `MODEL_REQUEST_FAILED_${res.statusCode}`
           reject(error)
           return
@@ -114,6 +114,27 @@ function contentOf(response) {
   return String(value || '')
 }
 
+function messageOf(response) {
+  return response && response.choices && response.choices[0] && response.choices[0].message
+    ? response.choices[0].message
+    : {}
+}
+
+function requestOptions(cfg, messages, options) {
+  const opts = options || {}
+  const payload = {
+    model: opts.vision ? cfg.visionModel : cfg.model,
+    messages,
+    temperature: 0.2,
+    max_tokens: cfg.maxTokens
+  }
+  if (Array.isArray(opts.tools) && opts.tools.length) {
+    payload.tools = opts.tools
+    payload.tool_choice = opts.toolChoice || 'auto'
+  }
+  return payload
+}
+
 function parseJson(text) {
   const cleaned = String(text || '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '')
   try { return JSON.parse(cleaned) } catch (err) {
@@ -128,13 +149,7 @@ function parseJson(text) {
 
 async function complete(messages, options) {
   const cfg = config()
-  const opts = options || {}
-  const payload = JSON.stringify({
-    model: opts.vision ? cfg.visionModel : cfg.model,
-    messages,
-    temperature: 0.2,
-    max_tokens: cfg.maxTokens
-  })
+  const payload = JSON.stringify(requestOptions(cfg, messages, options))
   const response = await request(endpoint(cfg.baseURL), {
     'Content-Type': 'application/json',
     'Content-Length': Buffer.byteLength(payload),
@@ -143,4 +158,15 @@ async function complete(messages, options) {
   return contentOf(response)
 }
 
-module.exports = { complete, parseJson, configStatus }
+async function completeMessage(messages, options) {
+  const cfg = config()
+  const payload = JSON.stringify(requestOptions(cfg, messages, options))
+  const response = await request(endpoint(cfg.baseURL), {
+    'Content-Type': 'application/json',
+    'Content-Length': Buffer.byteLength(payload),
+    Authorization: `Bearer ${cfg.key}`
+  }, payload, cfg.timeout)
+  return messageOf(response)
+}
+
+module.exports = { complete, completeMessage, parseJson, configStatus }

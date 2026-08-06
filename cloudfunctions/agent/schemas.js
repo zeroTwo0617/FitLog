@@ -1,4 +1,5 @@
 const MEAL_TYPES = new Set(['breakfast', 'lunch', 'dinner', 'snack', 'other'])
+const exercises = require('./exercises.js')
 
 function todayInChina() {
   const date = new Date(Date.now() + 8 * 60 * 60 * 1000)
@@ -45,13 +46,14 @@ function food(value) {
 
 function planItem(value) {
   const item = value || {}
+  const catalogItem = exercises.getById(item.exerciseId)
   const targetSets = number(item.targetSets, 1, 20)
   const targetReps = item.targetReps == null ? null : number(item.targetReps, 1, 100)
   const targetWeight = item.targetWeight == null ? null : number(item.targetWeight, 0, 1000)
-  if (!text(item.exerciseId, 80) || !text(item.exerciseName, 100) || targetSets == null || (item.targetReps != null && targetReps == null) || (item.targetWeight != null && targetWeight == null)) return null
+  if (!catalogItem || targetSets == null || (item.targetReps != null && targetReps == null) || (item.targetWeight != null && targetWeight == null)) return null
   return {
-    exerciseId: text(item.exerciseId, 80),
-    exerciseName: text(item.exerciseName, 100),
+    exerciseId: catalogItem.id,
+    exerciseName: catalogItem.nameZh || catalogItem.name,
     targetSets,
     targetReps,
     targetWeight

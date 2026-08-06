@@ -17,6 +17,7 @@ const config = {
     BODY: 'bodyMetrics',   // 身体数据（体重/围度）
     EXERCISES: 'exercises', // 动作库（可选，当前使用内置预设动作）
     AGENT_SESSIONS: 'agentSessions', // Agent 会话消息，按云端 _openid 隔离
+    AGENT_UPLOADS: 'agentUploads', // Agent 临时图片登记，用于异常退出后的清理
     NUTRITION_LOGS: 'nutritionLogs', // 已确认的每日饮食记录
     DIET_PLANS: 'dietPlans' // 已确认的饮食计划
   }

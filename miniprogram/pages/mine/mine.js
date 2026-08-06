@@ -6,6 +6,7 @@ const workoutRepo = require('../../utils/repositories/workout.js')
 const planRepo = require('../../utils/repositories/plan.js')
 const bodyRepo = require('../../utils/repositories/body.js')
 const nutritionRepo = require('../../utils/repositories/nutrition.js')
+const dateUtil = require('../../utils/date.js')
 
 page({
   data: {
@@ -54,12 +55,9 @@ page({
         map[date] = true
         return map
       }, {})
-      const p2 = (n) => (n < 10 ? '0' + n : '' + n)
       let weekDone = 0
       for (let i = 0; i < 7; i++) {
-        const d = new Date()
-        d.setDate(d.getDate() - i)
-        if (trainedSet[d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate())]) weekDone++
+        if (trainedSet[dateUtil.offsetDateString(-i)]) weekDone++
       }
       this.setData({
         profile: profile,

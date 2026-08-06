@@ -1,20 +1,18 @@
 // 统计 / 日历 / 身体数据 纯函数（不依赖 wx，便于单测）
 // 对齐 开发文档.md §5.2 workouts / §5.3 sets / §5.5 body_records / §5.7 打卡日历
 const workoutData = require('./workoutData.js')
+const dateUtil = require('./date.js')
 
 function fmtDate(d) {
-  const p = (x) => (x < 10 ? '0' + x : '' + x)
-  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+  return dateUtil.dateString(d)
 }
 
 // 返回最近 n 天的 dateStr 数组（含今天），升序
 function lastNDates(n, endDate) {
-  const end = endDate ? new Date(endDate) : new Date()
+  const end = endDate ? dateUtil.dateString(endDate) : dateUtil.todayString()
   const arr = []
   for (let i = n - 1; i >= 0; i--) {
-    const d = new Date(end)
-    d.setDate(end.getDate() - i)
-    arr.push(fmtDate(d))
+    arr.push(dateUtil.addDaysString(end, -i))
   }
   return arr
 }
@@ -133,10 +131,10 @@ function volumeTrend(agg, n, endDate) {
 // 当月打卡日历网格。year/month 为数字（month 1-12）；trainedDates 为 dateStr 数组
 function buildCalendar(year, month, trainedDates) {
   const trained = new Set(trainedDates || [])
-  const first = new Date(year, month - 1, 1)
-  const startWeekday = first.getDay() // 0=周日
-  const daysInMonth = new Date(year, month, 0).getDate()
-  const todayStr = fmtDate(new Date())
+  const first = new Date(Date.UTC(year, month - 1, 1))
+  const startWeekday = first.getUTCDay() // 0=周日
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate()
+  const todayStr = dateUtil.todayString()
   const cells = []
   for (let i = 0; i < startWeekday; i++) cells.push({ day: '', dateStr: '', trained: false, isToday: false })
   for (let d = 1; d <= daysInMonth; d++) {
@@ -221,15 +219,14 @@ function weekStreak(trainedDates) {
   if (!set.size) return 0
   const trainedWeek = (offset) => {
     // offset=0 本周，1 上周……（周一为一周起点）
-    const now = new Date()
-    const monday = new Date(now)
-    const dow = (now.getDay() + 6) % 7 // 周一=0
-    monday.setDate(now.getDate() - dow - offset * 7)
+    const today = dateUtil.todayString()
+    const todayDate = dateUtil.parseDateString(today)
+    const dow = (todayDate.getUTCDay() + 6) % 7 // 周一=0
+    const monday = dateUtil.addDaysString(today, -dow - offset * 7)
     for (let i = 0; i < 7; i++) {
-      const d = new Date(monday)
-      d.setDate(monday.getDate() + i)
-      if (d.getTime() > now.getTime()) break
-      if (set.has(fmtDate(d))) return true
+      const current = dateUtil.addDaysString(monday, i)
+      if (current > today) break
+      if (set.has(current)) return true
     }
     return false
   }

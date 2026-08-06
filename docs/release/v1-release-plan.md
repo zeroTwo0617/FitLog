@@ -9,7 +9,7 @@ V1 必须保证：
 - 用户可以创建计划、记录训练、查看历史和统计。
 - 训练数据不会因为页面刷新、重复点击或网络重试而明显重复或丢失。
 - 统计图表与产品定义一致，用户能理解“为什么有数据/为什么没有数据”。
-- 用户数据按 `_openid` 隔离，导出数据只包含当前用户数据。
+- 用户数据按 `_openid` 隔离。
 - CloudBase 配置、云函数、索引和权限可以被重复部署和验收。
 
 ## V1 范围
@@ -25,7 +25,6 @@ V1 必须保证：
 - 身体数据
 - 饮食记录
 - 用户档案初始化
-- 数据导出
 - 基础教练 Agent
 - 浅色/深色主题设置和自定义底部导航同步
 
@@ -47,9 +46,9 @@ V1 必须保证：
 - [cloudbase-indexes.md](../operations/cloudbase-indexes.md) 中的索引已经在控制台确认。
 - 训练保存事务在真实设备上验证成功。
 - 训练统计、容量、最大重量和 1RM 与明细数据人工核对一致。
-- 导出数据不包含其他用户记录。
 - 生产版本无测试数据入口（`seedData` 已移除）。
 - 关键错误不会被静默吞掉，也不会向用户暴露内部堆栈。
+- 不提供数据导出功能；发布包中不得恢复导出入口或导出云函数。
 - 主题切换后页面底色、顶栏、底部导航和图标颜色一致。
 - 放大后的字号在首页、动作库、教练、训练记录和饮食页面不溢出或遮挡操作。
 
@@ -129,7 +128,7 @@ V1 采用以下规则：
 - 页面只能调用 `miniprogram/utils/repositories/`。
 - 不允许页面直接调用 `wx.cloud.database()`、`.collection()` 或 `wx.cloud.callFunction()`。
 - 统计、日历和 Agent 不长期读取全部历史数据；优先增加按日期范围的查询或云端聚合。
-- `getAll()` 只用于小规模数据、导出或明确需要完整数据的场景。
+- `getAll()` 只用于小规模数据或明确需要完整数据的场景。
 - 所有云函数的 `wx-server-sdk` 使用固定版本，不使用 `latest`。
 - 所有列表查询都定义排序字段，避免同一时间数据顺序不稳定。
 
@@ -144,12 +143,12 @@ agent
 ensureUser
 updateUserActive
 saveWorkout
+getDayDetail
 savePlan
 deletePlan
 saveBodyMetric
 saveNutritionLog
 deleteNutritionLog
-exportData
 deleteUserData
 ```
 
@@ -158,7 +157,7 @@ deleteUserData
 - 集合权限全部按用户隔离。
 - 索引按 [cloudbase-indexes.md](../operations/cloudbase-indexes.md) 配置。
 - 管理员权限云函数必须显式按 `_openid` 过滤。
-- 导出、删除、更新接口都必须验证资源属于当前用户。
+- 删除、更新接口都必须验证资源属于当前用户。
 
 ### 配置
 

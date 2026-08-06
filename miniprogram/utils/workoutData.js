@@ -1,12 +1,13 @@
 // 训练记录的唯一日期口径。
 // workouts 是训练会话事实来源；sets 只补充容量、1RM 等明细指标。
+const dateUtil = require('./date.js')
 
 function pad(n) {
   return n < 10 ? '0' + n : String(n)
 }
 
 function formatDate(date) {
-  return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate())
+  return dateUtil.dateString(date)
 }
 
 function dateKey(record) {

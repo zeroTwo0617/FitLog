@@ -3,7 +3,7 @@
   "appid": "wx371390f8ed0c6037",
   "projectname": "fitlog-miniprogram",
   "setting": {
-    "urlCheck": false,
+    "urlCheck": true,
     "es6": true,
     "enhance": true,
     "postcss": true,
@@ -20,7 +20,7 @@
   "compileType": "miniprogram",
   "miniprogramRoot": "miniprogram/",
   "cloudfunctionRoot": "cloudfunctions/",
-  "libVersion": "latest",
+  "libVersion": "3.16.2",
   "condition": {},
   "packOptions": {
     "ignore": [

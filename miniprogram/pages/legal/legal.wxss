@@ -6,4 +6,6 @@
 .legal-section { padding: 26rpx 0 6rpx; border-top: 1rpx solid var(--hairline); }
 .legal-section-title { display: block; color: var(--text); font-size: 29rpx; font-weight: 900; line-height: 1.35; }
 .legal-paragraph { display: block; margin-top: 16rpx; color: var(--text-dim); font-size: 25rpx; line-height: 1.75; }
+.platform-privacy-link { margin: 28rpx 0 0; padding: 0; background: transparent; color: var(--primary); font-size: 25rpx; line-height: 1.6; text-align: left; }
+.platform-privacy-link::after { border: 0; }
 .legal-footer { padding: 32rpx 0 60rpx; color: var(--text-dim); font-size: 21rpx; line-height: 1.55; }

@@ -6,18 +6,16 @@ const workoutRepo = require('../../utils/repositories/workout.js')
 const planRepo = require('../../utils/repositories/plan.js')
 const nutritionRepo = require('../../utils/repositories/nutrition.js')
 const bodyRepo = require('../../utils/repositories/body.js')
+const dateUtil = require('../../utils/date.js')
 
 function formatToday() {
-  const now = new Date()
-  const month = now.getMonth() + 1
-  const day = now.getDate()
-  const weekday = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][now.getDay()]
-  return `${month}月${day}日 ${weekday}`
+  const current = dateUtil.parts(new Date())
+  const weekday = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][current.weekday]
+  return `${current.month}月${current.day}日 ${weekday}`
 }
 
 function fmtDate(d) {
-  const p = (n) => (n < 10 ? '0' + n : '' + n)
-  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+  return dateUtil.dateString(d)
 }
 
 // 近 7 天打卡条：[{dateStr, label, trained, isToday}]，最右为今天
@@ -29,10 +27,9 @@ function buildWeekDays(workouts) {
   const labels = ['日', '一', '二', '三', '四', '五', '六']
   const days = []
   for (let i = 6; i >= 0; i--) {
-    const d = new Date()
-    d.setDate(d.getDate() - i)
-    const ds = fmtDate(d)
-    days.push({ dateStr: ds, label: labels[d.getDay()], trained: !!trained[ds], isToday: i === 0 })
+    const ds = dateUtil.offsetDateString(-i)
+    const parsed = dateUtil.parseDateString(ds)
+    days.push({ dateStr: ds, label: labels[parsed.getUTCDay()], trained: !!trained[ds], isToday: i === 0 })
   }
   return days
 }
@@ -172,12 +169,10 @@ page({
         fat: 0,
         mealCount: 0
       }
-      const sevenDaysAgo = new Date()
-      sevenDaysAgo.setHours(0, 0, 0, 0)
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6)
+      const sevenDaysAgo = dateUtil.offsetDateString(-6)
       const weekDates = workouts.filter((w) => {
         const date = workoutData.dateKey(w)
-        return date && new Date(date).getTime() >= sevenDaysAgo.getTime()
+        return date && date >= sevenDaysAgo && date <= dateUtil.todayString()
       }).map((w) => workoutData.dateKey(w)).filter(Boolean)
       const weekCount = Array.from(new Set(weekDates)).length
       const latest = workouts[0]

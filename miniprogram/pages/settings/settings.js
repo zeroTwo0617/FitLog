@@ -3,6 +3,7 @@ const page = require('../../utils/page.js')
 const systemRepo = require('../../utils/repositories/system.js')
 const agentApi = require('../../utils/agentApi.js')
 const theme = require('../../utils/theme.js')
+const safeError = require('../../utils/errorText.js')
 
 page({
   data: {
@@ -72,7 +73,7 @@ page({
       })
       .catch((error) => {
         this.setData({ deleting: false })
-        wx.showToast({ title: (error && error.message) || '删除失败，请稍后重试', icon: 'none' })
+        wx.showToast({ title: safeError.message(error, '删除失败，请稍后重试'), icon: 'none' })
         console.error('删除用户数据失败', error)
       })
   }

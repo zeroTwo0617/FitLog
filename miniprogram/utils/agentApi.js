@@ -18,7 +18,7 @@ function cloudError(error) {
 }
 
 function call(data, timeout) {
-  const request = wx.cloud.callFunction({ name: 'agent', data })
+  const request = cloud.callFunction('agent', data)
   const limit = timeout || REQUEST_TIMEOUT
   let timerID
   const timer = new Promise((resolve, reject) => {
@@ -29,8 +29,7 @@ function call(data, timeout) {
     }, limit)
   })
   return Promise.race([request.then((res) => {
-    if (res && res.errCode && !res.result) throw cloudError(res)
-    let result = res && res.result ? res.result : res
+    let result = res
     if (typeof result === 'string') {
       try { result = JSON.parse(result) } catch (ignore) {}
     }
@@ -48,6 +47,18 @@ function chat(mode, query, context, sessionId) {
   return call({ action: 'chat', mode, query, context: context || {}, sessionId: sessionId || '' })
 }
 
+function searchExercises(options) {
+  const input = options || {}
+  return call({
+    action: 'searchExercises',
+    query: input.query || '',
+    bodyPart: input.bodyPart || '',
+    target: input.target || '',
+    equipment: input.equipment || '',
+    limit: input.limit || 8
+  })
+}
+
 function analyzeMeal(fileID, dateStr, mealType) {
   return call({ action: 'analyzeMeal', fileID, dateStr, mealType }, 35000)
 }
@@ -58,6 +69,10 @@ function analyzeTextMeal(query, dateStr, mealType) {
 
 function prepareUpload() {
   return call({ action: 'prepareUpload' })
+}
+
+function registerUpload(fileID) {
+  return call({ action: 'registerUpload', fileID: fileID })
 }
 
 function saveMeal(result) {
@@ -72,4 +87,4 @@ function diagnose() {
   return call({ action: 'diagnose' })
 }
 
-module.exports = { SESSION_KEYS, sessionKey, call, chat, diagnose, prepareUpload, analyzeMeal, analyzeTextMeal, saveMeal, saveDietPlan }
+module.exports = { SESSION_KEYS, sessionKey, call, chat, searchExercises, diagnose, prepareUpload, registerUpload, analyzeMeal, analyzeTextMeal, saveMeal, saveDietPlan }

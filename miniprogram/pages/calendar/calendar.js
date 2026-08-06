@@ -6,10 +6,11 @@ const workoutData = require('../../utils/workoutData.js')
 const page = require('../../utils/page.js')
 const workoutRepo = require('../../utils/repositories/workout.js')
 const nutritionRepo = require('../../utils/repositories/nutrition.js')
+const dateUtil = require('../../utils/date.js')
 
 function fmtNow() {
-  const d = new Date()
-  return { year: d.getFullYear(), month: d.getMonth() + 1 }
+  const current = dateUtil.parts(new Date())
+  return { year: current.year, month: current.month }
 }
 
 page({
@@ -192,7 +193,7 @@ page({
             id: workout._id,
             index: index + 1,
             title: workout.title || '训练记录',
-            time: workout.date ? new Date(workout.date).toTimeString().slice(0, 5) : '',
+            time: workout.date ? dateUtil.timeString(workout.date) : '',
             exerciseCount: groups.length,
             totalSets: groups.reduce((sum, group) => sum + group.setCount, 0),
             groups

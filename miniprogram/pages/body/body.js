@@ -5,11 +5,10 @@ const lc = require('../../utils/lineChart.js')
 const page = require('../../utils/page.js')
 const validation = require('../../utils/validation.js')
 const bodyRepo = require('../../utils/repositories/body.js')
+const dateUtil = require('../../utils/date.js')
 
 function fmtToday() {
-  const d = new Date()
-  const p = (x) => (x < 10 ? '0' + x : '' + x)
-  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+  return dateUtil.todayString()
 }
 
 function buildTrendSummary(trend) {

@@ -2,6 +2,8 @@ const agentContext = require('../../utils/agent.js')
 const agentApi = require('../../utils/agentApi.js')
 const agentRepo = require('../../utils/repositories/agent.js')
 const page = require('../../utils/page.js')
+const safeError = require('../../utils/errorText.js')
+const dateUtil = require('../../utils/date.js')
 
 const DEFAULT_MESSAGES = [{
   role: 'assistant',
@@ -9,14 +11,11 @@ const DEFAULT_MESSAGES = [{
 }]
 
 function todayString() {
-  const date = new Date(Date.now() + 8 * 60 * 60 * 1000)
-  const pad = (value) => (value < 10 ? '0' + value : String(value))
-  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`
+  return dateUtil.todayString()
 }
 
 function errorText(error) {
-  if (!error) return '服务暂时不可用，请稍后重试。'
-  return error.message || '服务暂时不可用，请稍后重试。'
+  return safeError.message(error, '服务暂时不可用，请稍后重试。')
 }
 
 function modelErrorText(error) {
@@ -354,7 +353,7 @@ page({
       .then((uploadResult) => {
         fileID = uploadResult && uploadResult.fileID
         if (!fileID) throw new Error('图片上传失败')
-        return agentApi.analyzeMeal(fileID, todayString(), 'other')
+        return agentApi.registerUpload(fileID).then(() => agentApi.analyzeMeal(fileID, todayString(), 'other'))
       })
       .then((result) => {
         const meal = result && result.meal

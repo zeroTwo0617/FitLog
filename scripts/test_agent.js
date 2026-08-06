@@ -34,13 +34,23 @@ async function main() {
     sessionId: 'session-old'
   })
 
+  await agentApi.searchExercises({ query: '胸部 哑铃', limit: 3 })
+  assert.deepStrictEqual(calls[1].data, {
+    action: 'searchExercises',
+    query: '胸部 哑铃',
+    bodyPart: '',
+    target: '',
+    equipment: '',
+    limit: 3
+  })
+
   const planReply = schemas.validateTraining({
     reply: 'training plan',
     planDraft: {
       name: 'beginner strength',
       items: [{
-        exerciseId: 'squat',
-        exerciseName: 'Squat',
+        exerciseId: '0001',
+        exerciseName: '仰卧起坐',
         targetSets: 4,
         targetReps: 8,
         targetWeight: null
@@ -49,6 +59,7 @@ async function main() {
   })
   assert(planReply.planDraft)
   assert.strictEqual(planReply.planDraft.items.length, 1)
+  assert.strictEqual(planReply.planDraft.items[0].exerciseName, '仰卧起坐')
 
   const invalidPlanReply = schemas.validateTraining({
     reply: 'I need more training context before making a plan.',

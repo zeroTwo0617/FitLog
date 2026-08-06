@@ -11,7 +11,6 @@ Repositories are the only client-side boundary for:
 - nutrition logs and diet plans: `repositories/nutrition.js`
 - users: `repositories/user.js`
 - agent sessions: `repositories/agent.js`
-- export tools: `repositories/system.js`
 
 All mutations use CloudBase functions. The functions derive `_openid` from
 `cloud.getWXContext()` and validate input again on the server. Client validation
@@ -21,4 +20,4 @@ Deploy these functions after every change:
 
 `saveWorkout`, `ensureUser`, `updateUserActive`, `savePlan`, `deletePlan`,
 `saveBodyMetric`, `saveNutritionLog`, `deleteNutritionLog`, `agent`,
-`exportData`, and `deleteUserData`.
+`getDayDetail`, and `deleteUserData`.

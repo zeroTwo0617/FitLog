@@ -10,6 +10,7 @@
       <text class="legal-section-title">{{item.title}}</text>
       <text class="legal-paragraph" wx:for="{{item.paragraphs}}" wx:for-item="paragraph" wx:key="*this">{{paragraph}}</text>
     </view>
+    <button wx:if="{{type === 'privacy'}}" class="platform-privacy-link" bindtap="openPlatformPrivacy">查看微信平台隐私保护指引</button>
     <view class="legal-footer">FitLog · 请以发布时在微信公众平台登记的正式隐私文件为准</view>
   </scroll-view>
 </view>

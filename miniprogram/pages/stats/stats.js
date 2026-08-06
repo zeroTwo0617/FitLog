@@ -3,6 +3,7 @@ const sd = require('../../utils/statsData.js')
 const lc = require('../../utils/lineChart.js')
 const page = require('../../utils/page.js')
 const workoutRepo = require('../../utils/repositories/workout.js')
+const dateUtil = require('../../utils/date.js')
 
 // 横轴标签：dateStr（如 2026-08-01）→ 月/日（8/1），跨月日期在横轴上也能分清
 function dayLabel(dateStr) {
@@ -79,9 +80,9 @@ page({
       }
 
       // 本月训练日：与日历页使用同一份 workouts 日期集合
-      const now = new Date()
-      const ny = now.getFullYear()
-      const nm = now.getMonth() + 1
+      const current = dateUtil.parts(new Date())
+      const ny = current.year
+      const nm = current.month
       const prefix = ny + '-' + (nm < 10 ? '0' + nm : nm) + '-'
       const monthCheckins = agg.trainedDates.filter((d) => d.indexOf(prefix) === 0).length
 

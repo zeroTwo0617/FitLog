@@ -6,13 +6,14 @@
 
 | 集合 | 字段 | 顺序 | 用途 |
 | --- | --- | --- | --- |
-| `workouts` | `_openid`, `dateStr` | 升序、降序 | 首页、历史、日历按用户和训练日读取 |
-| `sets` | `_openid`, `sessionId` | 升序、升序 | 按训练会话读取组明细 |
-| `bodyMetrics` | `_openid`, `dateStr` | 升序、降序 | 身体数据趋势和最近记录 |
-| `nutritionLogs` | `_openid`, `dateStr` | 升序、降序 | 每日饮食查询 |
-| `dietPlans` | `_openid`, `updatedAt` | 升序、降序 | 读取最近饮食计划 |
-| `plans` | `_openid`, `updatedAt` | 升序、降序 | 读取用户计划并保持稳定排序 |
+| `workouts` | `_openid`, `dateStr`, `date`, `createdAt`, `_id` | 升序、降序 | 首页、历史、日历按用户和训练日读取 |
+| `sets` | `_openid`, `sessionId`, `setIndex`, `createdAt`, `_id` | 升序、升序 | 按训练会话读取组明细 |
+| `bodyMetrics` | `_openid`, `dateStr`, `updatedAt`, `createdAt`, `_id` | 升序、降序 | 身体数据趋势和最近记录 |
+| `nutritionLogs` | `_openid`, `dateStr`, `updatedAt`, `createdAt`, `_id` | 升序、降序 | 每日饮食查询 |
+| `dietPlans` | `_openid`, `updatedAt`, `createdAt`, `_id` | 升序、降序 | 读取最近饮食计划 |
+| `plans` | `_openid`, `updatedAt`, `createdAt`, `_id` | 升序、降序 | 读取用户计划并保持稳定排序 |
 | `agentSessions` | `_openid`, `updatedAt` | 升序、降序 | 用户会话查询和排序 |
+| `agentUploads` | `_openid`, `fileID`, `updatedAt`, `_id` | 升序、升序、降序 | 临时图片登记、异常退出清理和重复登记去重 |
 
 ## 确认步骤
 

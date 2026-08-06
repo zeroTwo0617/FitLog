@@ -3,6 +3,7 @@ const auth = require('../../utils/auth.js')
 const nutrition = require('../../utils/nutrition.js')
 const page = require('../../utils/page.js')
 const nutritionRepo = require('../../utils/repositories/nutrition.js')
+const safeError = require('../../utils/errorText.js')
 
 function validDate(value) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value || '') ? value : nutrition.today()
@@ -160,7 +161,7 @@ page({
       wx.showToast({ title: id ? '饮食已修改' : '饮食已记录', icon: 'success' })
       this.load()
     }).catch((err) => {
-      this.setData({ saving: false, error: (err && (err.errMsg || err.message)) || '保存失败，请稍后重试。' })
+      this.setData({ saving: false, error: safeError.message(err, '保存失败，请稍后重试。') })
     })
   },
 
@@ -178,7 +179,7 @@ page({
           this.setData({ saving: false, editor: null, editingId: '' })
           wx.showToast({ title: '已删除', icon: 'success' })
           this.load()
-        }).catch((err) => this.setData({ saving: false, error: (err && (err.errMsg || err.message)) || '删除失败，请稍后重试。' }))
+        }).catch((err) => this.setData({ saving: false, error: safeError.message(err, '删除失败，请稍后重试。') }))
       }
     })
   }

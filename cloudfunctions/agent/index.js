@@ -2,18 +2,42 @@ const cloud = require('wx-server-sdk')
 const llm = require('./llm.js')
 const schemas = require('./schemas.js')
 const prompts = require('./prompts.js')
+const exerciseSearch = require('./exercises.js')
 const crypto = require('crypto')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const COLLECTIONS = {
   SESSIONS: 'agentSessions',
+  UPLOADS: 'agentUploads',
   NUTRITION_LOGS: 'nutritionLogs',
   DIET_PLANS: 'dietPlans'
 }
 
 function ok(data) { return Object.assign({ ok: true }, data || {}) }
 function fail(code, message) { return { ok: false, code, message: message || '请求失败' } }
+
+function safeErrorMessage(error, fallback) {
+  const code = String(error && error.code || '')
+  const messages = {
+    AUTH_REQUIRED: '请先登录微信云开发',
+    INVALID_DATE: '日期无效，请重新选择',
+    INVALID_FILE: '图片文件无效，请重新选择',
+    FORBIDDEN_FILE: '不能读取其他用户的图片',
+    FILE_DOWNLOAD_FAILED: '图片读取失败，请重试',
+    MODEL_CONFIG_MISSING: '助手服务暂时离线',
+    MODEL_CONFIG_INVALID: '助手服务配置异常',
+    MODEL_TIMEOUT: '模型响应超时，请稍后重试',
+    MODEL_UNAVAILABLE: '模型服务暂时不可用，请稍后重试',
+    MODEL_INVALID_JSON: '模型返回内容暂时无法整理，请重试',
+    INVALID_MEAL: '饮食识别数据无效，请重新描述或上传图片',
+    INVALID_DIET_PLAN: '饮食计划字段无效，请重新生成',
+    REGISTER_UPLOAD_FAILED: '图片登记失败，请重试'
+  }
+  if (messages[code]) return messages[code]
+  if (code.indexOf('MODEL_REQUEST_FAILED_') === 0) return '模型服务请求失败，请稍后重试'
+  return fallback || '服务暂时不可用，请稍后重试'
+}
 
 function todayInChina() {
   const date = new Date(Date.now() + 8 * 60 * 60 * 1000)
@@ -170,13 +194,13 @@ async function chat(event, context) {
   if (!query || query.length > 1200) return fail('INVALID_QUERY', '问题不能为空且不能超过 1200 字')
   const current = await sessionOf(event.sessionId, openid)
   try {
-    const raw = await llm.complete(prompts.chatMessages(mode, query, cleanContext(event.context), current && current.messages), {})
+    const raw = await completeTraining(prompts.chatMessages(mode, query, cleanContext(event.context), current && current.messages), mode)
     const parsed = llm.parseJson(raw)
     const validated = mode === 'diet' ? schemas.validateDiet(parsed) : schemas.validateTraining(parsed)
     const sessionId = await saveSession(event.sessionId, openid, mode, query, validated.reply, event.context)
     return ok({ mode, sessionId, message: validated.reply, planDraft: validated.planDraft || null, dietPlanDraft: validated.dietPlanDraft || null })
   } catch (error) {
-    return fail(error.code || 'MODEL_FAILED', error.message || '模型暂时不可用')
+    return fail(error.code || 'MODEL_FAILED', safeErrorMessage(error, '训练助手暂时不可用'))
   }
 }
 
@@ -191,7 +215,7 @@ async function analyzeMeal(event, context) {
   const mealType = String(event.mealType || 'other')
   if (!openid) return fail('AUTH_REQUIRED', '请先登录微信云开发')
   if (!fileID.startsWith('cloud://')) return fail('INVALID_FILE', '食物图片文件无效')
-  if (fileID.indexOf(`/diet/${openid}/`) < 0) return fail('FORBIDDEN_FILE', '不能读取其他用户的图片')
+  if (!isOwnedFile(fileID, openid)) return fail('FORBIDDEN_FILE', '不能读取其他用户的图片')
   if (!isDateStr(dateStr)) return fail('INVALID_DATE', '饮食日期无效或晚于今天')
   let downloaded
   try {
@@ -209,10 +233,101 @@ async function analyzeMeal(event, context) {
     const result = schemas.validateMeal(Object.assign({}, parsed, { dateStr, mealType, source: 'photo' }), true)
     return ok({ meal: result })
   } catch (error) {
-    return fail(error.code || 'MEAL_ANALYZE_FAILED', error.message || '食物识别失败')
+    return fail(error.code || 'MEAL_ANALYZE_FAILED', safeErrorMessage(error, '食物识别失败'))
   } finally {
     try { await cloud.deleteFile({ fileList: [fileID] }) } catch (ignore) {}
+    await forgetUpload(fileID, openid)
   }
+}
+
+function toolUnsupported(error) {
+  const code = String(error && error.code || '')
+  return code.indexOf('MODEL_REQUEST_FAILED_400') === 0 || code.indexOf('MODEL_REQUEST_FAILED_404') === 0 || code.indexOf('MODEL_REQUEST_FAILED_415') === 0 || code.indexOf('MODEL_REQUEST_FAILED_422') === 0
+}
+
+function parseToolArguments(value) {
+  if (value && typeof value === 'object' && !Array.isArray(value)) return value
+  try {
+    const parsed = JSON.parse(String(value || '{}'))
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : null
+  } catch (ignore) { return null }
+}
+
+function messageContent(message) {
+  const value = message && message.content
+  if (Array.isArray(value)) return value.map((item) => item && item.text ? item.text : '').join('')
+  return String(value || '')
+}
+
+async function completeTraining(messages, mode) {
+  if (mode !== 'training') return llm.complete(messages, {})
+  if (typeof llm.completeMessage !== 'function') return llm.complete(messages, {})
+
+  let first
+  try {
+    first = await llm.completeMessage(messages, { tools: [prompts.exerciseSearchTool()] })
+  } catch (error) {
+    if (toolUnsupported(error)) return llm.complete(messages, {})
+    throw error
+  }
+
+  const calls = Array.isArray(first && first.tool_calls) ? first.tool_calls.slice(0, 3) : []
+  if (!calls.length) {
+    const content = messageContent(first)
+    return content || llm.complete(messages, {})
+  }
+
+  const toolMessages = messages.slice()
+  toolMessages.push({
+    role: 'assistant',
+    content: first.content || null,
+    tool_calls: calls
+  })
+  calls.forEach((call, index) => {
+    const name = call && call.function && call.function.name
+    const args = parseToolArguments(call && call.function && call.function.arguments)
+    const result = name === 'search_exercises' && args
+      ? exerciseSearch.search(args)
+      : { query: '', total: 0, exercises: [] }
+    toolMessages.push({
+      role: 'tool',
+      tool_call_id: String(call && call.id || `search-${index}`),
+      name: name || 'search_exercises',
+      content: JSON.stringify(result)
+    })
+  })
+
+  const finalMessage = await llm.completeMessage(toolMessages, {})
+  const content = messageContent(finalMessage)
+  if (!content) {
+    const error = new Error('Model returned no final response after exercise search')
+    error.code = 'MODEL_BAD_RESPONSE'
+    throw error
+  }
+  return content
+}
+
+async function searchExercises(event, context) {
+  const openid = openidOf(context)
+  if (!openid) return fail('AUTH_REQUIRED', 'AUTH_REQUIRED')
+  const input = event || {}
+  if (String(input.query || '').length > exerciseSearch.MAX_QUERY_LENGTH ||
+      String(input.bodyPart || '').length > 40 ||
+      String(input.target || '').length > 40 ||
+      String(input.equipment || '').length > 40) {
+    return fail('INVALID_EXERCISE_SEARCH', 'Search parameters are too long')
+  }
+  const limit = Number(input.limit || 8)
+  if (!Number.isInteger(limit) || limit < 1 || limit > exerciseSearch.MAX_LIMIT) {
+    return fail('INVALID_EXERCISE_SEARCH', 'Search limit must be between 1 and 12')
+  }
+  return ok(exerciseSearch.search({
+    query: input.query,
+    bodyPart: input.bodyPart,
+    target: input.target,
+    equipment: input.equipment,
+    limit
+  }))
 }
 
 async function analyzeTextMeal(event, context) {
@@ -229,7 +344,7 @@ async function analyzeTextMeal(event, context) {
     const result = schemas.validateMeal(Object.assign({}, parsed, { dateStr, mealType, source: 'agent' }), true)
     return ok({ meal: result })
   } catch (error) {
-    return fail(error.code || 'MEAL_TEXT_ANALYZE_FAILED', error.message || '文字饮食分析失败')
+    return fail(error.code || 'MEAL_TEXT_ANALYZE_FAILED', safeErrorMessage(error, '文字饮食分析失败'))
   }
 }
 
@@ -240,6 +355,36 @@ async function prepareUpload(context) {
   return ok({ cloudPath: `diet/${openid}/${Date.now()}-${suffix}.jpg` })
 }
 
+function isOwnedFile(fileID, openid) {
+  return fileID.startsWith('cloud://') && fileID.indexOf(`/diet/${openid}/`) >= 0
+}
+
+async function registerUpload(event, context) {
+  const openid = openidOf(context)
+  const fileID = String(event && event.fileID || '')
+  if (!openid) return fail('AUTH_REQUIRED', '请先登录微信云开发')
+  if (!isOwnedFile(fileID, openid)) return fail('FORBIDDEN_FILE', '不能登记其他用户的图片')
+  try {
+    const existing = await db.collection(COLLECTIONS.UPLOADS).where({ _openid: openid, fileID }).limit(1).get()
+    if (existing.data && existing.data[0]) {
+      await db.collection(COLLECTIONS.UPLOADS).doc(existing.data[0]._id).update({ data: { updatedAt: new Date() } })
+      return ok({ fileID, created: false })
+    }
+    const now = new Date()
+    const saved = await db.collection(COLLECTIONS.UPLOADS).add({ data: { _openid: openid, fileID, createdAt: now, updatedAt: now } })
+    return ok({ fileID, id: saved._id, created: true })
+  } catch (error) {
+    return fail('REGISTER_UPLOAD_FAILED', '图片登记失败，请重试')
+  }
+}
+
+async function forgetUpload(fileID, openid) {
+  if (!fileID || !openid) return
+  try {
+    await db.collection(COLLECTIONS.UPLOADS).where({ _openid: openid, fileID }).remove()
+  } catch (ignore) {}
+}
+
 async function saveMeal(event, context) {
   const openid = openidOf(context)
   if (!openid) return fail('AUTH_REQUIRED', '请先登录微信云开发')
@@ -248,7 +393,7 @@ async function saveMeal(event, context) {
     const saved = await db.collection(COLLECTIONS.NUTRITION_LOGS).add({ data: Object.assign({}, result, { _openid: openid, createdAt: new Date(), updatedAt: new Date() }) })
     return ok({ id: saved._id, meal: result })
   } catch (error) {
-    return fail(error.code || 'INVALID_MEAL', error.message)
+    return fail(error.code || 'INVALID_MEAL', safeErrorMessage(error, '饮食数据无效'))
   }
 }
 
@@ -277,9 +422,11 @@ exports.main = async (event, context) => {
   try {
     switch (event && event.action) {
       case 'chat': return await chat(event, context)
+      case 'searchExercises': return await searchExercises(event, context)
       case 'getSession': return await getSession(event, context)
       case 'diagnose': return diagnostics()
       case 'prepareUpload': return await prepareUpload(context)
+      case 'registerUpload': return await registerUpload(event, context)
       case 'analyzeMeal': return await analyzeMeal(event, context)
       case 'analyzeTextMeal': return await analyzeTextMeal(event, context)
       case 'saveMeal': return await saveMeal(event, context)
@@ -288,7 +435,7 @@ exports.main = async (event, context) => {
     }
   } catch (error) {
     console.error('agent function failed', error)
-    return fail(error.code || 'INTERNAL_ERROR', error.message || '服务暂时不可用')
+    return fail(error.code || 'INTERNAL_ERROR', safeErrorMessage(error))
   }
 }
 
